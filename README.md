@@ -6,6 +6,7 @@ local fText = require("MyPackage.ftext")
 ```
 
 # list of files
+These files contain the modules in the MDK. If you include any of the modules from the MDK, you should also include LICENSE.lua. It contains the licenses for my modules and for luaunit and lua-schema, which I include as dependencies.
 
 * EMCO.lua
   * EMCO. Documentation at https://github.com/demonnic/EMCO/wiki
