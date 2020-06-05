@@ -5,6 +5,10 @@ This is a collection of lua modules I wrote which you can include in your Mudlet
 local fText = require("MyPackage.ftext")
 ```
 
+# documentation
+
+Starting with alpha2 of the MDK, I will be including the ldocs I generate from my code in the zipped releases.
+
 # list of files
 These files contain the modules in the MDK. You only need to include those files which you intend to use, except as noted in the descriptions below. If you include any of the modules from the MDK, you should also include LICENSE.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
 
@@ -22,6 +26,9 @@ These files contain the modules in the MDK. You only need to include those files
 
 * TextGauges.lua
   * TextGauges, what it says on the tin. Documentation at https://github.com/demonnic/TextGauges/wiki
+
+* timergauge.lua
+  * TimerGauge, an extension of Geyser.Gauge which serves as an animated countdown timer. Overview at https://github.com/demonnic/MDK/wiki/TimerGauge
 
 * luaunit.lua
   * LuaUnit, for writing unit tests for your packages. Modified slightly for use with Mudlet. Documentation at https://github.com/bluebird75/luaunit

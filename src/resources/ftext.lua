@@ -1,10 +1,13 @@
 --- fText processing
--- @module demonnic
+-- @module ftext
 local ftext = {}
 local dec = {"d", "decimal", "dec"}
 local hex = {"h", "hexidecimal", "hex"}
 local col = {"c", "color", "colour", "col", "name"}
 
+--- Performs wordwrapping on a string, given a length limit. Does not understand colour tags and will count them as characters in the string
+--@tparam string str the string to wordwrap
+--@tparam number limit the line length to wrap at
 function ftext.wordWrap(str, limit, indent, indent1)
   -- pulled from http://lua-users.org/wiki/StringRecipes
   indent = indent or ""
@@ -20,6 +23,10 @@ function ftext.wordWrap(str, limit, indent, indent1)
   return indent1..str:gsub("(%s+)()(%S+)()", check)
 end
 
+--- Performs wordwrapping on a string, while ignoring color tags of a given type.
+--@tparam string text the string you are wordwrapping
+--@tparam number limit the line length to wrap at
+--@tparam string type What type of color codes to ignore. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else or nil to pass the string on to wordWrap
 function ftext.xwrap(text, limit, type)
   local colorPattern
   if table.contains(dec, type) then
@@ -97,6 +104,9 @@ function ftext.xwrap(text, limit, type)
   return table.concat(lines, "\n")
 end
 
+--- The main course, this function returns a formatted string, based on a table of options
+--@tparam string str the string to format
+--@tparam table opts the table of options which control the formatting
 function ftext.fText(str, opts)
   local options = ftext.fixFormatOptions(str, opts)
   if options.wrap and (options.strLen > options.effWidth) then
@@ -113,6 +123,7 @@ function ftext.fText(str, opts)
   end
 end
 
+-- internal function, used to set defaults and type correct the options table
 function ftext.fixFormatOptions(str, opts)
   if opts.fixed then return table.deepcopy(opts) end
   --Set up all the things we might call the different echo types
@@ -184,6 +195,7 @@ function ftext.fixFormatOptions(str, opts)
   return options
 end
 
+-- internal function, processes a single line of the wrapped string.
 function ftext.fLine(str,opts)
   local options = ftext.fixFormatOptions(str,opts)
   local leftCap = options.leftCap
@@ -238,6 +250,11 @@ function ftext.fLine(str,opts)
   end
 end
 
+
+-- Functions below here are honestly for backwards compatibility and subject to removal soon. 
+-- They just force some options table overrides for the most part.
+
+-- no colors, no wrap
 function ftext.align(str, opts)
   local options = {}
   if opts == nil then
@@ -254,6 +271,7 @@ function ftext.align(str, opts)
   return ftext.fLine(str, options)
 end
 
+-- decho formatting, no wrap
 function ftext.dalign(str, opts)
   local options = {}
   if opts == nil then
@@ -270,6 +288,7 @@ function ftext.dalign(str, opts)
   return ftext.fLine(str, options)
 end
 
+--cecho formatting, no wrap
 function ftext.calign(str, opts)
   local options = {}
   if opts == nil then
@@ -286,6 +305,7 @@ function ftext.calign(str, opts)
   return ftext.fLine(str, options)
 end
 
+--hecho formatting, no wrap
 function ftext.halign(str, opts)
   local options = {}
   if opts == nil then
@@ -302,6 +322,7 @@ function ftext.halign(str, opts)
   return ftext.fLine(str, options)
 end
 
+-- literally just fText but forces cecho formatting
 function ftext.cfText(str, opts)
   local options = {}
   if opts == nil then opts = {} end
@@ -315,6 +336,7 @@ function ftext.cfText(str, opts)
   return ftext.fText(str, options)
 end
 
+-- fText but forces decho formatting
 function ftext.dfText(str, opts)
   local options = {}
   if opts == nil then opts = {} end
@@ -328,6 +350,7 @@ function ftext.dfText(str, opts)
   return ftext.fText(str, options)
 end
 
+-- fText but forces hecho formatting
 function ftext.hfText(str, opts)
   local options = {}
   if opts == nil then opts = {} end
@@ -339,41 +362,6 @@ function ftext.hfText(str, opts)
   end
   options = ftext.fixFormatOptions(str, options)
   return ftext.fText(str, options)
-end
-
-function ftext.test_ftext()
-  local testString = "This is a test of the emergency broadcast system. This is only a test. If this had been a real emergency, we would have given you more sensible information after this. But this was only a test."
-
-  local nTable = {width = 40, cap = "(CAP)", inside = true, alignment = 'center'}
-  local cTable = table.deepcopy(nTable)
-    cTable.formatType="c"
-    cTable.capColor = "<red:black>"
-    cTable.spacerColor = "<purple:green>"
-    cTable.textColor = "<purple:green>"
-
-  local dTable = table.deepcopy(nTable)
-    dTable.formatType="d"
-    dTable.capColor = "<0,0,182>"
-    dTable.spacerColor = "<0,182,0>"
-    dTable.textColor = "<182,0,0>"
-
-  local hTable = table.deepcopy(nTable)
-    hTable.formatType="h"
-    hTable.capColor = "#FF0000"
-    hTable.spacerColor = "#00FF00"
-    hTable.textColor = "#0000FF"
-  echo(string.rep("\n", 5))
-  echo("With word wrap:\n")
-  echo(ftext.fText(testString, nTable) .. "\n")
-  cecho(ftext.fText(testString, cTable) .. "\n")
-  decho(ftext.fText(testString, dTable) .. "\n")
-  hecho(ftext.fText(testString, hTable) .. "\n")
-
-  echo("\n\nWithout word wrap:\n")
-  echo(ftext.align(testString, nTable) .. "\n")
-  decho(ftext.dalign(testString, dTable) .. "\n")
-  cecho(ftext.calign(testString, cTable) .. "\n")
-  hecho(ftext.halign(testString, hTable) .. "\n")
 end
 
 return ftext
