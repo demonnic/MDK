@@ -1,5 +1,5 @@
 --- TimerGauge
--- Animated countdown timer, extends Geyser.Gauge
+-- Animated countdown timer, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
 --@module TimerGauge
 local TimerGauge = {
   name = "TimerGaugeClass",
