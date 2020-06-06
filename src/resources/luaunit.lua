@@ -96,11 +96,11 @@ Options:
 
 local is_equal -- defined here to allow calling from mismatchFormattingPureList
 
-----------------------------------------------------------------
+--
 --
 --                 general utility functions
 --
-----------------------------------------------------------------
+--
 
 local function pcall_or_abort(func, ...)
     -- unpack is a global function for Lua 5.1, otherwise use table.unpack
@@ -1188,11 +1188,11 @@ local function error_fmt(level, ...)
     error(string.format(...), (level or 1) + 1)
 end
 
-----------------------------------------------------------------
+--
 --
 --                     assertions
 --
-----------------------------------------------------------------
+--
 
 local function errorMsgEquality(actual, expected, doDeepAnalysis)
 
@@ -1248,9 +1248,9 @@ function M.successIf( cond )
 end
 
 
-------------------------------------------------------------------
+--
 --                  Equality assertions
-------------------------------------------------------------------
+--
 
 function M.assertEquals(actual, expected, extra_msg_or_nil, doDeepAnalysis)
     if type(actual) == 'table' and type(expected) == 'table' then
@@ -1329,9 +1329,9 @@ function M.assertItemsEquals(actual, expected, extra_msg_or_nil)
     end
 end
 
-------------------------------------------------------------------
+--
 --                  String assertion
-------------------------------------------------------------------
+--
 
 function M.assertStrContains( str, sub, isPattern, extra_msg_or_nil )
     -- this relies on lua string.find function
@@ -1452,9 +1452,9 @@ function M.assertErrorMsgMatches( expectedMsg, func, ... )
     end
 end
 
-------------------------------------------------------------------
+--
 --              Type assertions
-------------------------------------------------------------------
+--
 
 function M.assertEvalToTrue(value, extra_msg_or_nil)
     if not value then
@@ -1595,9 +1595,9 @@ function M.assertNotIs(actual, expected, extra_msg_or_nil)
 end
 
 
-------------------------------------------------------------------
+--
 --              Scientific assertions
-------------------------------------------------------------------
+--
 
 
 function M.assertIsNaN(value, extra_msg_or_nil)
@@ -1688,9 +1688,9 @@ function M.assertNotIsMinusZero(value, extra_msg_or_nil)
     end
 end
 
-----------------------------------------------------------------
+--
 --                     Compatibility layer
-----------------------------------------------------------------
+--
 
 -- for compatibility with LuaUnit v2.x
 function M.wrapFunctions()
@@ -1859,11 +1859,11 @@ for _,v in ipairs( list_of_funcs ) do
     end
 end
 
-----------------------------------------------------------------
+--
 --
 --                     Outputters
 --
-----------------------------------------------------------------
+--
 
 -- A common "base" class for outputters
 -- For concepts involved (class inheritance) see http://www.lua.org/pil/16.2.html
@@ -1895,9 +1895,9 @@ function genericOutput:endClass() end
 function genericOutput:endSuite() end
 
 
-----------------------------------------------------------------
+--
 --                     class TapOutput
-----------------------------------------------------------------
+--
 
 local TapOutput = genericOutput.new() -- derived class
 local TapOutput_MT = { __index = TapOutput } -- metatable
@@ -1943,9 +1943,9 @@ TapOutput.__class__ = 'TapOutput'
 
 -- class TapOutput end
 
-----------------------------------------------------------------
+--
 --                     class JUnitOutput
-----------------------------------------------------------------
+--
 
 -- See directory junitxml for more information about the junit format
 local JUnitOutput = genericOutput.new() -- derived class
@@ -2030,9 +2030,9 @@ JUnitOutput.__class__ = 'JUnitOutput'
 
 -- class TapOutput end
 
-----------------------------------------------------------------
+--
 --                     class TextOutput
-----------------------------------------------------------------
+--
 
 --[[
 
@@ -2117,7 +2117,7 @@ Tests run: 2, Failures: 1, Errors: 0, Skipped: 0
 -- LuaUnit
 ---- non verbose
 * display . or F or E when running tests
----- verbose
+-- -- verbose
 * display test name + ok/fail
 ----
 * blank line
@@ -2213,9 +2213,9 @@ TextOutput.__class__ = 'TextOutput'
 -- class TextOutput end
 
 
-----------------------------------------------------------------
+--
 --                     class NilOutput
-----------------------------------------------------------------
+--
 
 local function nopCallable()
     --print(42)
@@ -2229,11 +2229,11 @@ function NilOutput.new(runner)
     return setmetatable( { __class__ = 'NilOutput' }, NilOutput_MT )
 end
 
-----------------------------------------------------------------
+--
 --
 --                     class LuaUnit
 --
-----------------------------------------------------------------
+--
 
 M.LuaUnit = {
     outputType = TextOutput,
@@ -2250,7 +2250,7 @@ end
         return setmetatable( {}, LuaUnit_MT )
     end
 
-    -----------------[[ Utility methods ]]---------------------
+    --[[ Utility methods ]]--
 
     function M.LuaUnit.asFunction(aObject)
         -- return "aObject" if it is a function, and nil otherwise
@@ -2448,9 +2448,9 @@ end
         --os.exit(0)
     end
 
-----------------------------------------------------------------
+--
 --                     class NodeStatus
-----------------------------------------------------------------
+--
 
     local NodeStatus = { __class__ = 'NodeStatus' } -- class
     local NodeStatus_MT = { __index = NodeStatus } -- metatable
@@ -2519,7 +2519,7 @@ end
         return '            <passed/>\n' -- (not XSD-compliant! normally shouldn't get here)
     end
 
-    --------------[[ Output methods ]]-------------------------
+    --[[ Output methods ]]--
 
     local function conditional_plural(number, singular, color)
         -- returns a grammatically well-formed string "%d <singular/plural>"
@@ -2708,7 +2708,7 @@ end
         error( 'No such format: '..outputType,2)
     end
 
-    --------------[[ Runner ]]-----------------
+    --[[ Runner ]]--
 
     function M.LuaUnit:protectedCall(classInstance, methodInstance, prettyFuncName)
         -- if classInstance is nil, this is just a function call

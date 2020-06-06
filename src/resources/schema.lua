@@ -48,9 +48,9 @@ function schema.FormatOutput(output)
     return table.concat(format, "\n")
 end
 
--------------------------------------------------------------------------------
+--
 -- Infrastructure
--------------------------------------------------------------------------------
+--
 
 -- Path class. Represents paths to values in a table (the path's *base*).
 local Path = {}
@@ -227,7 +227,7 @@ setmetatable(Error, {
 })
 schema.Error = Error
 
--------------------------------------------------------------------------------
+--
 -- Schema Building Blocks
 -- A schema is a function taking the object to be checked and the path to the
 -- current value in the environment.
@@ -235,7 +235,7 @@ schema.Error = Error
 -- object which describes why it was rejected.
 -- The schemata below are just some basic building blocks. Expand them to your
 -- liking.
--------------------------------------------------------------------------------
+--
 
 -- Always accepts.
 function schema.Any(obj, path)
