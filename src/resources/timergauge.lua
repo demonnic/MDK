@@ -1,6 +1,6 @@
---- TimerGauge
--- Animated countdown timer, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
+--- Animated countdown timer, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
 --@module TimerGauge
+--@field active boolean. should the timer run or not?
 
 local TimerGauge = {
   name = "TimerGaugeClass",
@@ -475,6 +475,7 @@ function TimerGauge:new(cons, parent)
   end
 
   if cons.timerCaption and (not cons.suffix) then cons.suffix = cons.timerCaption end
+  cons.type = cons.type or "timergauge"
   -- call parent constructor
   local me = self.parent:new(cons, parent)
   -- add TimerGauge as the metatable/index
