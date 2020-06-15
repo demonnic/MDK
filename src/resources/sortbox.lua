@@ -99,13 +99,24 @@ function SortBox:organize()
   end
 end
 
+function SortBox:fixOrganize()
+  self.parent:reposition()
+  -- Workaround for issue with width/height being 0 at creation
+  if self:get_width() == 0 then
+    self:resize("0.9px", nil)
+  end
+  if self:get_height() == 0 then
+    self:resize(nil, "0.9px")
+  end
+end
+
 -- internal function, replicates Geyser.HBox functionality, but with the option of sorting
 function SortBox:horganize()
-  self.parent:reposition()
   local window_width = (self:calculate_dynamic_window_size().width / self:get_width()) * 100
   local start_x = 0
   local sortFunction = (self.autoSort and self.sortFunction) and SortBox.SortFunctions[self.sortFunction] or nil
   if sortFunction then
+    self:fixOrganize()
     for _, window in spairs(self.windowList, sortFunction) do
       local width = (window:get_width() / self:get_width()) * 100
       local height = (window:get_height() / self:get_height()) * 100
@@ -117,7 +128,7 @@ function SortBox:horganize()
         height = 100
       end
       window:resize(width.."%", height.."%")
-      start_x = start_x + (window:get_width() / self:get_width()) * 100
+      start_x = start_x + width
     end
   else
     if Geyser.HBox.organize then Geyser.HBox.organize(self) else Geyser.HBox.reposition(self) end
@@ -126,11 +137,11 @@ end
 
 -- internal function, replicates Geyser.VBox functionality, but with the option of sorting
 function SortBox:vorganize()
-  self.parent:reposition()
-  local window_height = (self:calculate_dynamic_window_size().height / self.get_height()) * 100
+  local window_height = (self:calculate_dynamic_window_size().height / self:get_height()) * 100
   local start_y = 0
   local sortFunction = (self.autoSort and self.sortFunction) and SortBox.SortFunctions[self.sortFunction] or nil
   if sortFunction then
+    self:fixOrganize()
     for _, window in spairs(self.windowList, sortFunction) do
       window:move("0%", start_y.."%")
       local width = (window:get_width() / self:get_width()) * 100
@@ -142,7 +153,7 @@ function SortBox:vorganize()
         height = window_height * window.v_stretch_factor
       end
       window:resize(width.."%", height.."%")
-      start_y = start_y + (window:get_height() / self:get_height()) * 100
+      start_y = start_y + height
     end
   else
     if Geyser.VBox.organize then Geyser.VBox.organize(self) else Geyser.VBox.reposition(self) end
