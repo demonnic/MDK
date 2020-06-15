@@ -163,6 +163,18 @@ function SortBox:disableTimer()
   self.timerSort = false
 end
 
+--- Sets the sortInterval, or amount of time in milliseconds between auto sorting on a timer if timerSort is true
+--@tparam number sortInterval time in milliseconds between auto sorting if timerSort is true
+function SortBox:setSortInterval(sortInterval)
+  local sitype = type(sortInterval)
+  assert(sitype == "number", string.format("SortBox:setSortInterval(sortInterval): sortInterval as number expected, got %s", sitype))
+  assert(sortInterval > 0, string.format("SortBox:setSortInterval(sortInterval): sortInterval must be positive"))
+  self.sortInterval = sortInterval
+  if self.timerSort then
+    self:enableTimer()
+  end
+end
+
 --- Enables sorting when items are added/removed, or if timerSort is true, every sortInterval milliseconds
 function SortBox:enableSort()
   self.autoSort = true
@@ -175,7 +187,7 @@ function SortBox:disableSort()
 end
 
 ---Set whether the SortBox acts as a VBox or HBox.
---@tparam string boxType If you pass 'h' or anything beginning with h it will act like an HBox. Anything else it will act like a VBox.
+--@tparam string boxType If you pass 'h' or 'horizontal' it will act like an HBox. Anything else it will act like a VBox.
 --@usage mySortBox:setBoxType("v") -- behave like a VBox
 -- mySortBox:setBoxType("h") -- behave like an HBox
 -- mySortBox:setBoxType("beeblebrox") -- why?! Why would you do this? It'll behave like a VBox

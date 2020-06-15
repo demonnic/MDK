@@ -296,10 +296,24 @@ function TimerGauge:setTime(time)
   end
 end
 
+--- Changes the time between gauge updates.
+--@tparam number updateTime amount of time in milliseconds between gauge updates. Must be a positive number.
+function TimerGauge:setUpdateTime(updateTime)
+  local updateTimeType = type(updateTime)
+  assert(updateTimeType == "number", string.format("TimerGauge:setUpdateTime(updateTime): name: %s updateTime as number expected, got %s", self.name, updateTimeType))
+  assert(updateTime > 0, string.format("TimerGauge:setUpdateTime(updateTime): name: %s updateTime must be a positive number. You gave %d", self.name, updateTime))
+  self.updateTime = updateTime
+  if self.timer then 
+    killTimer(self.timer)
+    self.timer = nil
+  end
+  if self.active then
+    self.timer = tempTimer(updateTime / 1000, function() self:update() end, true)
+  end
+end
+
 TimerGauge.parent = Geyser.Gauge
 setmetatable(TimerGauge, Geyser.Gauge)
-
-
 --- Creates a new TimerGauge instance.
 --@tparam table cons a table of options (or constraints) for how the TimerGauge will behave. Valid options include:
 --<style>
