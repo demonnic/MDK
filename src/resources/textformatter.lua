@@ -1,5 +1,5 @@
 --- Stand alone text formatter object. Remembers the options you set and can be adjusted as needed
--- @module TextFormatter
+-- @classmod TextFormatter
 local TextFormatter = {}
 TextFormatter.validFormatTypes = { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
 local pathOfThisFile = (...):match("(.-)[^%.]+$")

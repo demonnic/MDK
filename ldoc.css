@@ -6,8 +6,8 @@ http://developer.yahoo.com/yui/license.html
 version: 2.8.2r1
 */
 html {
-    color: #000;
-    background: #FFF;
+    color: #ccc;
+    background: #222;
 }
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,button,textarea,p,blockquote,th,td {
     margin: 0;
@@ -67,7 +67,7 @@ body {
     margin-left: 1em;
     margin-right: 1em;
     font-family: arial, helvetica, geneva, sans-serif;
-    background-color: #ffffff; margin: 0px;
+    background-color: #222222; margin: 0px;
 }
 
 code, tt { font-family: monospace; font-size: 1.1em; }
@@ -94,8 +94,8 @@ h2 { font-size: 1.25em; }
 h3 { font-size: 1.15em; }
 h4 { font-size: 1.06em; }
 
-a:link { font-weight: bold; color: #004080; text-decoration: none; }
-a:visited { font-weight: bold; color: #006699; text-decoration: none; }
+a:link { font-weight: bold; color: #2266ee; text-decoration: none; }
+a:visited { font-weight: bold; color: #0099bb; text-decoration: none; }
 a:link:hover { text-decoration: underline; }
 
 hr {
@@ -114,7 +114,7 @@ p.name {
 }
 
 pre {
-    background-color: rgb(245, 245, 245);
+    background-color: #000000;
     border: 1px solid #C0C0C0; /* silver */
     padding: 10px;
     margin: 10px 0 10px 0;
@@ -132,13 +132,13 @@ table.index td { text-align: left; vertical-align: top; }
 #container {
     margin-left: 1em;
     margin-right: 1em;
-    background-color: #f0f0f0;
+    background-color: #222222;
 }
 
 #product {
     text-align: center;
     border-bottom: 1px solid #cccccc;
-    background-color: #ffffff;
+    background-color: #222222;
 }
 
 #product big {
@@ -146,7 +146,7 @@ table.index td { text-align: left; vertical-align: top; }
 }
 
 #main {
-    background-color: #f0f0f0;
+    background-color: #222222;
     border-left: 2px solid #cccccc;
 }
 
@@ -154,14 +154,20 @@ table.index td { text-align: left; vertical-align: top; }
     float: left;
     width: 14em;
     vertical-align: top;
-    background-color: #f0f0f0;
+    background-color: #222222;
     overflow: visible;
 }
 
+#navigation h1 {
+  color: #cccccc;
+  font-size: 1.5em;
+  margin: 20px 0 20px 0;
+}
+
 #navigation h2 {
-    background-color:#e7e7e7;
+    background-color:#333333;
     font-size:1.1em;
-    color:#000000;
+    color:#cccccc;
     text-align: left;
     padding:0.2em;
     border-top:1px solid #dddddd;
@@ -190,14 +196,14 @@ table.index td { text-align: left; vertical-align: top; }
     padding: 1em;
     border-left: 2px solid #cccccc;
     border-right: 2px solid #cccccc;
-    background-color: #ffffff;
+    background-color: #222222;
 }
 
 #about {
     clear: both;
     padding: 5px;
     border-top: 2px solid #cccccc;
-    background-color: #ffffff;
+    background-color: #222222;
 }
 
 @media print {
@@ -232,20 +238,20 @@ table.index td { text-align: left; vertical-align: top; }
     }
 }
 
-table.geyser_list {
+table.module_list {
     border-width: 1px;
     border-style: solid;
     border-color: #cccccc;
     border-collapse: collapse;
 }
-table.geyser_list td {
+table.module_list td {
     border-width: 1px;
     padding: 3px;
     border-style: solid;
     border-color: #cccccc;
 }
-table.geyser_list td.name { background-color: #f0f0f0; min-width: 200px; }
-table.geyser_list td.summary { width: 100%; }
+table.module_list td.name { background-color: #222222; min-width: 200px; }
+table.module_list td.summary { width: 100%; }
 
 
 table.function_list {
@@ -260,7 +266,7 @@ table.function_list td {
     border-style: solid;
     border-color: #cccccc;
 }
-table.function_list td.name { background-color: #f0f0f0; min-width: 200px; }
+table.function_list td.name { background-color: #222222; min-width: 200px; }
 table.function_list td.summary { width: 100%; }
 
 ul.nowrap {
@@ -280,7 +286,7 @@ ul ol { margin-top: 0px; }
 
 /* make the target distinct; helps when we're navigating to a function */
 a:target + * {
-  background-color: #FF9;
+  background-color: #060;
 }
 
 
@@ -300,3 +306,10 @@ pre .user-keyword { color: #800080; }
 pre .prompt { color: #558817; }
 pre .url { color: #272fc2; text-decoration: underline; }
 
+.tg  {border-collapse:collapse;border-color:#ccc;border-spacing:0;}
+.tg td{background-color:#8b8b8b;border-color:#ccc;border-style:solid;border-width:1px;color:#000;
+  font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg th{background-color:#000000;border-color:#ccc;border-style:solid;border-width:1px;color:#FFF;
+  font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
+.tg .tg-even{background-color:#797979;border-color:inherit;text-align:left;vertical-align:top;color:#DDD}
+.tg .tg-odd{background-color:#8b8b8b;border-color:#ccc;border-style:solid;border-width:1px;color:#000border-color:inherit;text-align:left;vertical-align:top}

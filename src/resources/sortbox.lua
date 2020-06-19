@@ -1,5 +1,7 @@
 ---An H/VBox alternative which can be set to either vertical or horizontal, and will autosort the windows
---@module SortBox
+--@field autoSort Should the sortbox do sorting? Defaults to true.
+--@classmod SortBox
+
 local SortBox = Geyser.Container:new({
   name = "SortBoxClass",
   autoSort = true,
@@ -216,56 +218,45 @@ end
 --<br>If an invalid option is given, then existing H/VBox behaviour is maintained, just like if autoSort is false.
 --@usage mySortBox:setSortFunction("gaugeValue")
 --@tparam string functionName what type of sorting should we use? See table below for valid options and their descriptions.
--- <style type="text/css">
--- .tg  {border-collapse:collapse;border-color:#aabcfe;border-spacing:0;}
--- .tg td{background-color:#e8edff;border-color:#aabcfe;border-style:solid;border-width:1px;color:#669;
---   font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
--- .tg th{background-color:#b9c9fe;border-color:#aabcfe;border-style:solid;border-width:1px;color:#039;
---   font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
--- .tg .tg-phtq{background-color:#D2E4FC;border-color:inherit;text-align:left;vertical-align:top}
--- .tg .tg-hmp3{background-color:#D2E4FC;text-align:left;vertical-align:top}
--- .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
--- .tg .tg-0lax{text-align:left;vertical-align:top}
--- </style>
 -- <table class="tg">
 -- <thead>
 --   <tr>
---     <th class="tg-0pky">sort type</th>
---     <th class="tg-0pky">description</th>
+--     <th>sort type</th>
+--     <th>description</th>
 --   </tr>
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-phtq">gaugeValue</td>
---     <td class="tg-phtq">sort gauges based on how full the gauge is, from less full to more</td>
+--     <td class="tg-odd">gaugeValue</td>
+--     <td class="tg-odd">sort gauges based on how full the gauge is, from less full to more</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0pky">reverseGaugeValue</td>
---     <td class="tg-0pky">sort gauges based on how full the gauge is, from more full to less</td>
+--     <td class="tg-even">reverseGaugeValue</td>
+--     <td class="tg-even">sort gauges based on how full the gauge is, from more full to less</td>
 --   </tr>
 --   <tr>
---     <td class="tg-phtq">timeLeft</td>
---     <td class="tg-phtq">sort TimerGauges based on the total time left in the gauge, from less time to more</td>
+--     <td class="tg-odd">timeLeft</td>
+--     <td class="tg-odd">sort TimerGauges based on the total time left in the gauge, from less time to more</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0lax">reverseTimeLeft</td>
---     <td class="tg-0lax">sort TimerGauges based on the total time left in the gauge, from more time to less</td>
+--     <td class="tg-even">reverseTimeLeft</td>
+--     <td class="tg-even">sort TimerGauges based on the total time left in the gauge, from more time to less</td>
 --   </tr>
 --   <tr>
---     <td class="tg-hmp3">name</td>
---     <td class="tg-hmp3">sort any item (and mixed types) by name, alphabetically.</td>
+--     <td class="tg-odd">name</td>
+--     <td class="tg-odd">sort any item (and mixed types) by name, alphabetically.</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0lax">reverseName</td>
---     <td class="tg-0lax">sort any item (and mixed types) by name, reverse alphabetically.</td>
+--     <td class="tg-even">reverseName</td>
+--     <td class="tg-even">sort any item (and mixed types) by name, reverse alphabetically.</td>
 --   </tr>
 --   <tr>
---     <td class="tg-hmp3">message</td>
---     <td class="tg-hmp3">sorts Labels based on their echoed message, alphabetically. If not a label, the empty string will be used</td>
+--     <td class="tg-odd">message</td>
+--     <td class="tg-odd">sorts Labels based on their echoed message, alphabetically. If not a label, the empty string will be used</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0lax">reverseMessage</td>
---     <td class="tg-0lax">sorts Labels based on their echoed message, reverse alphabetically. If not a label, the empty string will be used</td>
+--     <td class="tg-even">reverseMessage</td>
+--     <td class="tg-even">sorts Labels based on their echoed message, reverse alphabetically. If not a label, the empty string will be used</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -288,50 +279,39 @@ SortBox.parent = Geyser.Container
 --@tparam table options the options to use for the SortBox. See table below for added options
 --@param[opt] container the container to add the SortBox into
 --<br><br>Table of new options
--- <style type="text/css">
--- .tg  {border-collapse:collapse;border-color:#aabcfe;border-spacing:0;}
--- .tg td{background-color:#e8edff;border-color:#aabcfe;border-style:solid;border-width:1px;color:#669;
---   font-family:Arial, sans-serif;font-size:14px;overflow:hidden;padding:10px 5px;word-break:normal;}
--- .tg th{background-color:#b9c9fe;border-color:#aabcfe;border-style:solid;border-width:1px;color:#039;
---   font-family:Arial, sans-serif;font-size:14px;font-weight:normal;overflow:hidden;padding:10px 5px;word-break:normal;}
--- .tg .tg-phtq{background-color:#D2E4FC;border-color:inherit;text-align:left;vertical-align:top}
--- .tg .tg-hmp3{background-color:#D2E4FC;text-align:left;vertical-align:top}
--- .tg .tg-0pky{border-color:inherit;text-align:left;vertical-align:top}
--- .tg .tg-0lax{text-align:left;vertical-align:top}
--- </style>
 -- <table class="tg">
 -- <thead>
 --   <tr>
---     <th class="tg-0pky">option name</th>
---     <th class="tg-0pky">description</th>
---     <th class="tg-0lax">default</th>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
 --   </tr>
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-phtq">autoSort</td>
---     <td class="tg-phtq">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
---     <td class="tg-hmp3">true</td>
+--     <td class="tg-odd">autoSort</td>
+--     <td class="tg-odd">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
+--     <td class="tg-odd">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0pky">timerSort</td>
---     <td class="tg-0pky">should the SortBox automatically perform sorting on a timer?</td>
---     <td class="tg-0lax">true</td>
+--     <td class="tg-even">timerSort</td>
+--     <td class="tg-even">should the SortBox automatically perform sorting on a timer?</td>
+--     <td class="tg-even">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-phtq">sortInterval</td>
---     <td class="tg-phtq">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
---     <td class="tg-hmp3">500</td>
+--     <td class="tg-odd">sortInterval</td>
+--     <td class="tg-odd">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
+--     <td class="tg-odd">500</td>
 --   </tr>
 --   <tr>
---     <td class="tg-0lax">boxType</td>
---     <td class="tg-0lax">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
---     <td class="tg-0lax">v</td>
+--     <td class="tg-even">boxType</td>
+--     <td class="tg-even">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
+--     <td class="tg-even">v</td>
 --   </tr>
 --   <tr>
---     <td class="tg-hmp3">sortFunction</td>
---     <td class="tg-hmp3">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
---     <td class="tg-hmp3">gaugeValue</td>
+--     <td class="tg-odd">sortFunction</td>
+--     <td class="tg-odd">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
+--     <td class="tg-odd">gaugeValue</td>
 --   </tr>
 -- </tbody>
 -- </table>

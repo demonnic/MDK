@@ -1,5 +1,5 @@
 --- Creates a text based gauge, for use in miniconsoles and the like.
---@module TextGauge
+--@classmod TextGauge
 
 local TextGauge = {
   width = 24,

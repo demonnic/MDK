@@ -1,5 +1,5 @@
 --- Animated countdown timer, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
---@module TimerGauge
+--@classmod TimerGauge
 --@field active boolean. should the timer run or not?
 
 local TimerGauge = {
@@ -125,63 +125,63 @@ end
 --- Get the amount of time remaining on the timer, in seconds
 --@tparam string format Format string for how to return the time. If not provided defaults to self.timeFormat(which defaults to "S.t").<br>
 --                      If "" is passed will return "" as the time. See below table for formatting codes<br>
---<table id="t02">
+--<table class="tg">
 --<tr>
 --  <th>format code</th>
 --  <th>what it is replaced with</th>
 --</tr>
 --<tr>
---  <td>S</td>
---  <td>Time left in seconds, unbroken down. Does not include milliseconds.<br>
+--  <td class="tg-odd">S</td>
+--  <td class="tg-odd">Time left in seconds, unbroken down. Does not include milliseconds.<br>
 --      IE a timer with 2 minutes left it would replace S with 120
 --  </td>
 --</tr>
 --<tr>
---  <td>dd</td>
---  <td>Days, with 1 leading 0 (0, 01, 02-...)</td>
+--  <td class="tg-even">dd</td>
+--  <td class="tg-even">Days, with 1 leading 0 (0, 01, 02-...)</td>
 --</tr>
 --<tr>
---  <td>d</td>
---  <td>Days, with no leading 0 (1,2,3-...)</td>
+--  <td class="tg-odd">d</td>
+--  <td class="tg-odd">Days, with no leading 0 (1,2,3-...)</td>
 --</tr>
 --<tr>
---  <td>hh</td>
---  <td>hours, with leading 0 (00-24)</td>
+--  <td class="tg-even">hh</td>
+--  <td class="tg-even">hours, with leading 0 (00-24)</td>
 --</tr>
 --<tr>
---  <td>h</td>
---  <td>hours, without leading 0 (0-24)</td>
+--  <td class="tg-odd">h</td>
+--  <td class="tg-odd">hours, without leading 0 (0-24)</td>
 --</tr>
 --<tr>
---  <td>MM</td>
---  <td>minutes, with a leading 0 (00-59)</td>
+--  <td class="tg-even">MM</td>
+--  <td class="tg-even">minutes, with a leading 0 (00-59)</td>
 --</tr>
 --<tr>
---  <td>M</td>
---  <td>minutes, no leading 0 (0-59)</td>
+--  <td class="tg-odd">M</td>
+--  <td class="tg-odd">minutes, no leading 0 (0-59)</td>
 --</tr>
 --<tr>
---  <td>ss</td>
---  <td>seconds, with leading 0 (00-59)</td>
+--  <td class="tg-even">ss</td>
+--  <td class="tg-even">seconds, with leading 0 (00-59)</td>
 --</tr>
 --<tr>
---  <td>s</td>
---  <td>seconds, no leading 0 (0-59)</td>
+--  <td class="tg-odd">s</td>
+--  <td class="tg-odd">seconds, no leading 0 (0-59)</td>
 --</tr>
 --<tr>
---  <td>t</td>
---  <td>tenths of a second<br>
+--  <td class="tg-even">t</td>
+--  <td class="tg-even">tenths of a second<br>
 --      timer with 12.345 seconds left, t would<br>
 --      br replaced by 3.
 --  </td>
 --</tr>
 --<tr>
---  <td>mm</td>
---  <td>milliseconds with leadings 0s (000-999)</td>
+--  <td class="tg-odd">mm</td>
+--  <td class="tg-odd">milliseconds with leadings 0s (000-999)</td>
 --</tr>
 --<tr>
---  <td>m</td>
---  <td>milliseconds with no leading 0s (0-999)</td>
+--  <td class="tg-even">m</td>
+--  <td class="tg-even">milliseconds with no leading 0s (0-999)</td>
 --</tr>
 --</table><br>
 --@usage myTimerGauge:getTime() --returns the time using myTimerGauge.format
@@ -316,145 +316,127 @@ TimerGauge.parent = Geyser.Gauge
 setmetatable(TimerGauge, Geyser.Gauge)
 --- Creates a new TimerGauge instance.
 --@tparam table cons a table of options (or constraints) for how the TimerGauge will behave. Valid options include:
---<style>
--- table#t01 tr:nth-child(even) {
---   background-color: #eee;
--- }
--- table#t01 tr:nth-child(odd) {
---   background-color: #fff;
--- }
--- table#t02 tr:nth-child(even) {
---   background-color: #eee;
--- }
--- table#t02 tr:nth-child(odd) {
---   background-color: #fff;
--- }
--- table, th,td {
---   border: 1px solid black;
---   border-collapse: collapse;
---   padding: 15px;
--- }
---</style><br>
---<table id="t01">
+--<br>
+--<table class="tg">
 --<tr>
 --  <th>name</th>
 --  <th>description</th>
 --  <th>default</th>
 --</tr>
 --<tr>
---  <td>time</td>
---  <td>how long the timer should run for</td>
---  <td></td>
+--  <td class="tg-odd">time</td>
+--  <td class="tg-odd">how long the timer should run for</td>
+--  <td class="tg-odd"></td>
 --</tr>
 --<tr>
---  <td>active</td>
---  <td>whether the timer should run or not</td>
---  <td>true</td>
+--  <td class="tg-even">active</td>
+--  <td class="tg-even">whether the timer should run or not</td>
+--  <td class="tg-even">true</td>
 --</tr>
 --<tr>
---  <td>showTime</td>
---  <td>should we show the time remaining on the gauge?</td>
---  <td>true</td>
+--  <td class="tg-odd">showTime</td>
+--  <td class="tg-odd">should we show the time remaining on the gauge?</td>
+--  <td class="tg-odd">true</td>
 --</tr>
 --<tr>
---  <td>prefix</td>
---  <td>text you want shown before the time.</td>
---  <td>""</td>
+--  <td class="tg-even">prefix</td>
+--  <td class="tg-even">text you want shown before the time.</td>
+--  <td class="tg-even">""</td>
 --</tr>
 --<tr>
---  <td>suffix</td>
---  <td>text you want shown after the time.</td>
---  <td>""</td>
+--  <td class="tg-odd">suffix</td>
+--  <td class="tg-odd">text you want shown after the time.</td>
+--  <td class="tg-odd">""</td>
 --</tr>
 --<tr>
---  <td>timerCaption</td>
---  <td>Alias for suffix. Deprecated and may be remove in the future</td>
---  <td/>
+--  <td class="tg-even">timerCaption</td>
+--  <td class="tg-even">Alias for suffix. Deprecated and may be remove in the future</td>
+--  <td class="tg-even"/>
 --</tr>
 --<tr>
---  <td>updateTime</td>
---  <td>number of milliseconds between gauge updates.</td>
---  <td>10</td>
+--  <td class="tg-odd">updateTime</td>
+--  <td class="tg-odd">number of milliseconds between gauge updates.</td>
+--  <td class="tg-odd">10</td>
 --</tr>
 --<tr>
---  <td>autoHide</td>
---  <td>should the timer :hide() itself when it runs out/you stop it?</td>
---  <td>true</td>
+--  <td class="tg-even">autoHide</td>
+--  <td class="tg-even">should the timer :hide() itself when it runs out/you stop it?</td>
+--  <td class="tg-even">true</td>
 --</tr>
 --<tr>
---  <td>autoShow</td>
---  <td>should the timer :show() itself when you start it?</td>
---  <td>true</td>
+--  <td class="tg-odd">autoShow</td>
+--  <td class="tg-odd">should the timer :show() itself when you start it?</td>
+--  <td class="tg-odd">true</td>
 --</tr>
 --<tr>
---  <td>manageContainer</td>
---  <td>should the timer remove itself from its container when you call <br>:hide() and add itself back when you call :show()?</td>
---  <td>false</td>
+--  <td class="tg-even">manageContainer</td>
+--  <td class="tg-even">should the timer remove itself from its container when you call <br>:hide() and add itself back when you call :show()?</td>
+--  <td class="tg-even">false</td>
 --</tr>
 --<tr>
---  <td>timeFormat</td>
---  <td>how should the time be displayed/returned if you call :getTime()? <br>See table below for more information</td>
---  <td>"S.t"</td>
+--  <td class="tg-odd">timeFormat</td>
+--  <td class="tg-odd">how should the time be displayed/returned if you call :getTime()? <br>See table below for more information</td>
+--  <td class="tg-odd">"S.t"</td>
 --</tr>
 --</table>
 --<br>Table of time format options
---<table id="t02">
+--<table class="tg">
 --<tr>
 --  <th>format code</th>
 --  <th>what it is replaced with</th>
 --</tr>
 --<tr>
---  <td>S</td>
---  <td>Time left in seconds, unbroken down. Does not include milliseconds.<br>
+--  <td class="tg-odd">S</td>
+--  <td class="tg-odd">Time left in seconds, unbroken down. Does not include milliseconds.<br>
 --      IE a timer with 2 minutes left it would replace S with 120
 --  </td>
 --</tr>
 --<tr>
---  <td>dd</td>
---  <td>Days, with 1 leading 0 (0, 01, 02-...)</td>
+--  <td class="tg-even">dd</td>
+--  <td class="tg-even">Days, with 1 leading 0 (0, 01, 02-...)</td>
 --</tr>
 --<tr>
---  <td>d</td>
---  <td>Days, with no leading 0 (1,2,3-...)</td>
+--  <td class="tg-odd">d</td>
+--  <td class="tg-odd">Days, with no leading 0 (1,2,3-...)</td>
 --</tr>
 --<tr>
---  <td>hh</td>
---  <td>hours, with leading 0 (00-24)</td>
+--  <td class="tg-even">hh</td>
+--  <td class="tg-even">hours, with leading 0 (00-24)</td>
 --</tr>
 --<tr>
---  <td>h</td>
---  <td>hours, without leading 0 (0-24)</td>
+--  <td class="tg-odd">h</td>
+--  <td class="tg-odd">hours, without leading 0 (0-24)</td>
 --</tr>
 --<tr>
---  <td>MM</td>
---  <td>minutes, with a leading 0 (00-59)</td>
+--  <td class="tg-even">MM</td>
+--  <td class="tg-even">minutes, with a leading 0 (00-59)</td>
 --</tr>
 --<tr>
---  <td>M</td>
---  <td>minutes, no leading 0 (0-59)</td>
+--  <td class="tg-odd">M</td>
+--  <td class="tg-odd">minutes, no leading 0 (0-59)</td>
 --</tr>
 --<tr>
---  <td>ss</td>
---  <td>seconds, with leading 0 (00-59)</td>
+--  <td class="tg-even">ss</td>
+--  <td class="tg-even">seconds, with leading 0 (00-59)</td>
 --</tr>
 --<tr>
---  <td>s</td>
---  <td>seconds, no leading 0 (0-59)</td>
+--  <td class="tg-odd">s</td>
+--  <td class="tg-odd">seconds, no leading 0 (0-59)</td>
 --</tr>
 --<tr>
---  <td>t</td>
---  <td>tenths of a second<br>
+--  <td class="tg-even">t</td>
+--  <td class="tg-even">tenths of a second<br>
 --      timer with 12.345 seconds left, t would<br>
 --      br replaced by 3.
 --  </td>
 --</tr>
 --<tr>
---  <td>mm</td>
---  <td>milliseconds with leadings 0s (000-999)</td>
+--  <td class="tg-odd">mm</td>
+--  <td class="tg-odd">milliseconds with leadings 0s (000-999)</td>
 --</tr>
 --<tr>
---  <td>m</td>
---  <td>milliseconds with no leading 0s (0-999)</td>
+--  <td class="tg-even">m</td>
+--  <td class="tg-even">milliseconds with no leading 0s (0-999)</td>
 --</tr>
 --</table><br>
 --@param parent The Geyser parent for this TimerGauge

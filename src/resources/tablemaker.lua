@@ -1,5 +1,5 @@
 --- Easy formatting for text tables
--- @module TableMaker
+-- @classmod TableMaker
 
 local TableMaker = {
   headCharacter = "*",
