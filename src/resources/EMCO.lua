@@ -7,6 +7,333 @@ local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
 })
 
+--- Creates a new Embeddable Multi Console Object.
+-- <br>see https://github.com/demonnic/EMCO/wiki for information on valid constraints and defaults
+-- @tparam table cons table of constraints which configures the EMCO.
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd">timeStamp</td>
+--     <td class="tg-odd">display timestamps on the miniconsoles?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">blankLine</td>
+--     <td class="tg-even">put a blank line between appends/echos?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">scrollbars</td>
+--     <td class="tg-odd">enable scrollbars for the miniconsoles?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">customTimestampColor</td>
+--     <td class="tg-even">if showing timestamps, use a custom color?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">mapTab</td>
+--     <td class="tg-odd">should we attach the Mudlet Mapper to this EMCO?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">mapTabName</td>
+--     <td class="tg-even">Which tab should we attach the map to?
+--                     <br>If mapTab is true and you do not set this, it will throw an error</td>
+--     <td class="tg-even"></td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">blinkFromAll</td>
+--     <td class="tg-odd">should tabs still blink, even if you're on the 'all' tab?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">preserveBackground</td>
+--     <td class="tg-even">preserve the miniconsole background color during append()?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">gag</td>
+--     <td class="tg-odd">when running :append(), should we also gag the line?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">timestampFormat</td>
+--     <td class="tg-even">Format string for the timestamp. Uses getTime()</td>
+--     <td class="tg-even">"HH:mm:ss"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">timestampBGColor</td>
+--     <td class="tg-odd">Custom BG color to use for timestamps. Any valid Geyser.Color works.</td>
+--     <td class="tg-odd">"blue"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">timestampFGColor</td>
+--     <td class="tg-even">Custom FG color to use for timestamps. Any valid Geyser.Color works</td>
+--     <td class="tg-even">"red"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">allTab</td>
+--     <td class="tg-odd">Should we send everything to an 'all' tab?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">allTabName</td>
+--     <td class="tg-even">And which tab should we use for the 'all' tab?</td>
+--     <td class="tg-even">"All"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">blink</td>
+--     <td class="tg-odd">Should we blink tabs that have been written to since you looked at them?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">blinkTime</td>
+--     <td class="tg-even">How long to wait between blinks, in seconds?</td>
+--     <td class="tg-even">3</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">fontSize</td>
+--     <td class="tg-odd">What font size to use for the miniconsoles?</td>
+--     <td class="tg-odd">9</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">font</td>
+--     <td class="tg-even">What font to use for the miniconsoles?</td>
+--     <td class="tg-even"></td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">tabFont</td>
+--     <td class="tg-odd">What font to use for the tabs?</td>
+--     <td class="tg-odd"></td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">activeTabCss</td>
+--     <td class="tg-even">What css to use for the active tab?</td>
+--     <td class="tg-even">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">inactiveTabCSS</td>
+--     <td class="tg-odd">What css to use for the inactive tabs?</td>
+--     <td class="tg-odd">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">activeTabFGColor</td>
+--     <td class="tg-even">What color to use for the text on the active tab. Any Geyser.Color works.</td>
+--     <td class="tg-even">"purple"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">inactiveTabFGColor</td>
+--     <td class="tg-odd">What color to use for the text on the inactive tabs. Any Geyser.Color works.</td>
+--     <td class="tg-odd">"white"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">activeTabBGColor</td>
+--     <td class="tg-even">What BG color to use for the active tab? Any Geyser.Color works. Overriden by activeTabCSS</td>
+--     <td class="tg-even">"<0,180,0>"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">inactiveTabBGColor</td>
+--     <td class="tg-odd">What BG color to use for the inactavie tabs? Any Geyser.Color works. Overridden by inactiveTabCSS</td>
+--     <td class="tg-odd">"<60,60,60>"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">consoleColor</td>
+--     <td class="tg-even">Default background color for the miniconsoles. Any Geyser.Color works</td>
+--     <td class="tg-even">"black"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">tabBoxCSS</td>
+--     <td class="tg-odd">tss for the entire tabBox (not individual tabs)</td>
+--     <td class="tg-odd">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">tabBoxColor</td>
+--     <td class="tg-even">What color to use for the tabBox? Any Geyser.Color works. Overridden by tabBoxCSS</td>
+--     <td class="tg-even">"black"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">consoleContainerCSS</td>
+--     <td class="tg-odd">CSS to use for the container holding the miniconsoles</td>
+--     <td class="tg-odd">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">consoleContainerColor</td>
+--     <td class="tg-even">Color to use for the container holding the miniconsole. Any Geyser.Color works. Overridden by consoleContainerCSS</td>
+--     <td class="tg-even">"black"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">gap</td>
+--     <td class="tg-odd">How many pixels to place between the tabs and the miniconsoles?</td>
+--     <td class="tg-odd">1</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">consoles</td>
+--     <td class="tg-even">List of the tabs for this EMCO in table format</td>
+--     <td class="tg-even">{ "All" }</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">allTabExclusions</td>
+--     <td class="tg-odd">List of the tabs which should never echo to the 'all' tab in table format</td>
+--     <td class="tg-odd">{}</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">tabHeight</td>
+--     <td class="tg-even">How many pixels high should the tabs be?</td>
+--     <td class="tg-even">25</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">autoWrap</td>
+--     <td class="tg-odd">Use autoWrap for the miniconsoles?</td>
+--     <td class="tg-odd">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">wrapAt</td>
+--     <td class="tg-even">How many characters to wrap it, if autoWrap is turned off?</td>
+--     <td class="tg-even">300</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">leftMargin</td>
+--     <td class="tg-odd">Number of pixels to put between the left edge of the EMCO and the miniconsole?</td>
+--     <td class="tg-odd">0</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">rightMargin</td>
+--     <td class="tg-even">Number of pixels to put between the right edge of the EMCO and the miniconsole?</td>
+--     <td class="tg-even">0</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">bottomMargin</td>
+--     <td class="tg-odd">Number of pixels to put between the bottom edge of the EMCO and the miniconsole?</td>
+--     <td class="tg-odd">0</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">topMargin</td>
+--     <td class="tg-even">Number of pixels to put between the top edge of the miniconsole container, and the miniconsole? This is in addition to gap</td>
+--     <td class="tg-even">0</td>
+--   </tr>
+-- </tbody>
+-- </table>
+-- @tparam GeyserObject container The container to use as the parent for the EMCO
+-- @return the newly created EMCO
+function EMCO:new(cons, container)
+  local funcName = "EMCO:new(cons, container)"
+  cons = cons or {}
+  cons.type = cons.type or "tabbedConsole"
+  cons.consoles = cons.consoles or { "All" }
+  if cons.mapTab then
+    if not type(cons.mapTabName) == "string" then
+      self:ce(funcName, [["mapTab" is true, thus constraint "mapTabName" and string expected, got ]] .. type(cons.mapTabName))
+    elseif not table.contains(cons.consoles, cons.mapTabName) then
+      self:ce(funcName, [["mapTabName" must be one of the consoles contained within constraint "consoles". Valid option for tha mapTab are: ]] .. table.concat(cons.consoles, ","))
+    end
+  end
+  cons.allTabExclusions = cons.allTabExclusions or {}
+  if not type(cons.allTabExclusions) == "table" then self:se(funcName, "allTabExclusions must be a table if it is provided") end
+  local me = self.parent:new(cons, container)
+  setmetatable(me, self)
+  self.__index = self
+  -- set some defaults. Almost all the defaults we had for YATCO, plus a few new ones
+  if me:fuzzyBoolean(cons.timestamp) then
+    me:enableTimestamp()
+  else
+    me:disableTimestamp()
+  end
+  if me:fuzzyBoolean(cons.customTimestampColor) then
+    me:enableCustomTimestampColor()
+  else
+    me:disableCustomTimestampColor()
+  end
+  if me:fuzzyBoolean(cons.mapTab) then
+    me.mapTab = true
+  else
+    me.mapTab = false
+  end
+  if me:fuzzyBoolean(cons.blinkFromAll) then
+    me:enableBlinkFromAll()
+  else
+    me:disableBlinkFromAll()
+  end
+  if me:fuzzyBoolean(cons.preserveBackground) then
+    me:enablePreserveBackground()
+  else
+    me:disablePreserveBackground()
+  end
+  if me:fuzzyBoolean(cons.gag)then
+    me:enableGag()
+  else
+    me:disableGag()
+  end
+  me:setTimestampFormat(cons.timestampFormat or "HH:mm:ss")
+  me:setTimestampBGColor(cons.timestampBGColor or "blue")
+  me:setTimestampFGColor(cons.timestampFGColor or "red")
+  if me:fuzzyBoolean(cons.allTab) then
+    me:enableAllTab(cons.allTab)
+  else
+    me:disableAllTab()
+  end
+  if me:fuzzyBoolean(cons.blink) then
+    me:enableBlink()
+  else
+    me:disableBlink()
+  end
+  if me:fuzzyBoolean(cons.blankLine) then
+    me:enableBlankLine()
+  else
+    me:disableBlankLine()
+  end
+  if me:fuzzyBoolean(cons.scrollbars) then
+    me.scrollbars = true
+  else
+    me.scrollbars = false
+  end
+  me.blinkTime = cons.blinkTime or 3
+  me.fontSize = cons.fontSize or 9
+  me.activeTabCSS = cons.activeTabCSS or ""
+  me.inactiveTabCSS = cons.inactiveTabCSS or ""
+  me.activeTabFGColor = cons.activeTabFGColor or "purple"
+  me.inactiveTabFGColor = cons.inactiveTabFGColor or "white"
+  me.activeTabBGColor = cons.activeTabBGColor or "<0,180,0>"
+  me.inactiveTabBGColor = cons.inactiveTabBGColor or "<60,60,60>"
+  me.consoleColor = cons.consoleColor or "black"
+  me.tabBoxCSS = cons.tabBoxCSS or ""
+  me.tabBoxColor = cons.tabBoxColor or "black"
+  me.consoleContainerCSS = cons.consoleContainerCSS or ""
+  me.consoleContainerColor = cons.consoleContainerColor or "black"
+  me.gap = cons.gap or 1
+  me.consoles = cons.consoles
+  me.tabHeight = cons.tabHeight or 25
+  me.leftMargin = cons.leftMargin or 0
+  me.rightMargin = cons.rightMargin or 0
+  me.topMargin = cons.topMargin or 0
+  me.bottomMargin = cons.bottomMargin or 0
+  if cons.autoWrap == nil then
+    me.autoWrap = true
+  else
+    me.autoWrap = cons.autoWrap
+  end
+  me.font = cons.font
+  me.tabFont = cons.tabFont
+  me.wrapAt = cons.wrapAt or 300
+  me.currentTab = ""
+  me.tabs = {}
+  me.tabsToBlink = {}
+  me.mc = {}
+  self.blinkTimerID = tempTimer(me.blinkTime, function() me:doBlink() end, true)
+  me:reset()
+  if me.allTab then me:setAllTabName(me.allTabName or me.consoles[1]) end
+  table.insert(EMCOHelper.items, me)
+  return me
+end
+
 function EMCO:readYATCO()
   local config
   if demonnic and demonnic.chat and demonnic.chat.config then
@@ -1128,332 +1455,5 @@ function EMCOHelper:switchTab(designator)
 end
 
 EMCO.parent = Geyser.Container
-
---- Creates a new Embeddable Multi Console Object.
--- <br>see https://github.com/demonnic/EMCO/wiki for information on valid constraints and defaults
--- @tparam table cons table of constraints which configures the EMCO.
--- <table class="tg">
--- <thead>
---   <tr>
---     <th>option name</th>
---     <th>description</th>
---     <th>default</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td class="tg-odd">timeStamp</td>
---     <td class="tg-odd">display timestamps on the miniconsoles?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">blankLine</td>
---     <td class="tg-even">put a blank line between appends/echos?</td>
---     <td class="tg-even">false</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">scrollbars</td>
---     <td class="tg-odd">enable scrollbars for the miniconsoles?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">customTimestampColor</td>
---     <td class="tg-even">if showing timestamps, use a custom color?</td>
---     <td class="tg-even">false</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">mapTab</td>
---     <td class="tg-odd">should we attach the Mudlet Mapper to this EMCO?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">mapTabName</td>
---     <td class="tg-even">Which tab should we attach the map to?
---                     <br>If mapTab is true and you do not set this, it will throw an error</td>
---     <td class="tg-even"></td>
---   </tr>
---   <tr>
---     <td class="tg-odd">blinkFromAll</td>
---     <td class="tg-odd">should tabs still blink, even if you're on the 'all' tab?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">preserveBackground</td>
---     <td class="tg-even">preserve the miniconsole background color during append()?</td>
---     <td class="tg-even">false</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">gag</td>
---     <td class="tg-odd">when running :append(), should we also gag the line?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">timestampFormat</td>
---     <td class="tg-even">Format string for the timestamp. Uses getTime()</td>
---     <td class="tg-even">"HH:mm:ss"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">timestampBGColor</td>
---     <td class="tg-odd">Custom BG color to use for timestamps. Any valid Geyser.Color works.</td>
---     <td class="tg-odd">"blue"</td>
---   </tr>
---   <tr>
---     <td class="tg-even">timestampFGColor</td>
---     <td class="tg-even">Custom FG color to use for timestamps. Any valid Geyser.Color works</td>
---     <td class="tg-even">"red"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">allTab</td>
---     <td class="tg-odd">Should we send everything to an 'all' tab?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">allTabName</td>
---     <td class="tg-even">And which tab should we use for the 'all' tab?</td>
---     <td class="tg-even">"All"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">blink</td>
---     <td class="tg-odd">Should we blink tabs that have been written to since you looked at them?</td>
---     <td class="tg-odd">false</td>
---   </tr>
---   <tr>
---     <td class="tg-even">blinkTime</td>
---     <td class="tg-even">How long to wait between blinks, in seconds?</td>
---     <td class="tg-even">3</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">fontSize</td>
---     <td class="tg-odd">What font size to use for the miniconsoles?</td>
---     <td class="tg-odd">9</td>
---   </tr>
---   <tr>
---     <td class="tg-even">font</td>
---     <td class="tg-even">What font to use for the miniconsoles?</td>
---     <td class="tg-even"></td>
---   </tr>
---   <tr>
---     <td class="tg-odd">tabFont</td>
---     <td class="tg-odd">What font to use for the tabs?</td>
---     <td class="tg-odd"></td>
---   </tr>
---   <tr>
---     <td class="tg-even">activeTabCss</td>
---     <td class="tg-even">What css to use for the active tab?</td>
---     <td class="tg-even">""</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">inactiveTabCSS</td>
---     <td class="tg-odd">What css to use for the inactive tabs?</td>
---     <td class="tg-odd">""</td>
---   </tr>
---   <tr>
---     <td class="tg-even">activeTabFGColor</td>
---     <td class="tg-even">What color to use for the text on the active tab. Any Geyser.Color works.</td>
---     <td class="tg-even">"purple"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">inactiveTabFGColor</td>
---     <td class="tg-odd">What color to use for the text on the inactive tabs. Any Geyser.Color works.</td>
---     <td class="tg-odd">"white"</td>
---   </tr>
---   <tr>
---     <td class="tg-even">activeTabBGColor</td>
---     <td class="tg-even">What BG color to use for the active tab? Any Geyser.Color works. Overriden by activeTabCSS</td>
---     <td class="tg-even">"<0,180,0>"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">inactiveTabBGColor</td>
---     <td class="tg-odd">What BG color to use for the inactavie tabs? Any Geyser.Color works. Overridden by inactiveTabCSS</td>
---     <td class="tg-odd">"<60,60,60>"</td>
---   </tr>
---   <tr>
---     <td class="tg-even">consoleColor</td>
---     <td class="tg-even">Default background color for the miniconsoles. Any Geyser.Color works</td>
---     <td class="tg-even">"black"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">tabBoxCSS</td>
---     <td class="tg-odd">tss for the entire tabBox (not individual tabs)</td>
---     <td class="tg-odd">""</td>
---   </tr>
---   <tr>
---     <td class="tg-even">tabBoxColor</td>
---     <td class="tg-even">What color to use for the tabBox? Any Geyser.Color works. Overridden by tabBoxCSS</td>
---     <td class="tg-even">"black"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">consoleContainerCSS</td>
---     <td class="tg-odd">CSS to use for the container holding the miniconsoles</td>
---     <td class="tg-odd">""</td>
---   </tr>
---   <tr>
---     <td class="tg-even">consoleContainerColor</td>
---     <td class="tg-even">Color to use for the container holding the miniconsole. Any Geyser.Color works. Overridden by consoleContainerCSS</td>
---     <td class="tg-even">"black"</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">gap</td>
---     <td class="tg-odd">How many pixels to place between the tabs and the miniconsoles?</td>
---     <td class="tg-odd">1</td>
---   </tr>
---   <tr>
---     <td class="tg-even">consoles</td>
---     <td class="tg-even">List of the tabs for this EMCO in table format</td>
---     <td class="tg-even">{ "All" }</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">allTabExclusions</td>
---     <td class="tg-odd">List of the tabs which should never echo to the 'all' tab in table format</td>
---     <td class="tg-odd">{}</td>
---   </tr>
---   <tr>
---     <td class="tg-even">tabHeight</td>
---     <td class="tg-even">How many pixels high should the tabs be?</td>
---     <td class="tg-even">25</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">autoWrap</td>
---     <td class="tg-odd">Use autoWrap for the miniconsoles?</td>
---     <td class="tg-odd">true</td>
---   </tr>
---   <tr>
---     <td class="tg-even">wrapAt</td>
---     <td class="tg-even">How many characters to wrap it, if autoWrap is turned off?</td>
---     <td class="tg-even">300</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">leftMargin</td>
---     <td class="tg-odd">Number of pixels to put between the left edge of the EMCO and the miniconsole?</td>
---     <td class="tg-odd">0</td>
---   </tr>
---   <tr>
---     <td class="tg-even">rightMargin</td>
---     <td class="tg-even">Number of pixels to put between the right edge of the EMCO and the miniconsole?</td>
---     <td class="tg-even">0</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">bottomMargin</td>
---     <td class="tg-odd">Number of pixels to put between the bottom edge of the EMCO and the miniconsole?</td>
---     <td class="tg-odd">0</td>
---   </tr>
---   <tr>
---     <td class="tg-even">topMargin</td>
---     <td class="tg-even">Number of pixels to put between the top edge of the miniconsole container, and the miniconsole? This is in addition to gap</td>
---     <td class="tg-even">0</td>
---   </tr>
--- </tbody>
--- </table>
--- @tparam GeyserObject container The container to use as the parent for the EMCO
--- @return the newly created EMCO
-function EMCO:new(cons, container)
-  local funcName = "EMCO:new(cons, container)"
-  cons = cons or {}
-  cons.type = cons.type or "tabbedConsole"
-  cons.consoles = cons.consoles or { "All" }
-  if cons.mapTab then
-    if not type(cons.mapTabName) == "string" then
-      self:ce(funcName, [["mapTab" is true, thus constraint "mapTabName" and string expected, got ]] .. type(cons.mapTabName))
-    elseif not table.contains(cons.consoles, cons.mapTabName) then
-      self:ce(funcName, [["mapTabName" must be one of the consoles contained within constraint "consoles". Valid option for tha mapTab are: ]] .. table.concat(cons.consoles, ","))
-    end
-  end
-  cons.allTabExclusions = cons.allTabExclusions or {}
-  if not type(cons.allTabExclusions) == "table" then self:se(funcName, "allTabExclusions must be a table if it is provided") end
-  local me = self.parent:new(cons, container)
-  setmetatable(me, self)
-  self.__index = self
-  -- set some defaults. Almost all the defaults we had for YATCO, plus a few new ones
-  if me:fuzzyBoolean(cons.timestamp) then
-    me:enableTimestamp()
-  else
-    me:disableTimestamp()
-  end
-  if me:fuzzyBoolean(cons.customTimestampColor) then
-    me:enableCustomTimestampColor()
-  else
-    me:disableCustomTimestampColor()
-  end
-  if me:fuzzyBoolean(cons.mapTab) then
-    me.mapTab = true
-  else
-    me.mapTab = false
-  end
-  if me:fuzzyBoolean(cons.blinkFromAll) then
-    me:enableBlinkFromAll()
-  else
-    me:disableBlinkFromAll()
-  end
-  if me:fuzzyBoolean(cons.preserveBackground) then
-    me:enablePreserveBackground()
-  else
-    me:disablePreserveBackground()
-  end
-  if me:fuzzyBoolean(cons.gag)then
-    me:enableGag()
-  else
-    me:disableGag()
-  end
-  me:setTimestampFormat(cons.timestampFormat or "HH:mm:ss")
-  me:setTimestampBGColor(cons.timestampBGColor or "blue")
-  me:setTimestampFGColor(cons.timestampFGColor or "red")
-  if me:fuzzyBoolean(cons.allTab) then
-    me:enableAllTab(cons.allTab)
-  else
-    me:disableAllTab()
-  end
-  if me:fuzzyBoolean(cons.blink) then
-    me:enableBlink()
-  else
-    me:disableBlink()
-  end
-  if me:fuzzyBoolean(cons.blankLine) then
-    me:enableBlankLine()
-  else
-    me:disableBlankLine()
-  end
-  if me:fuzzyBoolean(cons.scrollbars) then
-    me.scrollbars = true
-  else
-    me.scrollbars = false
-  end
-  me.blinkTime = cons.blinkTime or 3
-  me.fontSize = cons.fontSize or 9
-  me.activeTabCSS = cons.activeTabCSS or ""
-  me.inactiveTabCSS = cons.inactiveTabCSS or ""
-  me.activeTabFGColor = cons.activeTabFGColor or "purple"
-  me.inactiveTabFGColor = cons.inactiveTabFGColor or "white"
-  me.activeTabBGColor = cons.activeTabBGColor or "<0,180,0>"
-  me.inactiveTabBGColor = cons.inactiveTabBGColor or "<60,60,60>"
-  me.consoleColor = cons.consoleColor or "black"
-  me.tabBoxCSS = cons.tabBoxCSS or ""
-  me.tabBoxColor = cons.tabBoxColor or "black"
-  me.consoleContainerCSS = cons.consoleContainerCSS or ""
-  me.consoleContainerColor = cons.consoleContainerColor or "black"
-  me.gap = cons.gap or 1
-  me.consoles = cons.consoles
-  me.tabHeight = cons.tabHeight or 25
-  me.leftMargin = cons.leftMargin or 0
-  me.rightMargin = cons.rightMargin or 0
-  me.topMargin = cons.topMargin or 0
-  me.bottomMargin = cons.bottomMargin or 0
-  if cons.autoWrap == nil then
-    me.autoWrap = true
-  else
-    me.autoWrap = cons.autoWrap
-  end
-  me.font = cons.font
-  me.tabFont = cons.tabFont
-  me.wrapAt = cons.wrapAt or 300
-  me.currentTab = ""
-  me.tabs = {}
-  me.tabsToBlink = {}
-  me.mc = {}
-  self.blinkTimerID = tempTimer(me.blinkTime, function() me:doBlink() end, true)
-  me:reset()
-  if me.allTab then me:setAllTabName(me.allTabName or me.consoles[1]) end
-  table.insert(EMCOHelper.items, me)
-  return me
-end
 
 return EMCO
