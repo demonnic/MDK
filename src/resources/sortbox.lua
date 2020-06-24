@@ -57,6 +57,64 @@ SortBox.SortFunctions = {
     return avalue > bvalue
   end,
 }
+--- Creates a new SortBox
+--@usage mySortBox = SortBox:new({
+--   name = "mySortBox",
+--   x = 400,
+--   y = 100,
+--   height = 150,
+--   width = 300,
+--   sortFunction = "timeLeft"
+-- })
+--@tparam table options the options to use for the SortBox. See table below for added options
+--@param[opt] container the container to add the SortBox into
+--<br><br>Table of new options
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd">autoSort</td>
+--     <td class="tg-odd">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
+--     <td class="tg-odd">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">timerSort</td>
+--     <td class="tg-even">should the SortBox automatically perform sorting on a timer?</td>
+--     <td class="tg-even">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">sortInterval</td>
+--     <td class="tg-odd">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
+--     <td class="tg-odd">500</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">boxType</td>
+--     <td class="tg-even">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
+--     <td class="tg-even">v</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">sortFunction</td>
+--     <td class="tg-odd">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
+--     <td class="tg-odd">gaugeValue</td>
+--   </tr>
+-- </tbody>
+-- </table>
+function SortBox:new(options, container)
+  options = options or {}
+  options.type = options.type or "SortBox"
+  local me = self.parent:new(options, container)
+  setmetatable(me, self)
+  self.__index = self
+  if me.timerSort then me:enableTimer() end
+  me:setBoxType(me.boxType)
+  return me
+end
 
 -- I first found this on https://stackoverflow.com/questions/15706270/sort-a-table-in-lua
 -- modified slightly, as Mudlet already has table.keys to collect keys, and I don't want
@@ -266,64 +324,5 @@ function SortBox:setSortFunction(functionName)
 end
 
 SortBox.parent = Geyser.Container
-
---- Creates a new SortBox
---@usage mySortBox = SortBox:new({
---   name = "mySortBox",
---   x = 400,
---   y = 100,
---   height = 150,
---   width = 300,
---   sortFunction = "timeLeft"
--- })
---@tparam table options the options to use for the SortBox. See table below for added options
---@param[opt] container the container to add the SortBox into
---<br><br>Table of new options
--- <table class="tg">
--- <thead>
---   <tr>
---     <th>option name</th>
---     <th>description</th>
---     <th>default</th>
---   </tr>
--- </thead>
--- <tbody>
---   <tr>
---     <td class="tg-odd">autoSort</td>
---     <td class="tg-odd">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
---     <td class="tg-odd">true</td>
---   </tr>
---   <tr>
---     <td class="tg-even">timerSort</td>
---     <td class="tg-even">should the SortBox automatically perform sorting on a timer?</td>
---     <td class="tg-even">true</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">sortInterval</td>
---     <td class="tg-odd">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
---     <td class="tg-odd">500</td>
---   </tr>
---   <tr>
---     <td class="tg-even">boxType</td>
---     <td class="tg-even">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
---     <td class="tg-even">v</td>
---   </tr>
---   <tr>
---     <td class="tg-odd">sortFunction</td>
---     <td class="tg-odd">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
---     <td class="tg-odd">gaugeValue</td>
---   </tr>
--- </tbody>
--- </table>
-function SortBox:new(options, container)
-  options = options or {}
-  options.type = options.type or "SortBox"
-  local me = self.parent:new(options, container)
-  setmetatable(me, self)
-  self.__index = self
-  if me.timerSort then me:enableTimer() end
-  me:setBoxType(me.boxType)
-  return me
-end
 
 return SortBox
