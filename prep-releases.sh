@@ -2,7 +2,17 @@
 
 basedir=`dirname "$0"`
 srcdir=$basedir/src/resources
+VERSION=$1
+releaseFileName="build/demonnic-MDK-$VERSION.zip"
+if [ -z $VERSION ]; then
+  echo You must provide a version as the first and only argument
+  exit 1
+fi
 
+muddle
+./gendoc.sh
+zip -r -j $releaseFileName src/resources/*
+zip -u $releaseFileName doc/* doc/*/*
 # prep the ldoc css file to all sub-projects we are making docs for
 cp $basedir/ldoc.css sub-projects/TextGauges/ldoc.css
 cp $basedir/ldoc.css sub-projects/fText/ldoc.css
