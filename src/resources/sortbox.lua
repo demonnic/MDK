@@ -1,5 +1,4 @@
 ---An H/VBox alternative which can be set to either vertical or horizontal, and will autosort the windows
---@field autoSort Should the sortbox do sorting? Defaults to true.
 --@classmod SortBox
 
 local SortBox = Geyser.Container:new({
@@ -7,6 +6,9 @@ local SortBox = Geyser.Container:new({
   autoSort = true,
   timerSort = true,
   sortInterval = 500,
+  elastic = false,
+  maxHeight = 0,
+  maxWidth = 0,
   boxType = "v",
   sortFunction = "gaugeValue"
 })
@@ -103,6 +105,21 @@ SortBox.SortFunctions = {
 --     <td class="tg-odd">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
 --     <td class="tg-odd">gaugeValue</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-even">elastic</td>
+--     <td class="tg-even">Should this container stretch to fit its contents? boxType v stretches in height, h stretches in width.</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">maxHeight</td>
+--     <td class="tg-odd">If elastic, what's the biggest a 'v' style box should grow in height? Use 0 for unlimited</td>
+--     <td class="tg-odd">0</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">maxWidth</td>
+--     <td class="tg-even">If elastic, what's the biggest a 'h' style box should grow in width? Use 0 for unlimited</td>
+--     <td class="tg-even">0</td>
+--   </tr>
 -- </tbody>
 -- </table>
 function SortBox:new(options, container)
@@ -183,15 +200,53 @@ function SortBox:horganize()
       window:move(start_x.."%", "0%")
       if window.h_policy == Geyser.Dynamic then
         width = window_width * window.h_stretch_factor
+        if window.width ~= width then
+          window:resize(width .. "%", nil)
+        end
       end
       if window.v_policy == Geyser.Dynamic then
         height = 100
+        if window.height ~= height then
+          window:resize(nil, height .. "%")
+        end
       end
-      window:resize(width.."%", height.."%")
       start_x = start_x + width
     end
   else
-    if Geyser.HBox.organize then Geyser.HBox.organize(self) else Geyser.HBox.reposition(self) end
+    for _, window_name in ipairs(self.windows) do
+      local window = self.windowList[window_name]
+      local width = (window:get_width() / self:get_width()) * 100
+      local height = (window:get_height() / self:get_height()) * 100
+      window:move(start_x.."%", "0%")
+      if window.h_policy == Geyser.Dynamic then
+        width = window_width * window.h_stretch_factor
+        if window.width ~= width then
+          window:resize(width .. "%", nil)
+        end
+      end
+      if window.v_policy == Geyser.Dynamic then
+        height = 100
+        if window.height ~= height then
+          window:resize(nil, height .. "%")
+        end
+      end
+      start_x = start_x + (window:get_width() / self:get_width()) * 100
+    end
+  end
+  if self.elastic then
+    local contentWidth, canElastic = self:getContentWidth()
+    if not canElastic then
+      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic h_policy"), self.name)
+      return
+    end
+    local currentWidth = self:get_width()
+    local maxWidth = self.maxWidth
+    if maxWidth > 0 and contentWidth > maxWidth then
+      contentWidth = maxWidth
+    end
+    if contentWidth ~= currentWidth then
+      self:resize(contentWidth, nil)
+    end
   end
 end
 
@@ -208,16 +263,123 @@ function SortBox:vorganize()
       local height = (window:get_height() / self:get_height()) * 100
       if window.h_policy == Geyser.Dynamic then
         width = 100
+        if window.width ~= width then
+          window:resize(width .. "%", nil)
+        end
       end
       if window.v_policy == Geyser.Dynamic then
         height = window_height * window.v_stretch_factor
+        if window.height ~= height then
+          window:resize(nil, height .. "%")
+        end
       end
-      window:resize(width.."%", height.."%")
       start_y = start_y + height
     end
   else
-    if Geyser.VBox.organize then Geyser.VBox.organize(self) else Geyser.VBox.reposition(self) end
+    for _, window_name in ipairs(self.windows) do
+      local window = self.windowList[window_name]
+      window:move("0%", start_y.."%")
+      local width = (window:get_width() / self:get_width()) * 100
+      local height = (window:get_height() / self:get_height()) * 100
+      if window.h_policy == Geyser.Dynamic then
+        width = 100
+        if window.width ~= width then
+          window:resize(width .. "%", nil)
+        end
+      end
+      if window.v_policy == Geyser.Dynamic then
+        height = window_height * window.v_stretch_factor
+        if window.height ~= height then
+          window:resize(nil, height .. "%")
+        end
+      end
+      -- window:resize(width.."%", height.."%")
+      start_y = start_y + (window:get_height() / self:get_height()) * 100
+    end
   end
+  if self.elastic then
+    local contentHeight, canElastic = self:getContentHeight()
+    if not canElastic then
+      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic v_policy"), self.name)
+      return
+    end
+    local currentHeight = self:get_height()
+    local maxHeight = self.maxHeight
+    if maxHeight > 0 and contentHeight > maxHeight then
+      contentHeight = maxHeight
+    end
+    if contentHeight ~= currentHeight then
+      self:resize(nil, contentHeight)
+    end
+  end
+end
+
+-- Internal function
+-- Returns the sum of the heights of the contents, and whether this SortBox can be elastic in height
+function SortBox:getContentHeight()
+  if self.boxType ~= "v" then
+    return self:get_height()
+  end
+  local canElastic = true
+  local contentHeight = 0
+  for _,window in pairs(self.windowList) do
+    contentHeight = contentHeight + window:get_height()
+    if window.v_policy == Geyser.Dynamic then
+      canElastic = false
+    end
+  end
+  return contentHeight, canElastic
+end
+
+-- Internal function
+-- Returns the sum of the widths of the contents, and whether this SortBox can be elastic in width.
+function SortBox:getContentWidth()
+  if self.boxType == "v" then
+    return self:get_width()
+  end
+  local canElastic = true
+  local contentWidth = 0
+  for _,window in pairs(self.windowList) do
+    contentWidth = contentWidth + window:get_width()
+    if window.h_policy == Geyser.Dynamic then
+      canElastic = false
+    end
+  end
+  return contentWidth, canElastic
+end
+
+--- Enables elasticity for the SortBox.
+function SortBox:enableElastic()
+  self:setElastic(true)
+end
+
+--- Disables elasticity for the SortBox
+function SortBox:disableElastic()
+  self:setElastic(false)
+end
+
+--- Set elasticity specifically
+--@tparam boolean enabled if true, enable elasticity. If false, disable it.
+function SortBox:setElastic(enabled)
+  self.elastic = enabled and true or false
+end
+
+--- Set the max width of the SortBox if it's elastic
+--@tparam number maxWidth The maximum width in pixels to resize the SortBox to. Use 0 for unlimited.
+function SortBox:setMaxWidth(maxWidth)
+  local mwtype = type(maxWidth)
+  assert(mwtype == "number", string.format("SortBox:setMaxWidth(maxWidth): SortBox: %s maxWidth as number expected, got %s", self.name, mwtype))
+  assert(maxWidth >= 0, string.format("SortBox:setMaxWidth(maxWidth): SortBox: %s maxWidth must be >= 0, %d", self.name, maxWidth))
+  self.maxWidth = maxWidth
+end
+
+--- Set the max height of the SortBox if it's elastic
+--@tparam number maxHeight The maximum height in pixels to resize the SortBox to. Use 0 for unlimited.
+function SortBox:setMaxHeight(maxHeight)
+  local mhtype = type(maxHeight)
+  assert(mhtype == "number", string.format("SortBox:setMaxHeight(maxHeight): SortBox: %s maxHeight as number expected, got %s", self.name, mhtype))
+  assert(maxHeight >= 0, string.format("SortBox:setMaxHeight(maxHeight): SortBox: %s maxHeight must be >= 0, %d", self.name, maxHeight))
+  self.maxHeight = maxHeight
 end
 
 --- Starts the SortBox sorting and organizing itself on a timer
