@@ -1,5 +1,8 @@
 --- Easy formatting for text tables
--- @classmod TableMaker
+--@classmod TableMaker
+--@author Damian Monogue <demonnic@gmail.com>
+--@copyright 2020 Damian Monogue
+--@license MIT, see LICENSE.lua
 
 local TableMaker = {
   headCharacter = "*",
@@ -471,6 +474,84 @@ end
 
 --- Creates and returns a new TableMaker. See https://github.com/demonnic/fText/wiki/TableMaker for valid entries to the options table.
 --@tparam table options table of options for the TableMaker object
+--<br><br>Table of new options
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd">formatType</td>
+--     <td class="tg-odd">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
+--     <td class="tg-odd">c</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">printHeaders</td>
+--     <td class="tg-even">print top row as header</td>
+--     <td class="tg-even">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">headCharacter</td>
+--     <td class="tg-odd">The character used to construct the very top of the table. A solid line of these characters is used</td>
+--     <td class="tg-odd">"*"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">footCharacter</td>
+--     <td class="tg-even">The character used to construct the very bottom of the table. A solid line of these characters is used</td>
+--     <td class="tg-even">"*"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">edgeCharacter</td>
+--     <td class="tg-odd">the character used to form the left and right edges of the table. There is one on either side of every line</td>
+--     <td class="tg-odd">"*"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">frameColor</td>
+--     <td class="tg-even">The color to use for the frame. The frame is the border around the outside edge of the table (headCharacter, footCharacter, and edgeCharacters will all be this color).</td>
+--     <td class="tg-even">the correct 'white' for your formatType</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">rowSeparator</td>
+--     <td class="tg-odd">the character used to form the lines between rows of text</td>
+--     <td class="tg-odd">"-"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">separator</td>
+--     <td class="tg-even">Character used between columns.</td>
+--     <td class="tg-even">"|"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">separatorColor</td>
+--     <td class="tg-odd">the color used for the separators, the things which divide the rows and columns internally. (separator and rowSeparator will be this color)</td>
+--     <td class="tg-odd">frameColor</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">autoEcho</td>
+--     <td class="tg-even">echo the table automatically in addition to returning the string representation?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">autoEchoConsole</td>
+--     <td class="tg-odd">MiniConsole to autoEcho to</td>
+--     <td class="tg-odd">"main"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">autoClear</td>
+--     <td class="tg-even">If autoEchoing, and not echoing to the main console, should we clear the console before outputting?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">allowPopups</td>
+--     <td class="tg-odd">setting this to true allows you to make cells in the table clickable, as well as give them right-click menus.<br>
+--                        Please see Clickable Tables <a href="https://github.com/demonnic/fText/wiki/ClickableTables">HERE</a></td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+-- </tbody>
+-- </table>
 function TableMaker:new(options)
   local funcName = "TableMaker:new(options)"
   local me = {}

@@ -12,7 +12,7 @@ fi
 muddle
 ./gendoc.sh
 zip -r -j $releaseFileName src/resources/*
-zip -u $releaseFileName doc/* doc/*/*
+zip -u -r $releaseFileName doc
 # prep the ldoc css file to all sub-projects we are making docs for
 cp $basedir/ldoc.css sub-projects/TextGauges/ldoc.css
 cp $basedir/ldoc.css sub-projects/fText/ldoc.css

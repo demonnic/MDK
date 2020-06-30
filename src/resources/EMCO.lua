@@ -2,7 +2,10 @@
 -- This is essentially YATCO, but with some tweaks, updates, and it returns an object
 -- similar to Geyser so that you can a.) have multiple of them and b.) easily embed it
 -- into your existing UI as you would any other Geyser element.
--- @classmod EMCO
+--@classmod EMCO
+--@author Damian Monogue <demonnic@gmail.com>
+--@copyright 2020 Damian Monogue
+--@license MIT, see LICENSE.lua
 local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
 })

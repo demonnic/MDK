@@ -1,6 +1,8 @@
 --- Animated countdown timer, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
 --@classmod TimerGauge
---@field active boolean. should the timer run or not?
+--@author Damian Monogue <demonnic@gmail.com>
+--@copyright 2020 Damian Monogue
+--@license MIT, see LICENSE.lua
 
 local TimerGauge = {
   name = "TimerGaugeClass",

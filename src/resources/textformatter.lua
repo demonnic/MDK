@@ -1,5 +1,9 @@
 --- Stand alone text formatter object. Remembers the options you set and can be adjusted as needed
 -- @classmod TextFormatter
+--@author Damian Monogue <demonnic@gmail.com>
+--@copyright 2020 Damian Monogue
+--@license MIT, see LICENSE.lua
+
 local TextFormatter = {}
 TextFormatter.validFormatTypes = { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
 local pathOfThisFile = (...):match("(.-)[^%.]+$")
@@ -153,6 +157,79 @@ end
 
 --- Creates and returns a new TextFormatter. For valid options, please see https://github.com/demonnic/fText/wiki/fText
 --@tparam table options the options for the text formatter to use when running format()
+--<br><br>Table of options
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd">wrap</td>
+--     <td class="tg-odd">Should it wordwrap to multiple lines?</td>
+--     <td class="tg-odd">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">formatType</td>
+--     <td class="tg-even">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
+--     <td class="tg-even">"c"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">width</td>
+--     <td class="tg-odd">How wide should we format the text?</td>
+--     <td class="tg-odd">80</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">cap</td>
+--     <td class="tg-even">what characters to use for the endcap.</td>
+--     <td class="tg-even">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">capColor</td>
+--     <td class="tg-odd">what color to make the endcap?</td>
+--     <td class="tg-odd">the correct 'white' for your formatType</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">spacer</td>
+--     <td class="tg-even">What character to use for empty space. Must be a single character</td>
+--     <td class="tg-even">" "</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">spacerColor</td>
+--     <td class="tg-odd">what color should the spacer be?</td>
+--     <td class="tg-odd">the correct 'white' for your formatType</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">textColor</td>
+--     <td class="tg-even">what color should the text itself be?</td>
+--     <td class="tg-even">the correct 'white' for your formatType</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">alignment</td>
+--     <td class="tg-odd">How should the text be aligned within the width. "center", "left", or "right"</td>
+--     <td class="tg-odd">"center"</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">nogap</td>
+--     <td class="tg-even">Should we put a literal space between the spacer character and the text?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">inside</td>
+--     <td class="tg-odd">Put the spacers inside the caps?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">mirror</td>
+--     <td class="tg-even">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
+--     <td class="tg-even">true</td>
+--   </tr>
+-- </tbody>
+-- </table>
+
 function TextFormatter:new(options)
   if options == nil then options = {} end
   if options and type(options) ~= "table" then

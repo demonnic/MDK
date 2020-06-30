@@ -1,5 +1,8 @@
 --- Creates a text based gauge, for use in miniconsoles and the like.
 --@classmod TextGauge
+--@author Damian Monogue <demonnic@gmail.com>
+--@copyright 2020 Damian Monogue
+--@license MIT, see LICENSE.lua
 
 local TextGauge = {
   width = 24,
@@ -10,6 +13,68 @@ local TextGauge = {
   format = "c",
   value = 50,
 }
+
+--- Creates a new TextGauge.
+-- Please see the wiki for more information on valid options.
+--@tparam[opt] table options The table of options you would like the TextGauge to start with.
+--<br><br>Table of new options
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd">width</td>
+--     <td class="tg-odd">How many characters wide to make the gauge</td>
+--     <td class="tg-odd">24</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">fillCharacter</td>
+--     <td class="tg-even">What character to use for the 'full' part of the gauge</td>
+--     <td class="tg-even">:</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">emptyCharacter</td>
+--     <td class="tg-odd">What character to use for the 'empty' part of the gauge</td>
+--     <td class="tg-odd">-</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">showPercent</td>
+--     <td class="tg-even">Should we show what % of the gauge is filled?</td>
+--     <td class="tg-even">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">showPercentSymbol</td>
+--     <td class="tg-odd">Should we show the % sign itself?</td>
+--     <td class="tg-odd">true</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">format</td>
+--     <td class="tg-even">What type of color formatting to use? 'c' for cecho, 'd' for decho, 'h' for hecho</td>
+--     <td class="tg-even">c</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">value</td>
+--     <td class="tg-odd">How much of the gauge should be filled</td>
+--     <td class="tg-odd">50</td>
+--   </tr>
+-- </tbody>
+-- </table>
+function TextGauge:new(options)
+  options = options or {}
+  local optionsType = type(options)
+  assert(optionsType == "table" or optionsType == "nil", "TextGauge:new(options): options expected as table, got " .. optionsType )
+
+  local me = table.deepcopy(options)
+  setmetatable(me, self)
+  self.__index = self
+  me:setDefaultColors()
+  return me
+end
 
 --- Sets the width in characters of the gauge
 --@tparam number width number of characters wide to make the gauge
@@ -189,21 +254,6 @@ end
 --- Synonym for setValue
 function TextGauge:print(...)
   self:setValue(...)
-end
-
---- Creates a new TextGauge.
--- Please see the wiki for more information on valid options.
---@tparam[opt] table options The table of options you would like the TextGauge to start with.
-function TextGauge:new(options)
-  options = options or {}
-  local optionsType = type(options)
-  assert(optionsType == "table" or optionsType == "nil", "TextGauge:new(options): options expected as table, got " .. optionsType )
-
-  local me = table.deepcopy(options)
-  setmetatable(me, self)
-  self.__index = self
-  me:setDefaultColors()
-  return me
 end
 
 return TextGauge
