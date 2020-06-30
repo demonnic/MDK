@@ -16,6 +16,17 @@ local SortBox = Geyser.Container:new({
   sortFunction = "gaugeValue"
 })
 local BIGNUMBER = 999999999
+
+--- Sorting functions for spairs, should you wish
+--@table SortFunctions
+--@field gaugeValue sorts Geyser gauges by value, ascending
+--@field reverseGaugeValue sorts Geyser gauges by value, descending
+--@field timeLeft sorts TimerGauges by how much time is left, ascending
+--@field reverseTimeLeft sorts TimerGauges by how much time is left, descending.
+--@field name sorts Geyser objects by name, ascending
+--@field reverseName sorts Geyser objects by name, descending
+--@field message sorts Geyser labels and gauges by their echoed text, ascending
+--@field reverseMessage sorts Geyser labels and gauges by their echoed text, descending
 SortBox.SortFunctions = {
   gaugeValue = function(t,a,b)
     local avalue = t[a].value or BIGNUMBER
