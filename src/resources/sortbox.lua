@@ -147,6 +147,8 @@ function SortBox:new(options, container)
   return me
 end
 
+--- Iterates a key:value pair table in a sorted fashion
+--@local
 -- I first found this on https://stackoverflow.com/questions/15706270/sort-a-table-in-lua
 -- modified slightly, as Mudlet already has table.keys to collect keys, and I don't want
 -- to sort if no function to sort with is given. In this case, I want it to work like pairs.
@@ -200,7 +202,8 @@ function SortBox:organize()
   self:handleElastic()
 end
 
--- internal function, replicates Geyser.HBox functionality, but with the option of sorting
+--- replicates Geyser.HBox functionality, but with the option of sorting
+--@local
 function SortBox:horganize()
   local window_width = (self:calculate_dynamic_window_size().width / self:get_width()) * 100
   local start_x = 0
@@ -217,7 +220,8 @@ function SortBox:horganize()
   end
 end
 
--- internal function, replicates Geyser.VBox functionality, but with the option of sorting
+--- replicates Geyser.VBox functionality, but with the option of sorting
+--@local
 function SortBox:vorganize()
   local window_height = (self:calculate_dynamic_window_size().height / self:get_height()) * 100
   local start_y = 0
@@ -234,7 +238,8 @@ function SortBox:vorganize()
   end
 end
 
--- internal function, handles a single window during the shuffle process
+--- handles a single window during the shuffle process
+--@local
 function SortBox:handleWindow(window, start, window_dimension)
   local width = (window:get_width() / self:get_width()) * 100
   local height = (window:get_height() / self:get_height()) * 100
@@ -274,7 +279,8 @@ function SortBox:handleWindow(window, start, window_dimension)
   end
 end
 
--- internal function, handles actually resizing the window if elastic
+---handles actually resizing the window if elastic
+--@local
 function SortBox:handleElastic()
   if not self.elastic or table.is_empty(self.windows) then return end
   if self.boxType == "v" then
@@ -308,7 +314,8 @@ function SortBox:handleElastic()
   end
 end
 
--- Internal function, prevents gaps from forming during resize if it doesn't autoorganize on a timer.
+---prevents gaps from forming during resize if it doesn't autoorganize on a timer.
+--@local
 function SortBox:reposition()
   Geyser.Container.reposition(self)
   if self.contains_fixed then
@@ -316,8 +323,8 @@ function SortBox:reposition()
   end
 end
 
--- Internal function
--- Returns the sum of the heights of the contents, and whether this SortBox can be elastic in height
+--- Returns the sum of the heights of the contents, and whether this SortBox can be elastic in height
+--@local
 function SortBox:getContentHeight()
   if self.boxType ~= "v" then
     return self:get_height()
@@ -333,8 +340,8 @@ function SortBox:getContentHeight()
   return contentHeight, canElastic
 end
 
--- Internal function
--- Returns the sum of the widths of the contents, and whether this SortBox can be elastic in width.
+--- Returns the sum of the widths of the contents, and whether this SortBox can be elastic in width.
+--@local
 function SortBox:getContentWidth()
   if self.boxType == "v" then
     return self:get_width()
