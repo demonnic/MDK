@@ -42,26 +42,40 @@ local function _gradient(length, rgb1, rgb2)
 	end
 end
 
+local function gradient_to_string(gradient)
+  local gradstring = ""
+  for _,grad in ipairs(gradient) do
+    local nodestring = table.concat(grad, "")
+    if _ == 1 then
+      gradstring = nodestring
+    else
+      gradstring = gradstring .. "|" .. nodestring
+    end
+  end
+  return gradstring
+end
+
 local function _gradients(length, ...)
   local arg = {...}
+  local argkey = gradient_to_string(arg)
   local gradients_for_length = gradient_table[length]
   if not gradients_for_length then
     gradient_table[length] = {}
     gradients_for_length = gradient_table[length]
   end
-  local grads = gradients_for_length[arg]
+  local grads = gradients_for_length[argkey]
   if grads then
     return grads
   end
   if #arg == 0 then
-    gradients_for_length[arg] = {}
+    gradients_for_length[argkey] = {}
 		return {}
   elseif #arg == 1 then
-    gradients_for_length[arg] = arg[1]
+    gradients_for_length[argkey] = arg[1]
 		return arg[1]
   elseif #arg == 2 then
-    gradients_for_length[arg] = _gradient(length, arg[1], arg[2])
-    return gradients_for_length[arg]
+    gradients_for_length[argkey] = _gradient(length, arg[1], arg[2])
+    return gradients_for_length[argkey]
 	else
 		local quotient = math.floor(length / (#arg - 1))
 		local remainder = length % (#arg - 1)
@@ -74,7 +88,7 @@ local function _gradients(length, ...)
 				table.insert(gradients, rgb)
 			end
     end
-    gradients_for_length[arg] = gradients
+    gradients_for_length[argkey] = gradients
 		return gradients
 	end
 end
