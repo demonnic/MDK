@@ -15,6 +15,9 @@ These files contain the modules in the MDK. You only need to include those files
 * EMCO.lua
   * EMCO. Documentation at https://github.com/demonnic/EMCO/wiki
 
+* gradientmaker.lua
+  * Functions for creating color gradients for use with c/d/hecho. Documentation at https://github.com/demonnic/MDK/wiki/gradientmaker
+
 * ftext.lua
   * basic fText. Documentation at https://github.com/demonnic/fText/wiki
 
