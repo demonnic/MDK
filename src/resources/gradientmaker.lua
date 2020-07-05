@@ -45,7 +45,10 @@ end
 local function gradient_to_string(gradient)
   local gradstring = ""
   for _,grad in ipairs(gradient) do
-    local nodestring = table.concat(grad, "")
+    local nodestring = ""
+    for _,col in ipairs(grad) do
+      nodestring = string.format("%s%03d", nodestring, col)
+    end
     if _ == 1 then
       gradstring = nodestring
     else
@@ -296,5 +299,9 @@ function gradientmaker.install_global()
   _G["cgradient_table"] = function(...) return cgradient_table(...) end
   _G["color_name"] = function(...) return color_name(...) end
 end
+
+-- function gradientmaker.getGrads()
+--   return gradient_table
+-- end
 
 return gradientmaker
