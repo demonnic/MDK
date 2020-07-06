@@ -1457,6 +1457,113 @@ function EMCOHelper:switchTab(designator)
   end
 end
 
+--- Save an EMCO's configuration for reloading later. Filename is based on the EMCO's name property.
+function EMCO:save()
+  local configtable = {
+    timeStamp = self.timeStamp,
+    blankLine = self.blankLine,
+    scrollbars = self.scrollbars,
+    customTimestampColor = self.customTimestampColor,
+    mapTab = self.mapTab,
+    mapTabName = self.mapTabName,
+    blinkFromAll = self.blinkFromAll,
+    preserveBackground = self.preserveBackground,
+    gag = self.gag,
+    timestampFormat = self.timestampFormat,
+    timestampBGColor = self.timestampBGColor,
+    allTab = self.allTab,
+    allTabName = self.allTabName,
+    blink = self.blink,
+    blinkTime = self.blinkTime,
+    fontSize = self.fontSize,
+    font = self.font,
+    tabFont = self.tabFont,
+    activeTabCSS = self.activeTabCSS,
+    inactiveTabCSS = self.inactiveTabCSS,
+    activeTabFGColor = self.activeTabFGColor,
+    activeTabBGColor = self.activeTabBGColor,
+    inactiveTabFGColor = self.inactiveTabFGColor,
+    inactiveTabBGColor = self.inactiveTabBGColor,
+    consoleColor = self.consoleColor,
+    tabBoxCSS = self.tabBoxCSS,
+    tabBoxColor = self.tabBoxColor,
+    consoleContainerCSS = self.consoleContainerCSS,
+    consoleContainerColor = self.consoleContainerColor,
+    gap = self.gap,
+    consoles = self.consoles,
+    allTabExclusions = self.allTabExclusions,
+    tabHeight = self.tabHeight,
+    autoWrap = self.autoWrap,
+    wrapAt = self.wrapAt,
+    leftMargin = self.leftMargin,
+    rightMargin = self.rightMargin,
+    bottomMargin = self.bottomMargin,
+    topMargin = self.topMargin,
+    x = self.x,
+    y = self.y,
+    height = self.height,
+    width = self.width,
+  }
+  local dirname = getMudletHomeDir().."/EMCO/"
+  local filename = dirname .. self.name .. ".lua"
+  if not(io.exists(dirname)) then lfs.mkdir(dirname) end
+  table.save(filename, configtable)
+end
+
+--- Load and apply a saved config for this EMCO
+function EMCO:load()
+  local dirname = getMudletHomeDir().."/EMCO/"
+  local filename = dirname .. self.name .. ".lua"
+  local configTable = {}
+  if io.exists(filename) then
+    table.load(filename, configTable)
+  else
+    debugc(string.format("Attempted to load config for EMCO named %s but the file could not be found. Filename: %s", self.name, filename))
+  end
+  self.timeStamp = configTable.timeStamp
+  self.blankLine = configTable.blankLine
+  self.scrollbars = configTable.scrollbars
+  self.customTimestampColor = configTable.customTimestampColor
+  self.mapTab = configTable.mapTab
+  self.mapTabName = configTable.mapTabName
+  self.blinkFromAll = configTable.blinkFromAll
+  self.preserveBackground = configTable.preserveBackground
+  self.gag = configTable.gag
+  self.timestampFormat = configTable.timestampFormat
+  self.timestampBGColor = configTable.timestampBGColor
+  self.allTab = configTable.allTab
+  self.allTabName = configTable.allTabName
+  self.blink = configTable.blink
+  self.blinkTime = configTable.blinkTime
+  self.activeTabCSS = configTable.activeTabCSS
+  self.inactiveTabCSS = configTable.inactiveTabCSS
+  self.activeTabFGColor = configTable.activeTabFGColor
+  self.activeTabBGColor = configTable.activeTabBGColor
+  self.inactiveTabFGColor = configTable.inactiveTabFGColor
+  self.inactiveTabBGColor = configTable.inactiveTabBGColor
+  self.consoleColor = configTable.consoleColor
+  self.tabBoxCSS = configTable.tabBoxCSS
+  self.tabBoxColor = configTable.tabBoxColor
+  self.consoleContainerCSS = configTable.consoleContainerCSS
+  self.consoleContainerColor = configTable.consoleContainerColor
+  self.gap = configTable.gap
+  self.consoles = configTable.consoles
+  self.allTabExclusions = configTable.allTabExclusions
+  self.tabHeight = configTable.tabHeight
+  self.wrapAt = configTable.wrapAt
+  self.leftMargin = configTable.leftMargin
+  self.rightMargin = configTable.rightMargin
+  self.bottomMargin = configTable.bottomMargin
+  self.topMargin = configTable.topMargin
+  self:move(configTable.x, configTable.y)
+  self:resize(configTable.width, configTable.height)
+  self:reset()
+  if configTable.fontSize then self:setFontSize(configTable.fontSize) end
+  if configTable.font then self:setFont(configTable.font) end
+  if configTable.tabFont then self:setTabFont(configTable.tabFont) end
+  if configTable.autoWrap then self:enableAutoWrap() else self:disableAutoWrap() end
+end
+
 EMCO.parent = Geyser.Container
 
 return EMCO
