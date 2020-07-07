@@ -178,7 +178,7 @@ function Chyron:enableAutoWidth()
 end
 
 --- Disable autoWidth adjustment
-function Chryron:disableAutoWidth()
+function Chyron:disableAutoWidth()
   self.autoWidth = false
 end
 
