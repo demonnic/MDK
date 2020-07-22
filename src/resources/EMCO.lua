@@ -10,6 +10,21 @@ local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
 })
 
+-- patch Geyser.MiniConsole if it does not have its own display method defined
+if Geyser.MiniConsole.display == Geyser.display then
+  function Geyser.MiniConsole:display(...)
+    local arg = {...}
+    arg.n = table.maxn(arg)
+    if arg.n > 1 then
+      for i = 1, arg.n do
+        self:display(arg[i])
+      end
+    else
+      self:echo((prettywrite(arg[1], '  ') or 'nil') .. '\n')
+    end
+  end
+end
+
 --- Creates a new Embeddable Multi Console Object.
 -- <br>see https://github.com/demonnic/EMCO/wiki for information on valid constraints and defaults
 -- @tparam table cons table of constraints which configures the EMCO.
@@ -457,6 +472,37 @@ end
 
 function EMCO:ce(funcName, message)
   error(string.format("%s:gg Constraint Error: %s", funcName, message))
+end
+
+--- Display the contents of one or more variables to an EMCO tab. like display() but targets the miniconsole
+--@tparam string tabName the name of the tab you want to display to
+--@param item The thing to display()
+--@param[opt] item2 another thing to display()
+--@param[optchain] item_n and so on and so on
+function EMCO:display(tabName, ...)
+  local funcName = "EMCO:display(tabName, item)"
+  if not table.contains(self.consoles, tabName) then
+    self.ae(funcName, "tabName must be a tab which exists in this EMCO. valid options are: " .. table.concat(self.consoles, ","))
+  end
+  self.mc[tabName]:display(...)
+end
+
+--- Remove a tab from the EMCO
+--@tparam string tabName the name of the tab you want to remove from the EMCO
+function EMCO:removeTab(tabName)
+  local funcName = "EMCO:removeTab(tabName)"
+  if not table.contains(self.consoles, tabName) then
+    self.ae(funcName, "tabName must be a tab which exists in this EMCO. valid options are: " .. table.concat(self.consoles, ","))
+  end
+  table.remove(self.consoles, table.index_of(self.consoles, tabName))
+  local window = self.mc[tabName]
+  local tab = self.tabs[tabName]
+  window:hide()
+  tab:hide()
+  self.tabBox:remove(tab)
+  self.tabBox:organize()
+  self.consoleContainer:remove(window)
+  self.mc[tabName] = nil
 end
 
 --- Adds a tab to the EMCO object

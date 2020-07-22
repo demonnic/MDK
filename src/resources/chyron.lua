@@ -1,5 +1,10 @@
 --- Creates a label with a scrolling text element. It is highly recommended you use a monospace font for this label.
 --@classmod Chyron
+--@author Delra
+--@copyright 2019
+--@author Damian Monogue
+--@copyright 2020
+
 local Chyron = {
   name = "ChyronClass",
   text = "",
