@@ -11,35 +11,35 @@ local gradientmaker = {}
 local gradient_table = {}
 
 local function _clamp(num1, num2, num3)
-	local smaller = math.min(num2, num3)
-	local larger = math.max(num2, num3)
-	local minimum = math.max(0, smaller)
-	local maximum = math.min(255, larger)
-	return math.min(maximum, math.max(minimum, num1))
+  local smaller = math.min(num2, num3)
+  local larger = math.max(num2, num3)
+  local minimum = math.max(0, smaller)
+  local maximum = math.min(255, larger)
+  return math.min(maximum, math.max(minimum, num1))
 end
 
 local function _gradient(length, rgb1, rgb2)
-	assert(length > 0)
-	if length == 1 then
-		return {rgb1}
-	elseif length == 2 then
-		return {rgb1, rgb2}
-	else
-		local step = {}
-		for color = 1, 3 do step[color] = (rgb2[color] - rgb1[color]) / (length - 2) end
-		local gradient = {rgb1}
-		for iter = 1, length - 2 do
-			gradient[iter + 1] = {}
-			for color = 1, 3 do
-				gradient[iter + 1][color] = math.ceil(rgb1[color] + (iter * step[color]))
-			end
-		end
-		gradient[length] = rgb2
-		for index, color in ipairs(gradient) do
-			for iter = 1, 3 do gradient[index][iter] = _clamp(color[iter], rgb1[iter], rgb2[iter]) end
-		end
-		return gradient
-	end
+  assert(length > 0)
+  if length == 1 then
+    return {rgb1}
+  elseif length == 2 then
+    return {rgb1, rgb2}
+  else
+    local step = {}
+    for color = 1, 3 do step[color] = (rgb2[color] - rgb1[color]) / (length - 2) end
+    local gradient = {rgb1}
+    for iter = 1, length - 2 do
+      gradient[iter + 1] = {}
+      for color = 1, 3 do
+        gradient[iter + 1][color] = math.ceil(rgb1[color] + (iter * step[color]))
+      end
+    end
+    gradient[length] = rgb2
+    for index, color in ipairs(gradient) do
+      for iter = 1, 3 do gradient[index][iter] = _clamp(color[iter], rgb1[iter], rgb2[iter]) end
+    end
+    return gradient
+  end
 end
 
 local function gradient_to_string(gradient)
@@ -72,54 +72,60 @@ local function _gradients(length, ...)
   end
   if #arg == 0 then
     gradients_for_length[argkey] = {}
-		return {}
+    return {}
   elseif #arg == 1 then
     gradients_for_length[argkey] = arg[1]
-		return arg[1]
+    return arg[1]
   elseif #arg == 2 then
     gradients_for_length[argkey] = _gradient(length, arg[1], arg[2])
     return gradients_for_length[argkey]
-	else
-		local quotient = math.floor(length / (#arg - 1))
-		local remainder = length % (#arg - 1)
-		local gradients = {}
-		for section = 1, #arg - 1 do
-			local slength = quotient
-			if section <= remainder then slength = slength + 1 end
-			local gradient = _gradient(slength, arg[section], arg[section + 1])
-			for _, rgb in ipairs(gradient) do
-				table.insert(gradients, rgb)
-			end
+  else
+    local quotient = math.floor(length / (#arg - 1))
+    local remainder = length % (#arg - 1)
+    local gradients = {}
+    for section = 1, #arg - 1 do
+      local slength = quotient
+      if section <= remainder then slength = slength + 1 end
+      local gradient = _gradient(slength, arg[section], arg[section + 1])
+      for _, rgb in ipairs(gradient) do
+        table.insert(gradients, rgb)
+      end
     end
     gradients_for_length[argkey] = gradients
-		return gradients
-	end
+    return gradients
+  end
 end
 
 local function _color_name(rgb)
-	local least_distance = math.huge
-	local cname = ""
-	for name, color in pairs(color_table) do
-		local color_distance = math.sqrt((color[1] - rgb[1])^2 + (color[2] - rgb[2])^2 + (color[3] - rgb[3])^2)
-		if color_distance < least_distance then
-			least_distance = color_distance
-			cname = name
-		end
-	end
-	return cname
+  local least_distance = math.huge
+  local cname = ""
+  for name, color in pairs(color_table) do
+    local color_distance = math.sqrt((color[1] - rgb[1])^2 + (color[2] - rgb[2])^2 + (color[3] - rgb[3])^2)
+    if color_distance < least_distance then
+      least_distance = color_distance
+      cname = name
+    end
+  end
+  return cname
+end
+
+local function errorIfEmpty(text, funcName)
+  assert(#text > 0, string.format("%s: you passed in an empty string, and I cannot make a gradient out of an empty string", funcName))
 end
 
 local function dgradient_table(text, ...)
-	local gradients = _gradients(#text, ...)
-	local dgrads = {}
-	for character = 1, #text do
-		table.insert(dgrads, {gradients[character], text:sub(character, character)})
-	end
-	return dgrads
+  errorIfEmpty(text, "dgradient_table")
+  local gradients = _gradients(#text, ...)
+  local dgrads = {}
+  for character = 1, #text do
+    table.insert(dgrads, {gradients[character], text:sub(character, character)})
+  end
+  return dgrads
 end
 
 local function dgradient(text, ...)
-	local gradients = _gradients(#text, ...)
+  errorIfEmpty(text, "dgradient")
+  local gradients = _gradients(#text, ...)
   local dgrad = ""
   local current_color = ""
   for character = 1, #text do
@@ -131,21 +137,23 @@ local function dgradient(text, ...)
       dgrad = dgrad .. new_color .. char
       current_color = new_color
     end
-	end
-	return dgrad
+  end
+  return dgrad
 end
 
 local function cgradient_table(text, ...)
-	local gradients = _gradients(#text, ...)
-	local cgrads = {}
-	for character = 1, #text do
-		table.insert(cgrads, {_color_name(gradients[character]), text:sub(character, character)})
-	end
-	return cgrads
+  errorIfEmpty(text, "cgradient_table")
+  local gradients = _gradients(#text, ...)
+  local cgrads = {}
+  for character = 1, #text do
+    table.insert(cgrads, {_color_name(gradients[character]), text:sub(character, character)})
+  end
+  return cgrads
 end
 
 local function cgradient(text, ...)
-	local gradients = _gradients(#text, ...)
+  errorIfEmpty(text, "cgradient")
+  local gradients = _gradients(#text, ...)
   local cgrad = ""
   local current_color = ""
   for character = 1, #text do
@@ -157,22 +165,24 @@ local function cgradient(text, ...)
       cgrad = cgrad .. new_color .. char
       current_color = new_color
     end
-	end
-	return cgrad
+  end
+  return cgrad
 end
 
 local hex = Geyser.Color.hex
 
 local function hgradient_table(text, ...)
-	local grads = _gradients(#text, ...)
-	local hgrads = {}
-	for character = 1, #text do
-		table.insert(hgrads, {hex(unpack(grads[character])):sub(2,-1), text:sub(character, character)})
-	end
-	return hgrads
+  errorIfEmpty(text, "hgradient_table")
+  local grads = _gradients(#text, ...)
+  local hgrads = {}
+  for character = 1, #text do
+    table.insert(hgrads, {hex(unpack(grads[character])):sub(2,-1), text:sub(character, character)})
+  end
+  return hgrads
 end
 
 local function hgradient(text, ...)
+  errorIfEmpty(text, "hgradient")
   local grads = _gradients(#text, ...)
   local hgrads = ""
   local current_color = ""
@@ -195,6 +205,9 @@ local function color_name(...)
     return _color_name(arg[1])
   elseif #arg == 3 then
     return _color_name(arg)
+  else
+    local errmsg = "color_name: You must pass either a table of r,g,b values: color_name({r,g,b})\nor the three r,g,b values separately: color_name(r,g,b)"
+    error(errmsg)
   end
 end
 
