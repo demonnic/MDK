@@ -62,6 +62,13 @@ local SUG = {
 --</tr>
 --</table>
 --@param parent The Geyser container for this gauge
+--@usage local SUG = require("MDK-1.sug") --the following will watch "gmcp.Char.Vitals.hp" and "gmcp.Char.Vitals.maxhp" and update itself every 333 milliseconds
+-- myGauge = SUG:new({
+--   name = "myGauge",
+--   currentVariable = "gmcp.Char.Vitals.hp", --if this is nil, it will use the defaultCurrent of 50
+--   maxVariable = "gmcp.Char.Vitals.maxhp",  --if this is nil, it will use the defaultMax of 100.
+--   height = 50,
+-- })
 function SUG:new(cons, container)
   local funcName = "SUG:new(cons, container)"
   cons = cons or {}
