@@ -50,6 +50,16 @@ local SUG = {
 --  <td class="tg-odd">Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
 --  <td class="tg-odd">" |c/|m |p%"</td>
 --</tr>
+--<tr>
+--  <td class="tg-even">defaultCurrent</td>
+--  <td class="tg-even">What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
+--  <td class="tg-even">50</td>
+--</tr>
+--<tr>
+--  <td class="tg-odd">defaultMax</td>
+--  <td class="tg-odd">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
+--  <td class="tg-odd">100</td>
+--</tr>
 --</table>
 --@param parent The Geyser container for this gauge
 function SUG:new(cons, container)
@@ -116,6 +126,7 @@ function SUG:setMaxVariable(variableName)
   if variableName == "" then
     self.maxVariable = variableName
     self:update()
+    return
   end
   local nameType = type(variableName)
   local funcName = "SUG:setMaxVariable(variableName)"
@@ -139,6 +150,7 @@ end
 
 --- Stops the Self Updating Gauge from updating
 function SUG:stop()
+  self.active = false
   if self.timer then
     killTimer(self.timer)
     self.timer = nil
@@ -148,6 +160,7 @@ end
 --- Starts the Self Updating Gauge updating. If it is already updating, it will restart it.
 function SUG:start()
   SUG:stop()
+  self.active = true
   self.timer = tempTimer(self.updateTime / 1000, function() self:update() end, true)
 end
 
@@ -157,10 +170,15 @@ function SUG:update()
   local max = getValueAt(self.maxVariable)
   current = tonumber(current)
   max = tonumber(max)
-  max = max or self.defaultMax
   if current == nil then
     current = self.defaultCurrent
     debugc(string.format("Self Updating Gauge named %s is trying to update with an invalid current value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'", self.name, self.currentVariable, self.maxVariable))
+  end
+  if max == nil then
+    max = self.defaultMax
+    if self.maxVariable ~= "" then
+      debugc(string.format("Self Updating Gauge named %s is trying to update with an invalid max value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'", self.name, self.currentVariable, self.maxVariable))
+    end
   end
   local text = self.textTemplate
   local percent = math.floor((current / max * 100) + 0.5)
