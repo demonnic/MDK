@@ -24,6 +24,12 @@ These files contain the modules in the MDK. You only need to include those files
 * ftext.lua
   * basic fText. Documentation at https://github.com/demonnic/fText/wiki
 
+* sortbox.lua
+  * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at https://github.com/demonnic/MDK/wiki/SortBox
+
+* sug.lua
+  * Self Updating Gauges, will watch a set of variables and update itself on a timer based on what values those variables hold. Documentation at https://demonnic.github.io/mdk/current/classes/SUG.html
+
 * textformatter.lua
   * TextFormatter, a reusable fText object. Must have ftext.lua in the same directory. Documentation at https://github.com/demonnic/fText/wiki/TextFormatter
 
@@ -35,9 +41,6 @@ These files contain the modules in the MDK. You only need to include those files
 
 * timergauge.lua
   * TimerGauge, an extension of Geyser.Gauge which serves as an animated countdown timer. Overview at https://github.com/demonnic/MDK/wiki/TimerGauge
-
-* sortbox.lua
-  * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at https://github.com/demonnic/MDK/wiki/SortBox
 
 * luaunit.lua
   * LuaUnit, for writing unit tests for your packages. Modified slightly for use with Mudlet. Documentation at https://github.com/bluebird75/luaunit
