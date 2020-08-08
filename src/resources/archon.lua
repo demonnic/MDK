@@ -134,7 +134,7 @@ function Archon.verify_entry(entry)
 end
 
 local function digForValue(dataFrom, tableTo)
-  if table.size(tableTo) == 0 then
+  if dataFrom == nil or table.size(tableTo) == 0 then
 	  return dataFrom
 	else
 	  local newData = dataFrom[tableTo[1]]
@@ -144,6 +144,7 @@ local function digForValue(dataFrom, tableTo)
 end
 
 function Archon.getValueAt(accessString)
+  if accessString == "" then return nil end
   local tempTable = accessString:split("%.")
 	local accessTable = {}
 	for i,v in ipairs(tempTable) do
