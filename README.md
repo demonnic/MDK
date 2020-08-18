@@ -11,6 +11,10 @@ Starting with alpha2 of the MDK, I will be including the ldocs I generate from m
 
 # list of files
 These files contain the modules in the MDK. You only need to include those files which you intend to use, except as noted in the descriptions below. If you include any of the modules from the MDK, you should also include LICENSE.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
+You should also include demontools.lua, as it notes below several other of the MDK modules make use of items within it.
+
+* demontools.lua
+  * Collection of miscellaneous useful functions. You should include this file if you use the MDK, as several other modules make use of it
 
 * chyron.lua
   * Label which moves a message across its face from right to left, like a stock ticker or the news chyrons. Documentation at https://github.com/demonnic/MDK/wiki/Chyron
