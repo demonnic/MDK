@@ -11,6 +11,8 @@ local Archon = {
 }
 
 local pathOfThisFile = (...):match("(.-)[^%.]+$")
+local dt = require(pathOfThisFile .. "demontools")
+local getValueAt = dt.getValueAt
 local s = require(pathOfThisFile .. "schema")
 local sint = s.Integer
 local sstring = s.String
@@ -133,28 +135,8 @@ function Archon.verify_entry(entry)
   return verify_entry(entry)
 end
 
-local function digForValue(dataFrom, tableTo)
-  if dataFrom == nil or table.size(tableTo) == 0 then
-	  return dataFrom
-	else
-	  local newData = dataFrom[tableTo[1]]
-		table.remove(tableTo, 1)
-		return digForValue(newData, tableTo)
-	end
-end
-
 function Archon.getValueAt(accessString)
-  if accessString == "" then return nil end
-  local tempTable = accessString:split("%.")
-	local accessTable = {}
-	for i,v in ipairs(tempTable) do
-	  if tonumber(v) then
-	    accessTable[i] = tonumber(v)
-		else
-		  accessTable[i] = v
-		end
-	end
-	return digForValue(_G, accessTable)
+  return getValueAt(accessString)
 end
 
 return Archon
