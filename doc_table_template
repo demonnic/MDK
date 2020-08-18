@@ -1,0 +1,21 @@
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-odd"></td>
+--     <td class="tg-odd"></td>
+--     <td class="tg-odd"></td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even"></td>
+--     <td class="tg-even"></td>
+--     <td class="tg-even"></td>
+--   </tr>
+--</tbody>
+--</table>
