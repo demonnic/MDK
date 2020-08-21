@@ -126,9 +126,8 @@ end
 
 --- Returns the proper section of text
 --@local
---@param text the text to extract a section of
 --@param start the character to start at
---@param the length of the text you want to extract
+--@param length the length of the text you want to extract
 function Chyron:scrollText(start, length)
   local t = self.textTable
   local s = ''

@@ -254,7 +254,7 @@ local function hexToRgb(hexcode)
   end
   if back then
     local r,g,b = Geyser.Color.parse("#" .. back)
-    result = string.format("%s:%s,%s,%s")
+    result = string.format("%s:%s,%s,%s", result, r, g, b)
   end
   return string.format("%s>", result)
 end
@@ -656,6 +656,16 @@ local function consoleToString(options)
   return table.concat(lines, "\n")
 end
 
+local function decho2html(text)
+  local bufferName = "DemonToolsCheatBuffer"
+  createBuffer(bufferName)
+  clearWindow(bufferName)
+  text = text:gsub("\n", "<br>")
+  decho(bufferName, text)
+  local html = consoleToString({win = bufferName, format = "h", includeHtmlWrapper = false, start_line = 1})
+  return html
+end
+
 local function scientific_round(number, sigDigits)
   local decimalPlace = string.find(number, "%.")
   if not decimalPlace or (sigDigits < decimalPlace) then
@@ -767,80 +777,125 @@ end
 --- Takes a list table and returns it as a table of 'chunks'. If the table has 12 items and you ask for 3 chunks, each chunk will have 4 items in it
 -- @tparam table tbl The table you want to turn into chunks. Must be traversable using ipairs()
 -- @tparam number num_chunks The number of chunks to turn the table into
+-- @usage local dt = require("MDK-1.demontools")
+-- testTable = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" }
+-- display(dt.chunkify(testTable, 3))
+-- --displays the following
+-- {
+--   {
+--     "one",
+--     "two",
+--     "three",
+--     "four"
+--   },
+--   {
+--     "five",
+--     "six",
+--     "seven"
+--   },
+--   {
+--     "eight",
+--     "nine",
+--     "ten"
+--   }
+-- }
+
 function DemonTools.chunkify(tbl, num_chunks)
   return chunkify(tbl, num_chunks)
 end
 
 --- Takes an ansi colored text string and returns a cecho colored one
 -- @tparam string text the text to convert
+-- @usage   dt.ansi2cecho("[31mTest")
+-- --returns "<ansiRed>Test"
 function DemonTools.ansi2cecho(text)
   local dtext = ansi2decho(text)
   return decho2cecho(dtext)
 end
 
 
---- Takes an ansi colored text string and returns a decho colored one
+--- Takes an ansi colored text string and returns a decho colored one. Handles 256 color SGR codes better than Mudlet's ansi2decho
 -- @tparam string text the text to convert
+-- @usage   dt.ansi2decho("[31mTest") --returns "<128,0,0>Test"
+-- @usage dt.ansi2decho("[38:2::127:0:0mTest") --returns "<127,0,0>Test"
+-- @usage ansi2decho("[38:2::127:0:0mTest") -- doesn't parse this format of colors and so returns "[38:2::127:0:0mTest"
 function DemonTools.ansi2decho(text)
   return ansi2decho(text)
 end
 
 --- Takes an ansi colored text string and returns a hecho colored one
 -- @tparam string text the text to convert
+-- @usage   dt.ansi2hecho("[31mTest")
+-- --returns "#800000Test"
 function DemonTools.ansi2hecho(text)
   return ansi2hecho(text)
 end
 
 --- Takes an cecho colored text string and returns a decho colored one
 -- @tparam string text the text to convert
+-- @usage  dt.cecho2decho("<green>Test") --returns "<0,255,0>Test"
 function DemonTools.cecho2decho(text)
   return cecho2decho(text)
 end
 
 --- Takes an cecho colored text string and returns an ansi colored one
 -- @tparam string text the text to convert
+-- @usage dt.cecho2ansi("<green>Test") --returns "[38:2::0:255:0mTest"
 function DemonTools.cecho2ansi(text)
   return cecho2ansi(text)
 end
 
 --- Takes an cecho colored text string and returns a hecho colored one
 -- @tparam string text the text to convert
+-- @usage dt.cecho2hecho("<green>Test") --returns "#00ff00Test"
 function DemonTools.cecho2hecho(text)
   return cecho2hecho(text)
 end
 
 --- Takes an decho colored text string and returns a cecho colored one
 -- @tparam string text the text to convert
+-- @usage   dt.decho2cecho("<127,0,0:0,0,127>Test") --returns "<ansiRed:ansi_blue>Test"
 function DemonTools.decho2cecho(text)
   return decho2cecho(text)
 end
 
 --- Takes an decho colored text string and returns an ansi colored one
 -- @tparam string text the text to convert
+-- @usage dt.decho2ansi("<127,0,0:0,0,127>Test") --returns "[38:2::127:0:0m[48:2::0:0:127mTest"
 function DemonTools.decho2ansi(text)
   return decho2ansi(text)
 end
 
 --- Takes an decho colored text string and returns an hecho colored one
 -- @tparam string text the text to convert
+-- @usage dt.decho2hecho("<127,0,0:0,0,127>Test") --returns "#7f0000,00007fTest"
 function DemonTools.decho2hecho(text)
   return decho2hecho(text)
 end
 
+--- Takes a decho colored text string and returns html.
+-- @tparam string text the text to convert
+function DemonTools.decho2html(text)
+  return decho2html(text)
+end
+
 --- Takes an hecho colored text string and returns a ansi colored one
 -- @tparam string text the text to convert
+-- @usage dt.hecho2ansi("#7f0000,00007fTest") --returns "[38:2::127:0:0m[48:2::0:0:127mTest"
 function DemonTools.hecho2ansi(text)
   return hecho2ansi(text)
 end
 
 --- Takes an hecho colored text string and returns a cecho colored one
 -- @tparam string text the text to convert
+-- @usage   dt.hecho2cecho("#7f0000,00007fTest") --returns "<ansiRed:ansi_blue>Test"
 function DemonTools.hecho2cecho(text)
   return hecho2cecho(text)
 end
 
 --- Takes an hecho colored text string and returns a decho colored one
 -- @tparam string text the text to convert
+-- @usage   dt.hecho2decho("#7f0000,00007fTest") --returns "<127,0,0:0,0,127>Test"
 function DemonTools.hecho2decho(text)
   return hecho2decho(text)
 end
@@ -951,6 +1006,8 @@ end
 
 --- Rounds a number to the nearest whole integer
 -- @param number the number to round off
+-- @usage dt.roundInt(8.3) -- returns 8
+-- @usage dt.roundInt(10.7) -- returns 11
 function DemonTools.roundInt(number)
   local num = tonumber(number)
   local numType = type(num)
@@ -961,12 +1018,15 @@ end
 --- Rounds a number to a specified number of significant digits
 -- @tparam number number the number to round
 -- @tparam number sig_digits the number of significant digits to keep
+-- @usage dt.scientific_round(1348290, 3) -- will return 1350000
+-- @usage dt.scientific_found(123.3452, 5) -- will return 123.34
 function DemonTools.scientific_round(number, sig_digits)
   return scientific_round(number, sig_digits)
 end
 
 --- Returns a color table {r,g,b} derived from str. Will return the same color every time for the same string.
 -- @tparam string str the string to turn into a color.
+-- @usage   dt.string2color("Demonnic") --returns { 131, 122, 209 }
 function DemonTools.string2color(str)
   return string.tocolor(str)
 end
@@ -975,13 +1035,14 @@ end
 -- @tparam string strForColor the string to turn into a color using DemonTools.string2color
 -- @tparam string strToColor the string you want to color based on strForColor
 -- @param format What format to use for the color portion. "d" for decho, "c" for cecho, or "h" for hecho. Defaults to "d"
+-- @usage   dt.colorMunge("Demonnic", "Test") --returns "<131,122,209>Test"
 function DemonTools.colorMunge(strForColor, strToColor, format)
   return colorMunge(strForColor, strToColor, format)
 end
 
 --- Like colorMunge but also echos the result to win. 
 -- @tparam string strForColor the string to turn into a color using DemonTools.string2color
--- @tparam string strToColor the string you want to color based on strForColor
+-- @tparam string strToEcho the string you want to color and echo based on strForColor
 -- @param format What format to use for the color portion. "d" for decho, "c" for cecho, or "h" for hecho. Defaults to "d"
 -- @param win the window to echo to. You must provide the format if you want to change the window. Defaults to "main"
 function DemonTools.colorMungeEcho(strForColor, strToEcho, format, win)
@@ -991,11 +1052,20 @@ end
 --- Converts milliseconds to hours:minutes:seconds:milliseconds
 --@tparam number milliseconds the number of milliseconds to convert
 --@tparam boolean tbl if true, returns the time as a key/value table instead
+-- @usage dt.milliToHuman(37194572) --returns "10:19:54:572"
+-- @usage display(dt.milliToHuman(37194572, true))
+-- {
+--   minutes = 19,
+--   original = 37194572,
+--   hours = 10,
+--   milliseconds = 572,
+--   seconds = 54
+-- }
 function DemonTools.milliToHuman(milliseconds, tbl)
   local human = milliToHuman(milliseconds)
   local output
   if tbl then
-    timetbl = human:split(":")
+    local timetbl = human:split(":")
     output = {
       hours = tonumber(timetbl[1]),
       minutes = tonumber(timetbl[2]),
