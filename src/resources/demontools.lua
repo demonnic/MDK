@@ -1081,6 +1081,8 @@ end
 
 --- Takes the name of a variable as a string and returns the value. "health" will return the value in varable health, "gmcp.Char.Vitals" will return the table at gmcp.Char.Vitals, etc
 -- @tparam string variableString the string name of the variable you want the value of
+-- @usage currentHP = 50
+--dt.getValueAt("currentHP") -- returns 50
 function DemonTools.getValueAt(variableString)
   return getValueAt(variableString)
 end
