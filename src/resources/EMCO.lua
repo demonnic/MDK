@@ -8,6 +8,7 @@
 --@license MIT, see LICENSE.lua
 local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
+  timestampExceptions = {}
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -237,6 +238,11 @@ end
 --     <td class="tg-even">topMargin</td>
 --     <td class="tg-even">Number of pixels to put between the top edge of the miniconsole container, and the miniconsole? This is in addition to gap</td>
 --     <td class="tg-even">0</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">timestampExceptions</td>
+--     <td class="tg-odd">Table of tabnames which should not get timestamps even if timestamps are turned on</td>
+--     <td class="tg-odd">{}</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -1198,8 +1204,10 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     end
     local timestamp = getTime(true, self.timestampFormat)
     local fullTimestamp = string.format("%s%s<r> ", colorString, timestamp)
-    console:decho(fullTimestamp)
-    if allTab and tabName ~= self.allTabName then
+    if not table.contains(self.timestampExceptions, tabName) then
+      console:decho(fullTimestamp)
+    end
+    if allTab and tabName ~= self.allTabName and not table.contains(self.timestampExceptions, self.allTabName) then
       allTab:decho(fullTimestamp)
     end
   end
@@ -1315,8 +1323,10 @@ function EMCO:xLink(tabName, linkType, text, commands, hints, useCurrentFormat, 
     end
     local timestamp = getTime(true, self.timestampFormat)
     local fullTimestamp = string.format("%s%s<r> ", colorString, timestamp)
-    console:decho(fullTimestamp)
-    if allTab then
+    if not table.contains(self.timestampExceptions, tabName) then
+      console:decho(fullTimestamp)
+    end
+    if allTab and tabName ~= self.allTabName and not table.contains(self.timestampExceptions, self.allTabName) then
       allTab:decho(fullTimestamp)
     end
   end
@@ -1426,14 +1436,7 @@ end
 -- @tparam string tabName the name of the tab to add to the exclusion list
 function EMCO:addAllTabExclusion(tabName)
   local funcName = "EMCO:addAllTabExclusion(tabName)"
-  local ae = self.ae
-  local tabNameType = type(tabName)
-  local validTabName = table.contains(self.consoles, tabName)
-  if tabNameType ~= "string" then
-    ae(funcName, "tabName as string expected, got " .. tabNameType)
-  elseif not validTabName then
-    ae(funcName, string.format("tabName %s does not exist in this EMCO. valid tabs: " .. table.concat(self.consoles, ",")))
-  end
+  self:validTabNameOrError(tabName, funcName)
   if not table.contains(self.allTabExclusions, tabName) then table.insert(self.allTabExclusions, tabName) end
 end
 
@@ -1441,6 +1444,12 @@ end
 -- @tparam string tabName the name of the tab to remove from the exclusion list
 function EMCO:removeAllTabExclusion(tabName)
   local funcName = "EMCO:removeAllTabExclusion(tabName)"
+  self:validTabNameOrError(tabName, funcName)
+  local index = table.index_of(self.allTabExclusions, tabName)
+  if index then table.remove(self.allTabExclusions, index) end
+end
+
+function EMCO:validTabNameOrError(tabName, funcName)
   local ae = self.ae
   local tabNameType = type(tabName)
   local validTabName = table.contains(self.consoles, tabName)
@@ -1449,8 +1458,19 @@ function EMCO:removeAllTabExclusion(tabName)
   elseif not validTabName then
     ae(funcName, string.format("tabName %s does not exist in this EMCO. valid tabs: " .. table.concat(self.consoles, ",")))
   end
-  local index = table.index_of(self.allTabExclusions, tabName)
-  if index then table.remove(self.allTabExclusions, index) end
+end
+
+function EMCO:addTimestampException(tabName)
+  local funcName = "EMCO:addTimestampException(tabName)"
+  self:validTabNameOrError(tabName, funcName)
+  if not table.contains(self.timestampExceptions, tabName) then table.insert(self.timestampExceptions, tabName) end
+end
+
+function EMCO:removeTimestampException(tabName)
+  local funcName = "EMCO:removeTimestampTabException(tabName)"
+  self:validTabNameOrError(tabName, funcName)
+  local index = table.index_of(self.timestampExceptions, tabName)
+  if index then table.remove(self.timestampExceptions, index) end
 end
 
 --- Enable placing a blank line between all messages.
