@@ -1558,6 +1558,7 @@ function EMCO:save()
     gap = self.gap,
     consoles = self.consoles,
     allTabExclusions = self.allTabExclusions,
+    timestampExceptions = self.timestampExceptions
     tabHeight = self.tabHeight,
     autoWrap = self.autoWrap,
     wrapAt = self.wrapAt,
@@ -1615,6 +1616,7 @@ function EMCO:load()
   self.gap = configTable.gap
   self.consoles = configTable.consoles
   self.allTabExclusions = configTable.allTabExclusions
+  self.timestampExceptions = configTable.timestampExceptions
   self.tabHeight = configTable.tabHeight
   self.wrapAt = configTable.wrapAt
   self.leftMargin = configTable.leftMargin
