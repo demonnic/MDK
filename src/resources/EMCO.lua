@@ -1558,7 +1558,7 @@ function EMCO:save()
     gap = self.gap,
     consoles = self.consoles,
     allTabExclusions = self.allTabExclusions,
-    timestampExceptions = self.timestampExceptions
+    timestampExceptions = self.timestampExceptions,
     tabHeight = self.tabHeight,
     autoWrap = self.autoWrap,
     wrapAt = self.wrapAt,
