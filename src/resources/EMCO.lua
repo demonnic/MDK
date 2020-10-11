@@ -779,7 +779,7 @@ end
 function EMCO:enableTabUnderline()
   self.tabUnderline = true
   for _, tab in pairs(self.tab) do
-    tab:setUnderline(true)
+    tab:setUnderline(self.tabUnderline)
   end
 end
 
@@ -787,7 +787,7 @@ end
 function EMCO:disableTabUnderline()
   self.tabUnderline = false
   for _, tab in pairs(self.tab) do
-    tab:setUnderline(false)
+    tab:setUnderline(self.tabUnderline)
   end
 end
 
@@ -822,6 +822,7 @@ function EMCO:disableTabBold()
     tab:setBold(self.tabBold)
   end
 end
+
 --- enables custom colors for the timestamp, if displayed
 function EMCO:enableCustomTimestampColor()
   self.customTimestampColor = true
