@@ -8,7 +8,7 @@
 --@license MIT, see LICENSE.lua
 local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
-  timestampExceptions = {}
+  timestampExceptions = {},
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -319,6 +319,10 @@ function EMCO:new(cons, container)
   else
     me.scrollbars = false
   end
+  me.tabUnderline = me:fuzzyBoolean(cons.tabUnderline) and true or false
+  me.tabBold = me:fuzzyBoolean(cons.tabBold) and true or false
+  me.tabItalics = me:fuzzyBoolean(cons.tabItalics) and true or false
+  me.tabFontSize = cons.tabFontSize or 8
   me.blinkTime = cons.blinkTime or 3
   me.fontSize = cons.fontSize or 9
   me.activeTabCSS = cons.activeTabCSS or ""
@@ -561,6 +565,10 @@ function EMCO:createComponentsForTab(tabName)
   if self.tabFont then
     tab:setFont(self.tabFont)
   end
+  tab:setFontSize(self.tabFontSize)
+  tab:setItalics(self.tabItalics)
+  tab:setBold(self.tabBold)
+  tab:setUnderline(self.tabUnderline)
   tab:echo(tabName, self.inactiveTabFGColor, 'c')
   -- use the inactive CSS. It's "" if unset, which is ugly, but
   tab:setStyleSheet(self.inactiveTabCSS)
@@ -758,6 +766,62 @@ function EMCO:setSingleWindowFont(tabName, font)
   self.mc[tabName]:setFont(font)
 end
 
+--- sets the font size for all tabs
+--- @tparam number fontSize the font size to use for the tabs
+function EMCO:setTabFontSize(fontSize)
+  self.tabFontSize = fontSize
+  for _, tab in pairs(self.tabs) do
+    tab:setFontSize(fontSize)
+  end
+end
+
+--- enables underline on all tabs
+function EMCO:enableTabUnderline()
+  self.tabUnderline = true
+  for _, tab in pairs(self.tab) do
+    tab:setUnderline(true)
+  end
+end
+
+--- disables underline on all tabs
+function EMCO:disableTabUnderline()
+  self.tabUnderline = false
+  for _, tab in pairs(self.tab) do
+    tab:setUnderline(false)
+  end
+end
+
+--- enables italics on all tabs
+function EMCO:enableTabItalics()
+  self.tabItalics = true
+  for _, tab in pairs(self.tab) do
+    tab:setItalics(self.tabItalics)
+  end
+end
+
+--- enables italics on all tabs
+function EMCO:disableTabItalics()
+  self.tabItalics = false
+  for _, tab in pairs(self.tab) do
+    tab:setItalics(self.tabItalics)
+  end
+end
+
+--- enables bold on all tabs
+function EMCO:enableTabBold()
+  self.tabBold = true
+  for _, tab in pairs(self.tab) do
+    tab:setBold(self.tabBold)
+  end
+end
+
+--- disables bold on all tabs
+function EMCO:disableTabBold()
+  self.tabBold = false
+  for _, tab in pairs(self.tab) do
+    tab:setBold(self.tabBold)
+  end
+end
 --- enables custom colors for the timestamp, if displayed
 function EMCO:enableCustomTimestampColor()
   self.customTimestampColor = true
@@ -1570,6 +1634,10 @@ function EMCO:save()
     y = self.y,
     height = self.height,
     width = self.width,
+    tabFontSize = self.tabFontSize,
+    tabBold = self.tabBold,
+    tabItalics = self.tabItalics,
+    tabUnderline = self.tabUnderline,
   }
   local dirname = getMudletHomeDir().."/EMCO/"
   local filename = dirname .. self.name .. ".lua"
@@ -1623,6 +1691,10 @@ function EMCO:load()
   self.rightMargin = configTable.rightMargin
   self.bottomMargin = configTable.bottomMargin
   self.topMargin = configTable.topMargin
+  self.tabFontSize = configTable.tabFontSize
+  self.tabBold = configTable.tabBold
+  self.tabItalics = configTable.tabItalics
+  self.tabUnderline = configTable.tabUnderline
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
