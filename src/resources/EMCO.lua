@@ -6,10 +6,11 @@
 --@author Damian Monogue <demonnic@gmail.com>
 --@copyright 2020 Damian Monogue
 --@license MIT, see LICENSE.lua
-local EMCO = Geyser.Container:new({
+local EMCO = {
   name = "TabbedConsoleClass",
   timestampExceptions = {},
-})
+  parent = Geyser.Container
+}
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
 if Geyser.MiniConsole.display == Geyser.display then
@@ -243,6 +244,26 @@ end
 --     <td class="tg-odd">timestampExceptions</td>
 --     <td class="tg-odd">Table of tabnames which should not get timestamps even if timestamps are turned on</td>
 --     <td class="tg-odd">{}</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">tabFontSize</td>
+--     <td class="tg-even">Font size for the tabs</td>
+--     <td class="tg-even">8</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">tabBold</td>
+--     <td class="tg-odd">Should the tab text be bold? Boolean value</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">tabItalics</td>
+--     <td class="tg-even">Should the tab text be italicized?</td>
+--     <td class="tg-even">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">tabUnderline</td>
+--     <td class="tg-odd">Should the tab text be underlined?</td>
+--     <td class="tg-odd">false</td>
 --   </tr>
 -- </tbody>
 -- </table>
