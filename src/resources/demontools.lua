@@ -408,7 +408,7 @@ local function ansi2decho(tstring)
     [7] = color_table.ansiLightWhite
   }
 
-  function colorCodeToRGB(color, parts)
+  local function colorCodeToRGB(color, parts)
     local rgb
     if color ~= 8 then
       rgb = colours[color]
@@ -669,8 +669,8 @@ end
 local function scientific_round(number, sigDigits)
   local decimalPlace = string.find(number, "%.")
   if not decimalPlace or (sigDigits < decimalPlace) then
-    numberTable = {}
-    count = 1
+    local numberTable = {}
+    local count = 1
     for digit in string.gmatch(number, "%d") do
       table.insert(numberTable, digit)
     end
