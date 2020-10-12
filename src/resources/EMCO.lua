@@ -6,11 +6,10 @@
 --@author Damian Monogue <demonnic@gmail.com>
 --@copyright 2020 Damian Monogue
 --@license MIT, see LICENSE.lua
-local EMCO = {
+local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
   timestampExceptions = {},
-  parent = Geyser.Container
-}
+})
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
 if Geyser.MiniConsole.display == Geyser.display then
@@ -265,6 +264,11 @@ end
 --     <td class="tg-odd">Should the tab text be underlined?</td>
 --     <td class="tg-odd">false</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-even">tabAlignment</td>
+--     <td class="tg-even">Valid alignments are 'c', 'center', 'l', 'left', 'r', 'right', or '' to not include the alignment as part of the echo (to allow the stylesheet to handle it)</td>
+--     <td class="tg-even">'c'</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -344,6 +348,7 @@ function EMCO:new(cons, container)
   me.tabBold = me:fuzzyBoolean(cons.tabBold) and true or false
   me.tabItalics = me:fuzzyBoolean(cons.tabItalics) and true or false
   me.tabFontSize = cons.tabFontSize or 8
+  me.tabAlignment = cons.tabAlignment or "c"
   me.blinkTime = cons.blinkTime or 3
   me.fontSize = cons.fontSize or 9
   me.activeTabCSS = cons.activeTabCSS or ""
@@ -560,7 +565,7 @@ function EMCO:switchTab(tabName)
     self.mc[oldTab]:hide()
     self.tabs[oldTab]:setStyleSheet(self.inactiveTabCSS)
     self.tabs[oldTab]:setColor(self.inactiveTabBGColor)
-    self.tabs[oldTab]:echo(oldTab, self.inactiveTabFGColor, "c")
+    self.tabs[oldTab]:echo(oldTab, self.inactiveTabFGColor)
     if self.blink then
       if self.allTab and tabName == self.allTabName then
         self.tabsToBlink = {}
@@ -571,7 +576,7 @@ function EMCO:switchTab(tabName)
   end
   self.tabs[tabName]:setStyleSheet(self.activeTabCSS)
   self.tabs[tabName]:setColor(self.activeTabBGColor)
-  self.tabs[tabName]:echo(tabName, self.activeTabFGColor, "c")
+  self.tabs[tabName]:echo(tabName, self.activeTabFGColor)
   if oldTab and self.mc[oldTab] then
     self.mc[oldTab]:hide()
   end
@@ -586,11 +591,12 @@ function EMCO:createComponentsForTab(tabName)
   if self.tabFont then
     tab:setFont(self.tabFont)
   end
+  tab:echo(tabName, self.inactiveTabFGColor)
+  tab:setAlignment(self.tabAlignment)
   tab:setFontSize(self.tabFontSize)
   tab:setItalics(self.tabItalics)
   tab:setBold(self.tabBold)
   tab:setUnderline(self.tabUnderline)
-  tab:echo(tabName, self.inactiveTabFGColor, 'c')
   -- use the inactive CSS. It's "" if unset, which is ugly, but
   tab:setStyleSheet(self.inactiveTabCSS)
   -- set the BGColor if set. if the CSS is set it overrides the setColor, but if it's "" then the setColor actually covers that.
@@ -796,10 +802,19 @@ function EMCO:setTabFontSize(fontSize)
   end
 end
 
+--- Sets the alignment for all the tabs
+-- @param alignment Valid alignments are 'c', 'center', 'l', 'left', 'r', 'right', or '' to not include the alignment as part of the echo
+function EMCO:setTabAlignment(alignment)
+  self.tabAlignment = alignment
+  for _, tab in pairs(self.tabs) do
+    tab:setAlignment(self.tabAlignment)
+  end
+end
+
 --- enables underline on all tabs
 function EMCO:enableTabUnderline()
   self.tabUnderline = true
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setUnderline(self.tabUnderline)
   end
 end
@@ -807,7 +822,7 @@ end
 --- disables underline on all tabs
 function EMCO:disableTabUnderline()
   self.tabUnderline = false
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setUnderline(self.tabUnderline)
   end
 end
@@ -815,7 +830,7 @@ end
 --- enables italics on all tabs
 function EMCO:enableTabItalics()
   self.tabItalics = true
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setItalics(self.tabItalics)
   end
 end
@@ -823,7 +838,7 @@ end
 --- enables italics on all tabs
 function EMCO:disableTabItalics()
   self.tabItalics = false
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setItalics(self.tabItalics)
   end
 end
@@ -831,7 +846,7 @@ end
 --- enables bold on all tabs
 function EMCO:enableTabBold()
   self.tabBold = true
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setBold(self.tabBold)
   end
 end
@@ -839,7 +854,7 @@ end
 --- disables bold on all tabs
 function EMCO:disableTabBold()
   self.tabBold = false
-  for _, tab in pairs(self.tab) do
+  for _, tab in pairs(self.tabs) do
     tab:setBold(self.tabBold)
   end
 end
