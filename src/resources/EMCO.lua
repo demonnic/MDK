@@ -1675,6 +1675,7 @@ function EMCO:save()
     tabBold = self.tabBold,
     tabItalics = self.tabItalics,
     tabUnderline = self.tabUnderline,
+    tabAlignment = self.tabAlignment,
   }
   local dirname = getMudletHomeDir().."/EMCO/"
   local filename = dirname .. self.name .. ".lua"
@@ -1732,6 +1733,7 @@ function EMCO:load()
   self.tabBold = configTable.tabBold
   self.tabItalics = configTable.tabItalics
   self.tabUnderline = configTable.tabUnderline
+  self.tabAlignment = configTable.tabAlignment
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
