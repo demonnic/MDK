@@ -9,27 +9,27 @@ _Echos.Patterns.Hex[1] = [[(\x5c?(?:#|\|c)(?:[0-9a-fA-F]{6})?(?:,[0-9a-fA-F]{6})
 -- internal function, recursively digs for a value within subtables if possible
 local function digForValue(dataFrom, tableTo)
   if digForValue == nil or table.size(tableTo) == 0 then
-	  return dataFrom
-	else
-	  local newData = dataFrom[tableTo[1]]
-		table.remove(tableTo, 1)
-		return digForValue(newData, tableTo)
-	end
+    return dataFrom
+  else
+    local newData = dataFrom[tableTo[1]]
+    table.remove(tableTo, 1)
+    return digForValue(newData, tableTo)
+  end
 end
 
 -- Internal function, used to turn a string variable name into a value
 local function getValueAt(accessString)
   if accessString == "" then return nil end
   local tempTable = accessString:split("%.")
-	local accessTable = {}
-	for i,v in ipairs(tempTable) do
-	  if tonumber(v) then
-	    accessTable[i] = tonumber(v)
-		else
-		  accessTable[i] = v
-		end
-	end
-	return digForValue(_G, accessTable)
+  local accessTable = {}
+  for i,v in ipairs(tempTable) do
+    if tonumber(v) then
+      accessTable[i] = tonumber(v)
+    else
+      accessTable[i] = v
+    end
+  end
+  return digForValue(_G, accessTable)
 end
 
 -- internal sorting function, sorts first by hue, then luminosity, then value
