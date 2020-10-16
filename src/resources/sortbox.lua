@@ -286,7 +286,7 @@ function SortBox:handleElastic()
   if self.boxType == "v" then
     local contentHeight, canElastic = self:getContentHeight()
     if not canElastic then
-      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic v_policy"), self.name)
+      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic v_policy", self.name))
       return
     end
     local currentHeight = self:get_height()
@@ -300,7 +300,7 @@ function SortBox:handleElastic()
   else
     local contentWidth, canElastic = self:getContentWidth()
     if not canElastic then
-      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic h_policy"), self.name)
+      debugc(string.format("SortBox named %s cannot properly elasticize, as it contains at least one item with a dynamic h_policy", self.name))
       return
     end
     local currentWidth = self:get_width()
