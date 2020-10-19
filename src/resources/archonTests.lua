@@ -44,6 +44,43 @@ function Archon.runTests()
     local actual = Archon.verify_entry(string_entry)
     assertNil(actual)
   end
+
+  function ta:test_string_full_entry_validation_failure()
+    local string_entry = {
+      type = "string",
+      display = "Test String"
+    }
+    local expected = "Type mismatch: 'displayName' should be string, is nil\nSuperfluous value: 'display' does not appear in the record schema"
+    local actual = Archon.verify_entry(string_entry)
+    assertEquals(expected, actual)
+  end
+
+  function ta:test_config_validation_success()
+    Archon.config = {
+      name = {
+        type = "string",
+        displayName = "name",
+        default = "Default"
+      },
+      queues = {
+        type = "int",
+        displayName = "queues",
+        default = 2,
+        min = 1,
+        max = 4,
+        step = 1
+      },
+      items = {
+        type = "list",
+        displayName = "items",
+        allowedTypes = "string",
+      },
+    }
+    assertNil(Archon:checkConfig())
+  end
+
+  function ta:test_config_validation_failure()
+  end
   lu.LuaUnit.run('--pattern', 'Archon')
   TestArchon = nil
 end

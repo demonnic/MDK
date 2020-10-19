@@ -39,7 +39,7 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">timeStamp</td>
+--     <td class="tg-odd">timestamp</td>
 --     <td class="tg-odd">display timestamps on the miniconsoles?</td>
 --     <td class="tg-odd">false</td>
 --   </tr>
