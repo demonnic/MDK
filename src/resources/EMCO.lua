@@ -269,6 +269,16 @@ end
 --     <td class="tg-even">Valid alignments are 'c', 'center', 'l', 'left', 'r', 'right', or '' to not include the alignment as part of the echo (to allow the stylesheet to handle it)</td>
 --     <td class="tg-even">'c'</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-odd">commandLine</td>
+--     <td class="tg-odd">Should we enable commandlines for the miniconsoles?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">cmdActions</td>
+--     <td class="tg-even">A table with console names as keys, and values which are templates for the command to send. see the setCustomCommandline function for more</td>
+--     <td class="tg-even">{}</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -291,6 +301,8 @@ function EMCO:new(cons, container)
   setmetatable(me, self)
   self.__index = self
   -- set some defaults. Almost all the defaults we had for YATCO, plus a few new ones
+  me.cmdActions = cons.cmdActions or {}
+  if not type(me.cmdActions) == "table" then self:se(funcName, "cmdActions must be a table if it is provided") end
   if me:fuzzyBoolean(cons.timestamp) then
     me:enableTimestamp()
   else
@@ -362,6 +374,7 @@ function EMCO:new(cons, container)
   me.tabBoxColor = cons.tabBoxColor or "black"
   me.consoleContainerCSS = cons.consoleContainerCSS or ""
   me.consoleContainerColor = cons.consoleContainerColor or "black"
+  me.commandLine = me:fuzzyBoolean(cons.commandLine) and true or false
   me.gap = cons.gap or 1
   me.consoles = cons.consoles
   me.tabHeight = cons.tabHeight or 25
@@ -610,10 +623,12 @@ function EMCO:createComponentsForTab(tabName)
     y = self.topMargin,
     height = string.format("-%dpx", self.bottomMargin),
     width = string.format("-%dpx", self.rightMargin),
-    name = string.format("%sWindow%s", self.name, tabName)
+    name = string.format("%sWindow%s", self.name, tabName),
+    commandLine = self.commandLine
   }
   local parent = self.consoleContainer
-  if self.mapTab and tabName == self.mapTabName then
+  local mapTab = self.mapTab and tabName == self.mapTabName
+  if mapTab then
     window = Geyser.Mapper:new(windowConstraints, parent)
   else
     window = Geyser.MiniConsole:new(windowConstraints, parent)
@@ -634,7 +649,70 @@ function EMCO:createComponentsForTab(tabName)
     end
   end
   self.mc[tabName] = window
+  if not mapTab then
+    self:setCmdAction(tabName)
+  end
   window:hide()
+end
+
+--- Sets the command action for a tab's command line. Can either be a template string to send where '|t' is replaced by the text sent, or a funnction which takes the text
+--- @tparam string tabName the name of the tab to set the command action on
+--- @param template the template for the commandline to use, or the function to run when enter is hit.
+--- @usage myEMCO:setCmdAction("CT", "ct |t") -- will send everything in the CT tab's command line to CT by doing "ct Hi there!" if you type "Hi there!" in CT's command line
+--- @usage myEMCO:setCmdAction("CT", function(txt) send("ct " .. txt) end) -- functionally the same as the above
+function EMCO:setCmdAction(tabName, template)
+  template = template or self.cmdActions[tabName]
+  if template == "" then template = nil end
+  self.cmdActions[tabName] = template
+  local window = self.mc[tabName]
+  if template then
+    if type(template) == "string" then
+      window:setCmdAction(function(txt)
+        txt = template:gsub("|t", txt)
+        send(txt)
+      end)
+    elseif type(template) == "function" then
+      window:setCmdAction(template)
+    else
+      debugc(string.format("EMCO:setCmdAction(tabName, template): template must be a string or function if provided. Leaving CmdAction for tab %s be. Template type was: %s", tabName, type(template)))
+    end
+  else
+    window:resetCmdAction()
+  end
+end
+
+--- Resets the command action for tabName's miniconsole, which makes it work like the normal commandline
+--- @tparam string tabName the name of the tab to reset the cmdAction for
+function EMCO:resetCmdAction(tabName)
+  self.cmdActions[tabName] = nil
+  self.mc[tabName]:resetCmdAction()
+end
+
+--- Gets the contents of tabName's cmdLine
+--- @tparam tabName the name of the tab to get the commandline of
+function EMCO:getCmdLine(tabName)
+  return self.mc[tabName]:getCmdLine()
+end
+
+--- Prints to tabName's command line
+--- @tparam tabName the tab whose command line you want to print to
+--- @tparam txt the text to print to the command line
+function EMCO:printCmd(tabName, txt)
+  return self.mc[tabName]:printCmd(txt)
+end
+
+
+--- Clears tabName's command line
+--- @tparam string tabName the tab whose command line you want to clear
+function EMCO:clearCmd(tabName)
+  return self.mc[tabName]:clearCmd()
+end
+
+--- Appends text to tabName's command line
+--- @tparam string tabName the tab whose command line you want to append to
+--- @tparam string txt the text to append to the command line
+function EMCO:appendCmd(tabName, txt)
+  return self.mc[tabName]:appendCmd(txt)
 end
 
 --- resets the object, redrawing everything
