@@ -9,6 +9,8 @@
 local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
   timestampExceptions = {},
+  path = "|h/log/|E/|y/|m/|d/",
+  fileName = "|N.|e"
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -26,6 +28,14 @@ if Geyser.MiniConsole.display == Geyser.display then
   end
 end
 
+local pathOfThisFile = (...):match("(.-)[^%.]+$")
+local ok, content = pcall(require, pathOfThisFile .. "loggingconsole")
+local LC
+if ok then
+  LC = content
+else
+  debugc("EMCO tried to require loggingconsole but could not because: " .. content)
+end
 --- Creates a new Embeddable Multi Console Object.
 -- <br>see https://github.com/demonnic/EMCO/wiki for information on valid constraints and defaults
 -- @tparam table cons table of constraints which configures the EMCO.
@@ -279,6 +289,11 @@ end
 --     <td class="tg-even">A table with console names as keys, and values which are templates for the command to send. see the setCustomCommandline function for more</td>
 --     <td class="tg-even">{}</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-odd">backgroundImages</td>
+--     <td class="tg-odd">A table containing definitions for the background images. Each entry should have a key the same name as the tab it applies to, with entries "image" which is the path to the image file,<br>and "mode" which determines how it is displayed. "border" stretches, "center" center, "tile" tiles, and "style". See Mudletwikilink for details.</td>
+--     <td class="tg-odd">{}</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -303,6 +318,8 @@ function EMCO:new(cons, container)
   -- set some defaults. Almost all the defaults we had for YATCO, plus a few new ones
   me.cmdActions = cons.cmdActions or {}
   if not type(me.cmdActions) == "table" then self:se(funcName, "cmdActions must be a table if it is provided") end
+  me.backgroundImages = cons.backgroundImages or {}
+  if not type(me.backgroundImages) == "table" then self:se(funcName, "backgroundImages must be a table if provided.") end
   if me:fuzzyBoolean(cons.timestamp) then
     me:enableTimestamp()
   else
@@ -624,14 +641,20 @@ function EMCO:createComponentsForTab(tabName)
     height = string.format("-%dpx", self.bottomMargin),
     width = string.format("-%dpx", self.rightMargin),
     name = string.format("%sWindow%s", self.name, tabName),
-    commandLine = self.commandLine
+    commandLine = self.commandLine,
+    path = self:processTemplate(self.path, tabName),
+    fileName = self:processTemplate(self.fileName, tabName)
   }
   local parent = self.consoleContainer
   local mapTab = self.mapTab and tabName == self.mapTabName
   if mapTab then
     window = Geyser.Mapper:new(windowConstraints, parent)
   else
-    window = Geyser.MiniConsole:new(windowConstraints, parent)
+    if LC then
+      window = LC:new(windowConstraints, parent)
+    else
+      window = Geyser.MiniConsole:new(windowConstraints, parent)
+    end
     if self.font then
       window:setFont(self.font)
     end
@@ -653,6 +676,62 @@ function EMCO:createComponentsForTab(tabName)
     self:setCmdAction(tabName)
   end
   window:hide()
+  self:processImage(tabName)
+end
+
+--- Sets the background image for a tab's console. use EMCO:resetBackgroundImage(tabName) to remove an image.
+--- @tparam string tabName the tab to change the background image for.
+--- @tparam string imagePath the path to the image file to use.
+--- @tparam string mode the mode to use. Will default to "center" if not provided.
+function EMCO:setBackgroundImage(tabName, imagePath, mode)
+  mode = mode or "center"
+  local tabNameType = type(tabName)
+  local imagePathType = type(imagePath)
+  local modeType = type(mode)
+  local funcName = "EMCO:setBackgroundImage(tabName, imagePath, mode)"
+  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then self.ae(funcName, "tabName must be a string and an existing tab") end
+  if imagePathType ~= "string" or not io.exists(imagePath) then self.ae(funcName, "imagePath must be a string and point to an existing image file") end
+  if modeType ~= "string" or not table.contains({"border", "center", "tile", "style"}, mode) then self.ae(funcName, "mode must be one of 'border', 'center', 'tile', or 'style'") end
+  local image = {
+    image = imagePath,
+    mode = mode
+  }
+  self.backgroundImages[tabName] = image
+  self:processImage(tabName)
+end
+
+--- Resets the background image on a tab's console, returning it to the background color
+--- @tparam string tabName the tab to change the background image for.
+function EMCO:resetBackgroundImage(tabName)
+  local tabNameType = type(tabName)
+  local funcName = "EMCO:resetBackgroundImage(tabName)"
+  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then self.ae(funcName, "tabName must be a string and an existing tab") end
+  self.backgroundImages[tabName] = nil
+  self:processImage(tabName)
+end
+
+--- Does the work of actually setting/resetting the background image on a tab
+--- @tparam string tabName the name of the tab to process the image for.
+--- @local
+function EMCO:processImage(tabName)
+  if self.mapTab and tabName == self.mapTabName then return end
+  local image = self.backgroundImages[tabName]
+  local window = self.mc[tabName]
+  if image then
+    if image.image and io.exists(image.image) then
+      window:setBackgroundImage(image.image, image.mode)
+    end
+  else
+    window:resetBackgroundImage()
+  end
+end
+
+--- Formats the string through EMCO's template. |E is replaced with the EMCO's name. |N is replaced with the tab's name.
+--@param str the string to replace tokens in
+function EMCO:processTemplate(str, tabName)
+  str = str:gsub("|E", self.name)
+  str = str:gsub("|N", tabName or "")
+  return str
 end
 
 --- Sets the command action for a tab's command line. Can either be a template string to send where '|t' is replaced by the text sent, or a funnction which takes the text
@@ -689,14 +768,14 @@ function EMCO:resetCmdAction(tabName)
 end
 
 --- Gets the contents of tabName's cmdLine
---- @tparam tabName the name of the tab to get the commandline of
+--- @param tabName the name of the tab to get the commandline of
 function EMCO:getCmdLine(tabName)
   return self.mc[tabName]:getCmdLine()
 end
 
 --- Prints to tabName's command line
---- @tparam tabName the tab whose command line you want to print to
---- @tparam txt the text to print to the command line
+--- @param tabName the tab whose command line you want to print to
+--- @param txt the text to print to the command line
 function EMCO:printCmd(tabName, txt)
   return self.mc[tabName]:printCmd(txt)
 end
