@@ -4,7 +4,77 @@
 --@copyright 2020 Damian Monogue
 --@license MIT, see LICENSE.lua
 local DemonTools = {}
-_Echos.Patterns.Hex[1] = [[(\x5c?(?:#|\|c)(?:[0-9a-fA-F]{6})?(?:,[0-9a-fA-F]{6})?)|(\|r|#r)]]
+local bufferName = "DemonToolsCheatBuffer"
+local function exists(path)
+  local ok, err, code = os.rename(path, path)
+  if not ok and code == 13 then return true end
+  return ok, err
+end
+
+local function isWindows()
+  return package.config:sub(1,1) == [[\]]
+end
+
+local function isDir(path)
+  if not path:ends("/") then path = path .. "/" end
+  return exists(path)
+end
+
+local function mkdir_p(path)
+  path = path:gsub("\\", "/")
+  local pathTbl = path:split("/")
+  local cwd = "/"
+  if isWindows() then cwd = "" end
+  for index,dirName in ipairs(pathTbl) do
+    if index == 1 then
+      cwd = cwd .. dirName
+    else
+      cwd = cwd .. "/" .. dirName
+      cwd = cwd:gsub("//", "/")
+    end
+    if not table.contains({"/", "C:"}, cwd) and not exists(cwd) then
+      local ok, err = lfs.mkdir(cwd)
+      if not ok then
+        return ok, err
+      end
+    end
+  end
+  return true
+end
+
+local htmlHeader = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      body {
+        background-color: black;
+        font-family: 'Droid Sans Mono';
+        white-space: pre; 
+        font-size: 12px;
+      }
+    </style>
+  </head>
+<body><span>]=]
+
+local htmlHeaderPattern = [=[  <!DOCTYPE HTML PUBLIC "%-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <meta http%-equiv="Content%-Type" content="text/html;charset=utf%-8" >
+    <link href='http://fonts.googleapis.com/css%?family=Droid%+Sans%+Mono' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      body {
+        background%-color: black;
+        font%-family: 'Droid Sans Mono';
+        white%-space: pre; 
+        font%-size: 12px;
+      }
+    </style>
+  </head>
+<body><span>]=]
 
 -- internal function, recursively digs for a value within subtables if possible
 local function digForValue(dataFrom, tableTo)
@@ -574,6 +644,60 @@ local function displayColors(options)
   end
 end
 
+local function cecho2string(text)
+  local pattern = _Echos.Patterns.Color[2]
+  local result = rex.gsub(text, pattern, "")
+  return result
+end
+
+local function decho2string(text)
+  local pattern = _Echos.Patterns.Decimal[2]
+  local result = rex.gsub(text, pattern, "")
+  return result
+end
+
+local function hecho2string(text)
+  local pattern = _Echos.Patterns.Hex[2]
+  local result = rex.gsub(text, pattern, "")
+  return result
+end
+
+local function append2decho()
+  createBuffer(bufferName)
+  clearWindow(bufferName)
+  appendBuffer(bufferName)
+  local str = copy2decho(bufferName)
+  return str
+end
+
+local function html2decho(text)
+  text = text:gsub(htmlHeaderPattern, "")
+  text = text:gsub("<span style='color: rgb%((%d+,%d+,%d+)%);background: rgb%((%d+,%d+,%d+)%);'>", "<%1:%2>")
+  text = text:gsub("<br>", "\n")
+  text = text:gsub("</span>", "")
+  return text
+end
+
+local function html2cecho(text)
+  local dtext = html2decho(text)
+  return decho2cecho(dtext)
+end
+
+local function html2hecho(text)
+  local dtext = html2decho(text)
+  return decho2hecho(dtext)
+end
+
+local function html2ansi(text)
+  local dtext = html2decho(text)
+  return decho2ansi(dtext)
+end
+
+local function html2string(text)
+  local dtext = html2decho(text)
+  return decho2string(text)
+end
+
 local function consoleToString(options)
   options = options or {}
   options.win = options.win or "main"
@@ -628,22 +752,7 @@ local function consoleToString(options)
   end
   local lines = {}
   if format == "h" and options.includeHtmlWrapper then
-    lines[#lines + 1] = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-    <style type="text/css">
-      body {
-        background-color: black;
-        font-family: 'Droid Sans Mono';
-        white-space: pre; 
-        font-size: 12px;
-      }
-    </style>
-  </head>
-<body><span>]=]
+    lines[#lines + 1] = htmlHeader
   end
   for line_number = start,finish do
     move(0,line_number)
@@ -657,13 +766,27 @@ local function consoleToString(options)
 end
 
 local function decho2html(text)
-  local bufferName = "DemonToolsCheatBuffer"
   createBuffer(bufferName)
   clearWindow(bufferName)
   text = text:gsub("\n", "<br>")
   decho(bufferName, text)
   local html = consoleToString({win = bufferName, format = "h", includeHtmlWrapper = false, start_line = 1})
   return html
+end
+
+local function cecho2html(text)
+  local dtext = cecho2decho(text)
+  return decho2html(dtext)
+end
+
+local function hecho2html(text)
+  local dtext = hecho2decho(text)
+  return decho2html(dtext)
+end
+
+local function ansi2html(text)
+  local dtext = ansi2decho(text)
+  return decho2html(dtext)
 end
 
 local function scientific_round(number, sigDigits)
@@ -879,6 +1002,71 @@ function DemonTools.decho2html(text)
   return decho2html(text)
 end
 
+--- Takes a cecho colored text string and returns html.
+-- @tparam string text the text to convert
+function DemonTools.cecho2html(text)
+  return cecho2html(text)
+end
+
+--- Takes a hecho colored text string and returns html.
+-- @tparam string text the text to convert
+function DemonTools.hecho2html(text)
+  return hecho2html(text)
+end
+
+--- Takes an ansi colored text string and returns html.
+-- @tparam string text the text to convert
+function DemonTools.ansi2html(text)
+  return ansi2html(text)
+end
+
+--- Takes an html colored string of the sort turned out by the DemonTools *2html functions and returns a cecho string
+-- @tparam string text the text to convert
+function DemonTools.html2cecho(text)
+  return html2cecho(text)
+end
+
+--- Takes an html colored string of the sort turned out by the DemonTools *2html functions and returns a decho string
+-- @tparam string text the text to convert
+function DemonTools.html2decho(text)
+  return html2decho(text)
+end
+
+--- Takes an html colored string of the sort turned out by the DemonTools *2html functions and returns an ansi string
+-- @tparam string text the text to convert
+function DemonTools.html2ansi(text)
+  return html2ansi(text)
+end
+
+--- Takes an html colored string of the sort turned out by the DemonTools *2html functions and returns an hecho string
+-- @tparam string text the text to convert
+function DemonTools.html2hecho(text)
+  return html2hecho(text)
+end
+
+--- Takes a cecho string and returns it without the formatting
+--@param text the text to transform
+function DemonTools.cecho2string(text)
+  return cecho2string(text)
+end
+
+--- Takes a decho string and returns it without the formatting
+--@param text the text to transform
+function DemonTools.decho2string(text)
+  return decho2string(text)
+end
+
+--- Takes a hecho string and returns it without the formatting
+--@param text the text to transform
+function DemonTools.hecho2string(text)
+  return hecho2string(text)
+end
+
+--- Takes an html colored string of the sort turned out by the DemonTools *2html functions and returns a clean string
+function DemonTools.html2string(text)
+  return html2string(text)
+end
+
 --- Takes an hecho colored text string and returns a ansi colored one
 -- @tparam string text the text to convert
 -- @usage dt.hecho2ansi("#7f0000,00007fTest") --returns "[38:2::127:0:0m[48:2::0:0:127mTest"
@@ -898,6 +1086,11 @@ end
 -- @usage   dt.hecho2decho("#7f0000,00007fTest") --returns "<127,0,0:0,0,127>Test"
 function DemonTools.hecho2decho(text)
   return hecho2decho(text)
+end
+
+--- Takes the currently copy()ed item and returns it as a decho string
+function DemonTools.append2decho()
+  return append2decho()
 end
 
 --- Dump the contents of a miniconsole, user window, or the main window in one of several formats, as determined by a table of options
@@ -1085,6 +1278,29 @@ end
 --dt.getValueAt("currentHP") -- returns 50
 function DemonTools.getValueAt(variableString)
   return getValueAt(variableString)
+end
+
+--- Returns if a file or directory exists on the filesystem
+-- @tparam string path the path to the file or directory to check
+function DemonTools.exists(path)
+  return exists(path)
+end
+
+--- Returns if a path is a directory or not
+-- @tparam string path the path to check
+function DemonTools.isDir(path)
+  return isDir(path)
+end
+
+--- Returns true if running on windows, false otherwise
+function DemonTools.isWindows()
+  return isWindows()
+end
+
+--- Creates a directory, creating each directory as necessary along the way.
+-- @tparam string path the path to create
+function DemonTools.mkdir_p(path)
+  return mkdir_p(path)
 end
 
 return DemonTools
