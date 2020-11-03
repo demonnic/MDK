@@ -4,7 +4,8 @@
 --@copyright 2020 Damian Monogue
 --@license MIT, see LICENSE.lua
 local DemonTools = {}
-local bufferName = "DemonToolsCheatBuffer"
+local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000 })
+cheatConsole:hide()
 local function exists(path)
   local ok, err, code = os.rename(path, path)
   if not ok and code == 13 then return true end
@@ -663,10 +664,10 @@ local function hecho2string(text)
 end
 
 local function append2decho()
-  createBuffer(bufferName)
-  clearWindow(bufferName)
-  appendBuffer(bufferName)
-  local str = copy2decho(bufferName)
+  cheatConsole:clear()
+  cheatConsole:appendBuffer()
+  local str = copy2decho(cheatConsole.name)
+  cheatConsole:clear()
   return str
 end
 
@@ -766,11 +767,11 @@ local function consoleToString(options)
 end
 
 local function decho2html(text)
-  createBuffer(bufferName)
-  clearWindow(bufferName)
+  cheatConsole:clear()
   text = text:gsub("\n", "<br>")
-  decho(bufferName, text)
-  local html = consoleToString({win = bufferName, format = "h", includeHtmlWrapper = false, start_line = 1})
+  cheatConsole:decho(text)
+  local html = copy2html(cheatConsole.name)
+  cheatConsole:clear()
   return html
 end
 

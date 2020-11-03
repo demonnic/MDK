@@ -1,3 +1,4 @@
+--- MiniConsole with logging capabilities
 --@classmod LoggingConsole
 --@author Damian Monogue <demonnic@gmail.com>
 --@copyright 2020 Damian Monogue
@@ -63,6 +64,7 @@ local LoggingConsole = {
 --   </tr>
 --</tbody>
 --</table>
+--@param container the container for the console
 function LoggingConsole:new(cons, container)
   cons = cons or {}
   local consType = type(cons)
@@ -243,7 +245,6 @@ function LoggingConsole:xEchoLink(text, lType, command, hint, useFormat, log)
   if log == nil then
     log = self.log
   end
-  echo(tostring(log))
   local logStr = ""
   if lType:starts("c") then
     if self.logFormat == "h" then
@@ -293,7 +294,6 @@ function LoggingConsole:xEchoLink(text, lType, command, hint, useFormat, log)
     end
   end
   if log then
-    echo("THIS SHOULD LOG NOW!!" .. logStr .. " !!\n")
     self:writeToLog(logStr)
   end
 end
@@ -343,8 +343,8 @@ end
 --@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
 --@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
 --@param log Should we log this line? Defaults to self.log if not passed.
-function LoggingConsole:cechoPopup(text, commands, hint, log)
-  self:xEchoLink(text, "cp", commands, hint, true, log)
+function LoggingConsole:cechoPopup(text, commands, hints, log)
+  self:xEchoLink(text, "cp", commands, hints, true, log)
 end
 
 --- dechoPopup for LoggingConsole
@@ -352,8 +352,8 @@ end
 --@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
 --@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
 --@param log Should we log this line? Defaults to self.log if not passed.
-function LoggingConsole:dechoPopup(text, commands, hint, log)
-  self:xEchoLink(text, "dp", commands, hint, true, log)
+function LoggingConsole:dechoPopup(text, commands, hints, log)
+  self:xEchoLink(text, "dp", commands, hints, true, log)
 end
 
 --- hechoPopup for LoggingConsole
@@ -361,8 +361,8 @@ end
 --@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
 --@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
 --@param log Should we log this line? Defaults to self.log if not passed.
-function LoggingConsole:hechoPopup(text, commands, hint, log)
-  self:xEchoLink(text, "hp", commands, hint, true, log)
+function LoggingConsole:hechoPopup(text, commands, hints, log)
+  self:xEchoLink(text, "hp", commands, hints, true, log)
 end
 
 --- echoPopup for LoggingConsole
@@ -374,8 +374,8 @@ end
 --@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}) -- text "This is a link" will send("sleep") when clicked and be blue w/ underline. Defaut log behaviour (self.log)
 --@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, false, false) -- same as above, but forces it not to log regardless of self.log setting
 --@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, true, true) -- same as above, but forces it to log regardless of self.log setting and the text will look like anything else echoed to the console.
-function LoggingConsole:echoPopup(text, commands, hint, useCurrentFormat, log)
-  self:xEchoLink(text, "ep", commands, hint, useCurrentFormat, log)
+function LoggingConsole:echoPopup(text, commands, hints, useCurrentFormat, log)
+  self:xEchoLink(text, "ep", commands, hints, useCurrentFormat, log)
 end
 
 
@@ -446,12 +446,6 @@ function LoggingConsole:replay(numberOfLines)
   end
   self:decho(result, false)
 end
-
--- --- Resposition's the console, generally in response to a window resize event
--- --@local
--- function LoggingConsole:reposition()
---   parent.reposition(self)
--- end
 
 setmetatable(LoggingConsole, parent)
 
