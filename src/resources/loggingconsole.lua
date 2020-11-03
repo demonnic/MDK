@@ -17,7 +17,7 @@ local htmlHeader = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitiona
       body {
         background-color: black;
         font-family: 'Droid Sans Mono';
-        white-space: pre; 
+        white-space: pre-wrap; 
         font-size: 12px;
       }
     </style>
