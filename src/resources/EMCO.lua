@@ -589,6 +589,8 @@ function EMCO:addTab(tabName, position)
   end
 end
 
+--- Switches the active, visible tab of the EMCO to tabName
+--@param tabName the name of the tab to show
 function EMCO:switchTab(tabName)
   local oldTab = self.currentTab
   if oldTab ~= tabName and oldTab ~= "" then
@@ -732,6 +734,34 @@ function EMCO:processTemplate(str, tabName)
   str = str:gsub("|E", self.name)
   str = str:gsub("|N", tabName or "")
   return str
+end
+
+--- Sets the path for the EMCO for logging
+--@param path the template for the path. @see EMCO:new()
+function EMCO:setPath(path)
+  if not LC then return end
+  path = path or self.path
+  self.path = path
+  path = self:processTemplate(path)
+  for name,window in pairs(self.mc) do
+    if not (self.mapTab and self.mapTabName == name) then
+      window:setPath(path)
+    end
+  end
+end
+
+--- Sets the fileName for the EMCO for logging
+--@param fileName the template for the path. @see EMCO:new()
+function EMCO:setFileName(fileName)
+  if not LC then return end
+  fileName = fileName or self.fileName
+  self.fileName = fileName
+  fileName = self:processTemplate(fileName)
+  for name,window in pairs(self.mc) do
+    if not (self.mapTab and self.mapTabName == name) then
+      window:setFileName(fileName)
+    end
+  end
 end
 
 --- Sets the command action for a tab's command line. Can either be a template string to send where '|t' is replaced by the text sent, or a funnction which takes the text
