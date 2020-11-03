@@ -14,19 +14,22 @@ These files contain the modules in the MDK. You only need to include those files
 You should also include demontools.lua, as it notes below several other of the MDK modules make use of items within it.
 
 * demontools.lua
-  * Collection of miscellaneous useful functions. You should include this file if you use the MDK, as several other modules make use of it
+  * Collection of miscellaneous useful functions. You should include this file if you use the MDK, as several other modules make use of it. Include functions for converting c/d/hecho, html, and ansi colored strings between each other, mkdir_p, and some others. Documented at the API docs linked above.
 
 * chyron.lua
   * Label which moves a message across its face from right to left, like a stock ticker or the news chyrons. Documentation at https://github.com/demonnic/MDK/wiki/Chyron
 
 * EMCO.lua
-  * EMCO. Documentation at https://github.com/demonnic/EMCO/wiki
+  * EMCO. Documentation at https://github.com/demonnic/EMCO/wiki Will make use of LoggingConsole if loggingconsole.lua and demontools.lua are included
 
 * gradientmaker.lua
   * Functions for creating color gradients for use with c/d/hecho. Documentation at https://github.com/demonnic/MDK/wiki/gradientmaker
 
 * ftext.lua
   * basic fText. Documentation at https://github.com/demonnic/fText/wiki
+
+* loggingconsole.lua
+  * Self logging extension to the mini console. Works just like a Geyser.MiniConsole but adds a templated path and fileName constraint, as well as logFormat so it can log what is echod or appended to it. Requires demontools.lua in order to work.
 
 * sortbox.lua
   * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at https://github.com/demonnic/MDK/wiki/SortBox
