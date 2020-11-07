@@ -728,6 +728,26 @@ function EMCO:processImage(tabName)
   end
 end
 
+--- Replays the last numLines lines from the log for tabName
+--@param tabName the name of the tab to replay
+--@param numLines the number of lines to replay
+function EMCO:replay(tabName, numLines)
+  if not LC then return end
+  if self.mapTab and tabName == self.mapTabName then return end
+  numLines = numLines or 10
+  self.mc[tabName]:replay(numLines)
+end
+
+--- Replays the last numLines in all miniconsoles
+--@param numLimes
+function EMCO:replayAll(numLines)
+  if not LC then return end
+  numLines = numLines or 10
+  for _, tabName in ipairs(self.consoles) do
+    self:replay(tabName, numLines)
+  end
+end
+
 --- Formats the string through EMCO's template. |E is replaced with the EMCO's name. |N is replaced with the tab's name.
 --@param str the string to replace tokens in
 function EMCO:processTemplate(str, tabName)
