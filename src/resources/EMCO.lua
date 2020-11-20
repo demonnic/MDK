@@ -569,6 +569,7 @@ function EMCO:removeTab(tabName)
   self.tabBox:organize()
   self.consoleContainer:remove(window)
   self.mc[tabName] = nil
+  self.tabs[tabName] = nil
 end
 
 --- Adds a tab to the EMCO object
