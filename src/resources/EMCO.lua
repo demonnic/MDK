@@ -12,7 +12,7 @@ local EMCO = Geyser.Container:new({
   path = "|h/log/|E/|y/|m/|d/",
   fileName = "|N.|e",
   bufferSize = "100000",
-  deleteLines = "10000",
+  deleteLines = "1000",
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -304,7 +304,7 @@ end
 --   <tr>
 --     <td class="tg-odd">deleteLines</td>
 --     <td class="tg-odd">Number of lines to delete if a console's buffer fills up.</td>
---     <td class="tg-odd">10000</td>
+--     <td class="tg-odd">1000</td>
 --   </tr>
 -- </tbody>
 -- </table>
