@@ -10,7 +10,9 @@ local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
   timestampExceptions = {},
   path = "|h/log/|E/|y/|m/|d/",
-  fileName = "|N.|e"
+  fileName = "|N.|e",
+  bufferSize = "100000",
+  deleteLines = "10000",
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -293,6 +295,16 @@ end
 --     <td class="tg-odd">backgroundImages</td>
 --     <td class="tg-odd">A table containing definitions for the background images. Each entry should have a key the same name as the tab it applies to, with entries "image" which is the path to the image file,<br>and "mode" which determines how it is displayed. "border" stretches, "center" center, "tile" tiles, and "style". See Mudletwikilink for details.</td>
 --     <td class="tg-odd">{}</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">bufferSize</td>
+--     <td class="tg-even">Number of lines of scrollback to keep for the miniconsoles</td>
+--     <td class="tg-even">100000</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">deleteLines</td>
+--     <td class="tg-odd">Number of lines to delete if a console's buffer fills up.</td>
+--     <td class="tg-odd">10000</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -673,6 +685,7 @@ function EMCO:createComponentsForTab(tabName)
     else
       window:disableScrollBar()
     end
+    window:setBufferSize(self.bufferSize, self.deleteLines)
   end
   self.mc[tabName] = window
   if not mapTab then
@@ -680,6 +693,22 @@ function EMCO:createComponentsForTab(tabName)
   end
   window:hide()
   self:processImage(tabName)
+end
+
+--- Sets the buffer size and number of lines to delete for all managed miniconsoles.
+--- @tparam number bufferSize number of lines of scrollback to maintain in the miniconsoles. Uses current value if nil is passed
+--- @tparam number deleteLines number of line to delete if the buffer filles up. Uses current value if nil is passed
+function EMCO:setBufferSize(bufferSize, deleteLines)
+  bufferSize = bufferSize or self.bufferSize
+  deleteLines = deleteLines or self.deleteLines
+  self.bufferSize = bufferSize
+  self.deleteLines = deleteLines
+  for tabName,window in pairs(self.mc) do
+    local mapTab = self.mapTab and tabName == self.mapTabName
+    if not mapTab then
+      window:setBufferSize(bufferSize, deleteLines)
+    end
+  end
 end
 
 --- Sets the background image for a tab's console. use EMCO:resetBackgroundImage(tabName) to remove an image.
