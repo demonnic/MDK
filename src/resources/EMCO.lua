@@ -769,7 +769,7 @@ function EMCO:replay(tabName, numLines)
 end
 
 --- Replays the last numLines in all miniconsoles
---@param numLimes
+--@param numLineses
 function EMCO:replayAll(numLines)
   if not LC then return end
   numLines = numLines or 10
