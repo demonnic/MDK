@@ -29,5 +29,5 @@ cp $srcdir/tablemaker.lua sub-projects/fText/src/resources/tablemaker.lua
 
 # prep EMCO
 cp $srcdir/EMCO.lua sub-projects/EMCO/src/resources/EMCO.lua
-cp $srcdir/demontools.lua sub-projects/EMCO/src/resources/demontoools.lua
+cp $srcdir/demontools.lua sub-projects/EMCO/src/resources/demontools.lua
 cp $srcdir/loggingconsole.lua sub-projects/EMCO/src/resources/loggingconsole.lua
