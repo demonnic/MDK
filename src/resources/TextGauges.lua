@@ -38,14 +38,14 @@ local TextGauge = {
 --     <td class="tg-even">:</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">emptyCharacter</td>
---     <td class="tg-odd">What character to use for the 'empty' part of the gauge</td>
---     <td class="tg-odd">-</td>
+--     <td class="tg-odd">overflowCharacter</td>
+--     <td class="tg-odd">What character to use for >100% part of the gauge</td>
+--     <td class="tg-odd">if not set, it uses whatever you set fillCharacter to</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">showPercent</td>
---     <td class="tg-even">Should we show what % of the gauge is filled?</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-even">emptyCharacter</td>
+--     <td class="tg-even">What character to use for the 'empty' part of the gauge</td>
+--     <td class="tg-even">-</td>
 --   </tr>
 --   <tr>
 --     <td class="tg-odd">showPercentSymbol</td>
@@ -53,14 +53,44 @@ local TextGauge = {
 --     <td class="tg-odd">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">format</td>
---     <td class="tg-even">What type of color formatting to use? 'c' for cecho, 'd' for decho, 'h' for hecho</td>
---     <td class="tg-even">c</td>
+--     <td class="tg-even">showPercent</td>
+--     <td class="tg-even">Should we show what % of the gauge is filled?</td>
+--     <td class="tg-even">true</td>
 --   </tr>
 --   <tr>
 --     <td class="tg-odd">value</td>
 --     <td class="tg-odd">How much of the gauge should be filled</td>
 --     <td class="tg-odd">50</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">format</td>
+--     <td class="tg-even">What type of color formatting to use? 'c' for cecho, 'd' for decho, 'h' for hecho</td>
+--     <td class="tg-even">c</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">fillColor</td>
+--     <td class="tg-odd">What color to make the full part of the bar?</td>
+--     <td class="tg-odd">"DarkOrange" or equivalent for your format type</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">emptyColor</td>
+--     <td class="tg-even">what color to use for the empty part of the bar?</td>
+--     <td class="tg-even">"white" or format appropriate equivalent</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">percentColor</td>
+--     <td class="tg-odd">What color to print the percentage numvers in, if shown?</td>
+--     <td class="tg-odd">"white" or fortmat appropriate equivalent</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">percentSymbolColor</td>
+--     <td class="tg-even">What color to make the % if shown?</td>
+--     <td class="tg-even">If not set, uses what percentColor is set to.</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">overflowColor</td>
+--     <td class="tg-odd">What color to make the >100% portion of the bar?</td>
+--     <td class="tg-odd">If not set, will use the same color as fillColor</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -96,6 +126,14 @@ function TextGauge:setFillCharacter(character)
   self.fillCharacter = character
 end
 
+--- Sets the character to use for the 'overflow' (>100%) part of the gauge
+--@tparam string character the character to use.
+function TextGauge:setOverflowCharacter(character)
+  assert(character ~= nil, "TextGauge:setOverflowCharacter(character): character required, got nil")
+  assert(utf8.len(character) == 1, "TextGauge:setOverflowCharacter(character): character must be a single character")
+  self.overflowCharacter = character
+end
+
 --- Sets the character to use for the 'full' part of the gauge
 --@tparam string character the character to use.
 function TextGauge:setEmptyCharacter(character)
@@ -109,6 +147,13 @@ end
 function TextGauge:setFillColor(color)
   assert(color ~= nil, "TextGauge:setFillColor(color): color required, got nil")
   self.fillColor = color
+end
+
+--- Sets the overflow color for the gauge.
+--@tparam string color the color to use for the full portion of the gauge. Will be run through Geyser.Golor
+function TextGauge:setOverflowColor(color)
+  assert(color ~= nil, "TextGauge:setOverflowColor(color): color required, got nil")
+  self.overflowColor = color
 end
 
 --- Sets the empty color for the gauge.
