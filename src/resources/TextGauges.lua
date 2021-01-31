@@ -68,7 +68,6 @@ function TextGauge:new(options)
   options = options or {}
   local optionsType = type(options)
   assert(optionsType == "table" or optionsType == "nil", "TextGauge:new(options): options expected as table, got " .. optionsType )
-
   local me = table.deepcopy(options)
   setmetatable(me, self)
   self.__index = self
@@ -196,6 +195,7 @@ function TextGauge:setDefaultColors()
     self.emptyColor = self.emptyColor or ""
     self.resetColor = ""
   end
+  self.overflowColor = self.overflowColor or self.fillColor
 end
 
 -- Internal function used to route Geyser.Color based on internally stored format
@@ -224,14 +224,15 @@ function TextGauge:setValue(current,max)
   if current < 0 then current = 0 end
   max = max or 100
   local value = math.floor(current / max * 100)
-  if value > 100 then value = 100 end
   self.value = value
   local width = self.width
   local percentString = ""
   local percentSymbolString = ""
   local fillCharacter = self.fillCharacter
+  local overflowCharacter = self.overflowCharacter or fillCharacter
   local emptyCharacter = self.emptyCharacter
   local fillColor = self:getColor(self.fillColor)
+  local overflowColor = self:getColor(self.overflowColor)
   local emptyColor = self:getColor(self.emptyColor)
   local percentColor = self:getColor(self.percentColor)
   local percentSymbolColor = self:getColor(self.percentSymbolColor)
@@ -244,11 +245,20 @@ function TextGauge:setValue(current,max)
     percentSymbolString = string.format("%s%s%s", percentSymbolColor, "%", resetColor)
     width = width - 1
   end
-  local perc = (current / max)
-  local fillWidth = math.floor(perc * width)
+  local perc = value / 100
+  local overflow = perc - 1
+  if overflow < 0 then overflow = 0 end
+  if overflow > 1 then
+    perc = 2
+    overflow = 1
+  end
+  local overflowWidth = math.floor(overflow * width)
+  local fillWidth = math.floor((perc - overflow) * width)
   local emptyWidth = width - fillWidth
-  if value == 100 and self.showPercent then fillWidth = fillWidth -1 end
-  return string.format("%s%s%s%s%s%s%s%s%s", fillColor, string.rep(fillCharacter, fillWidth),resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor, percentString, percentSymbolString, resetColor)
+  fillWidth = fillWidth - overflowWidth
+  if value >= 100 and self.showPercent then fillWidth = fillWidth -1 end
+  if value >= 200 and self.showPercent then overflowWidth = overflowWidth -1 end
+  return string.format("%s%s%s%s%s%s%s%s%s%s%s", overflowColor, string.rep(overflowCharacter, overflowWidth), fillColor, string.rep(fillCharacter, fillWidth),resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor, percentString, percentSymbolString, resetColor)
 end
 
 --- Synonym for setValue
