@@ -100,8 +100,8 @@ end
 ---@param window Optional window to cecho to
 ---@param filename Full path to file
 ---@see echofile.f
----@usage local fp = require("MDK-1.echofile")
---- local cechoFile,f = fp.cechoFile, fp.f
+---@usage local ec = require("MDK-1.echofile")
+--- local cechoFile,f = ec.cechoFile, ec.f
 --- cechoFile("C:/path/to/file") -- windows1
 --- cechoFile("C:\\path\\to\\file") -- windows2
 --- cechoFile("/path/to/file") -- Linux/MacOS
