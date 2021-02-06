@@ -68,26 +68,35 @@ local function xechoFile(options)
     return nil, err
   end
   local lines = file:read("*a")
-  return func(window, f(lines))
+  if options.ansi then lines = ansi2decho(lines) end
+  if options.filter then lines = f(lines) end
+  return func(window, lines)
 end
 
-local function getOptions(etype, window, filename)
+local function getOptions(etype, filter, window, filename)
   if filename == nil then
     filename = window
     window = "main"
+  end
+  local ansi = false
+  if etype == "a" then
+    etype = 'd'
+    ansi = true
   end
   local options = {
     filename = filename,
     window = window,
     func = _G[etype .. "echo"],
-    functionName = etype .. "echoFile([window,] filename)"
+    functionName = etype .. "echoFile([window,] filename)",
+    ansi = ansi,
+    filter = filter,
   }
   return options
 end
 
 --- Takes a string and performs interpolation
 --- Uses {} as the delimiter. Expressions will be evaluated
----@param str The string to interpolate
+---@param str string: The string to interpolate
 ---@usage echofile = require("MDK-1.echofile")
 --- echofile.f("{1+1}") -- returns "2"
 --- local x = 4
@@ -96,9 +105,41 @@ function echofile.f(str)
   return f(str)
 end
 
---- reads the contents of a file, interpolates it as per echofile.f and then cechos it
----@param window Optional window to cecho to
----@param filename Full path to file
+--- reads the contents of a file, converts it to decho and then dechos it
+---@param window string: Optional window to cecho to
+---@param filename string: Full path to file
+---@see echofile.f
+---@see echofile.cechoFile
+---@usage local ec = require("MDK-1.echofile")
+--- local cechoFile,f = ec.cechoFile, ec.f
+--- cechoFile("C:/path/to/file") -- windows1
+--- cechoFile("C:\\path\\to\\file") -- windows2
+--- cechoFile("/path/to/file") -- Linux/MacOS
+--- cechoFile("aMiniConsole", f"{getMudletHomeDir()}/myPkgName/helpfile") -- cecho a file from your pkg to a miniconsole
+function echofile.aechoFile(window, filename)
+  local options = getOptions("a", false, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file, converts it to decho, interpolates it as per echofile.f and then dechos it
+---@param window string: Optional window to cecho to
+---@param filename string: Full path to file
+---@see echofile.f
+---@see echofile.cechoFilef
+---@usage local ec = require("MDK-1.echofile")
+--- local cechoFile,f = ec.cechoFile, ec.f
+--- cechoFile("C:/path/to/file") -- windows1
+--- cechoFile("C:\\path\\to\\file") -- windows2
+--- cechoFile("/path/to/file") -- Linux/MacOS
+--- cechoFile("aMiniConsole", f"{getMudletHomeDir()}/myPkgName/helpfile") -- cecho a file from your pkg to a miniconsole
+function echofile.aechoFilef(window, filename)
+  local options = getOptions("a", true, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file and then cechos it
+---@param window string: Optional window to cecho to
+---@param filename string: Full path to file
 ---@see echofile.f
 ---@usage local ec = require("MDK-1.echofile")
 --- local cechoFile,f = ec.cechoFile, ec.f
@@ -107,37 +148,82 @@ end
 --- cechoFile("/path/to/file") -- Linux/MacOS
 --- cechoFile("aMiniConsole", f"{getMudletHomeDir()}/myPkgName/helpfile") -- cecho a file from your pkg to a miniconsole
 function echofile.cechoFile(window, filename)
-  local options = getOptions("c", window, filename)
+  local options = getOptions("c", false, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file, interpolates it as per echofile.f and then cechos it
+---@param window string: Optional window to cecho to
+---@param filename string: Full path to file
+---@see echofile.f
+---@usage local ec = require("MDK-1.echofile")
+--- local cechoFile,f = ec.cechoFile, ec.f
+--- cechoFile("C:/path/to/file") -- windows1
+--- cechoFile("C:\\path\\to\\file") -- windows2
+--- cechoFile("/path/to/file") -- Linux/MacOS
+--- cechoFile("aMiniConsole", f"{getMudletHomeDir()}/myPkgName/helpfile") -- cecho a file from your pkg to a miniconsole
+function echofile.cechoFilef(window, filename)
+  local options = getOptions("c", true, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file and then dechos it
+---@param window string: Optional window to decho to
+---@param filename string: Full path to file
+---@see echofile.f
+---@see echofile.cechoFile
+function echofile.dechoFile(window, filename)
+  local options = getOptions("d", false, window, filename)
   return xechoFile(options)
 end
 
 --- reads the contents of a file, interpolates it as per echofile.f and then dechos it
----@param window Optional window to decho to
----@param filename Full path to file
+---@param window string: Optional window to decho to
+---@param filename string: Full path to file
 ---@see echofile.f
 ---@see echofile.cechoFile
-function echofile.dechoFile(window, filename)
-  local options = getOptions("d", window, filename)
+function echofile.dechoFilef(window, filename)
+  local options = getOptions("d", true, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file and then hechos it
+---@param window string: Optional window to hecho to
+---@param filename string: Full path to file
+---@see echofile.f
+---@see echofile.cechoFile
+function echofile.hechoFile(window, filename)
+  local options = getOptions("h", false, window, filename)
   return xechoFile(options)
 end
 
 --- reads the contents of a file, interpolates it as per echofile.f and then hechos it
----@param window Optional window to hecho to
----@param filename Full path to file
+---@param window string: Optional window to hecho to
+---@param filename string: Full path to file
 ---@see echofile.f
 ---@see echofile.cechoFile
-function echofile.hechoFile(window, filename)
-  local options = getOptions("h", window, filename)
+function echofile.hechoFilef(window, filename)
+  local options = getOptions("h", true, window, filename)
   return xechoFile(options)
 end
 
 --- reads the contents of a file, interpolates it as per echofile.f and then echos it
----@param window Optional window to echo to
----@param filename Full path to file
+---@param window string: Optional window to echo to
+---@param filename string: Full path to file
 ---@see echofile.f
 ---@see echofile.cechoFile
 function echofile.echoFile(window, filename)
-  local options = getOptions("", window, filename)
+  local options = getOptions("", false, window, filename)
+  return xechoFile(options)
+end
+
+--- reads the contents of a file, interpolates it as per echofile.f and then echos it
+---@param window string: Optional window to echo to
+---@param filename string: Full path to file
+---@see echofile.f
+---@see echofile.cechoFile
+function echofile.echoFilef(window, filename)
+  local options = getOptions("", true, window, filename)
   return xechoFile(options)
 end
 
@@ -150,14 +236,32 @@ function echofile.patchGeyser()
   function Geyser.MiniConsole:echoFile(filename)
     return echofile.echoFile(self.name, filename)
   end
+  function Geyser.MiniConsole:echoFilef(filename)
+    return echofile.echoFilef(self.name, filename)
+  end
+  function Geyser.MiniConsole:aechoFile(filename)
+    return echofile.aechoFile(self.name, filename)
+  end
+  function Geyser.MiniConsole:aechoFilef(filename)
+    return echofile.aechoFilef(self.name, filename)
+  end
   function Geyser.MiniConsole:cechoFile(filename)
     return echofile.cechoFile(self.name, filename)
+  end
+  function Geyser.MiniConsole:cechoFilef(filename)
+    return echofile.cechoFilef(self.name, filename)
   end
   function Geyser.MiniConsole:dechoFile(filename)
     return echofile.dechoFile(self.name, filename)
   end
+  function Geyser.MiniConsole:dechoFilef(filename)
+    return echofile.dechoFilef(self.name, filename)
+  end
   function Geyser.MiniConsole:hechoFile(filename)
     return echofile.hechoFile(self.name, filename)
+  end
+  function Geyser.MiniConsole:hechoFilef(filename)
+    return echofile.hechoFilef(self.name, filename)
   end
 end
 
@@ -170,9 +274,15 @@ end
 function echofile.installGlobal()
   _G.f = f
   _G.echoFile = echofile.echoFile
+  _G.echoFilef = echofile.echoFilef
+  _G.aechoFile = echofile.aechoFile
+  _G.aechoFilef = echofile.aechoFilef
   _G.cechoFile = echofile.cechoFile
+  _G.cechoFilef = echofile.cechoFilef
   _G.dechoFile = echofile.dechoFile
+  _G.dechoFilef = echofile.dechoFilef
   _G.hechoFile = echofile.hechoFile
+  _G.hechoFilef = echofile.hechoFilef
   echofile.patchGeyser()
 end
 
