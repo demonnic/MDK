@@ -1,4 +1,4 @@
-MDKExample = MDKExample or { version = "1.1.4" }
+MDKExample = MDKExample or { version = "1.1.5" }
 function MDKExample.exampleFText()
   local fText = require("@PKGNAME@.ftext")
   cecho(fText.fText("Testing!", {width = 40, formatType = 'c', textColor = '<orange>', capColor = '<purple>', cap = '[TEST]'}))
