@@ -4,7 +4,6 @@
 ---@copyright 2021 Damian Monogue
 ---@copyright 2016 Hisham Muhammad (https://github.com/hishamhm/f-strings/blob/master/LICENSE)
 ---@license MIT, see LICENSE.lua
-
 local echofile = {}
 
 -- following functions fiddled with from https://github.com/hishamhm/f-strings/blob/master/F.lua and https://hisham.hm/2016/01/04/string-interpolation-in-lua/
@@ -27,22 +26,24 @@ local function f(str)
   return (str:gsub("%b{}", function(block)
     local code = block:match("{(.*)}")
     local exp_env = {}
-    setmetatable(exp_env, { __index = function(_, k)
-      local stack_level = 5
-      while debug.getinfo(stack_level, "") ~= nil do
-        local i = 1
-        repeat
-          local name, value = debug.getlocal(stack_level, i)
-          if name == k then
-            return value
-          end
-          i = i + 1
-        until name == nil
-        stack_level = stack_level + 1
-      end
-      return rawget(outer_env, k)
-    end })
-    local fn, err = load("return "..code, "expression `"..code.."`", "t", exp_env)
+    setmetatable(exp_env, {
+      __index = function(_, k)
+        local stack_level = 5
+        while debug.getinfo(stack_level, "") ~= nil do
+          local i = 1
+          repeat
+            local name, value = debug.getlocal(stack_level, i)
+            if name == k then
+              return value
+            end
+            i = i + 1
+          until name == nil
+          stack_level = stack_level + 1
+        end
+        return rawget(outer_env, k)
+      end,
+    })
+    local fn, err = load("return " .. code, "expression `" .. code .. "`", "t", exp_env)
     if fn then
       return tostring(fn())
     else
@@ -63,13 +64,17 @@ local function xechoFile(options)
   if not io.exists(filename) then
     return nil, f("{functionName}: {filename} not found")
   end
-  local file,err = io.open(filename, "r")
+  local file, err = io.open(filename, "r")
   if not file then
     return nil, err
   end
   local lines = file:read("*a")
-  if options.ansi then lines = ansi2decho(lines) end
-  if options.filter then lines = f(lines) end
+  if options.ansi then
+    lines = ansi2decho(lines)
+  end
+  if options.filter then
+    lines = f(lines)
+  end
   return func(window, lines)
 end
 
@@ -232,7 +237,9 @@ end
 --- myMC = Geyser.MiniConsole:new({name = "myMC"})
 --- myMC:cechoFile(f"{getMudletHomeDir()}/helpfile")
 function echofile.patchGeyser()
-  if Geyser.MiniConsole.echoFile then return end
+  if Geyser.MiniConsole.echoFile then
+    return
+  end
   function Geyser.MiniConsole:echoFile(filename)
     return echofile.echoFile(self.name, filename)
   end
