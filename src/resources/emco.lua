@@ -2,11 +2,11 @@
 -- This is essentially YATCO, but with some tweaks, updates, and it returns an object
 -- similar to Geyser so that you can a.) have multiple of them and b.) easily embed it
 -- into your existing UI as you would any other Geyser element.
---@classmod EMCO
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@copyright 2021 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @classmod EMCO
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @copyright 2021 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local EMCO = Geyser.Container:new({
   name = "TabbedConsoleClass",
   timestampExceptions = {},
@@ -315,24 +315,31 @@ function EMCO:new(cons, container)
   local funcName = "EMCO:new(cons, container)"
   cons = cons or {}
   cons.type = cons.type or "tabbedConsole"
-  cons.consoles = cons.consoles or { "All" }
+  cons.consoles = cons.consoles or {"All"}
   if cons.mapTab then
     if not type(cons.mapTabName) == "string" then
       self:ce(funcName, [["mapTab" is true, thus constraint "mapTabName" and string expected, got ]] .. type(cons.mapTabName))
     elseif not table.contains(cons.consoles, cons.mapTabName) then
-      self:ce(funcName, [["mapTabName" must be one of the consoles contained within constraint "consoles". Valid option for tha mapTab are: ]] .. table.concat(cons.consoles, ","))
+      self:ce(funcName, [["mapTabName" must be one of the consoles contained within constraint "consoles". Valid option for tha mapTab are: ]] ..
+                table.concat(cons.consoles, ","))
     end
   end
   cons.allTabExclusions = cons.allTabExclusions or {}
-  if not type(cons.allTabExclusions) == "table" then self:se(funcName, "allTabExclusions must be a table if it is provided") end
+  if not type(cons.allTabExclusions) == "table" then
+    self:se(funcName, "allTabExclusions must be a table if it is provided")
+  end
   local me = self.parent:new(cons, container)
   setmetatable(me, self)
   self.__index = self
   -- set some defaults. Almost all the defaults we had for YATCO, plus a few new ones
   me.cmdActions = cons.cmdActions or {}
-  if not type(me.cmdActions) == "table" then self:se(funcName, "cmdActions must be a table if it is provided") end
+  if not type(me.cmdActions) == "table" then
+    self:se(funcName, "cmdActions must be a table if it is provided")
+  end
   me.backgroundImages = cons.backgroundImages or {}
-  if not type(me.backgroundImages) == "table" then self:se(funcName, "backgroundImages must be a table if provided.") end
+  if not type(me.backgroundImages) == "table" then
+    self:se(funcName, "backgroundImages must be a table if provided.")
+  end
   if me:fuzzyBoolean(cons.timestamp) then
     me:enableTimestamp()
   else
@@ -358,7 +365,7 @@ function EMCO:new(cons, container)
   else
     me:disablePreserveBackground()
   end
-  if me:fuzzyBoolean(cons.gag)then
+  if me:fuzzyBoolean(cons.gag) then
     me:enableGag()
   else
     me:disableGag()
@@ -424,9 +431,13 @@ function EMCO:new(cons, container)
   me.tabs = {}
   me.tabsToBlink = {}
   me.mc = {}
-  self.blinkTimerID = tempTimer(me.blinkTime, function() me:doBlink() end, true)
+  self.blinkTimerID = tempTimer(me.blinkTime, function()
+    me:doBlink()
+  end, true)
   me:reset()
-  if me.allTab then me:setAllTabName(me.allTabName or me.consoles[1]) end
+  if me.allTab then
+    me:setAllTabName(me.allTabName or me.consoles[1])
+  end
   table.insert(EMCOHelper.items, me)
   return me
 end
@@ -462,7 +473,7 @@ function EMCO:readYATCO()
   end
   if config.channels then
     local channels = "consoles = {\n"
-    for _,channel in ipairs(config.channels) do
+    for _, channel in ipairs(config.channels) do
       if _ == #config.channels then
         channels = string.format("%s    \"%s\"", channels, channel)
       else
@@ -491,9 +502,12 @@ function EMCO:readYATCO()
   end
   constraints = string.format("%s  preserveBackground = %s,\n", constraints, tostring(config.preserveBackground))
   constraints = string.format("%s  gag = %s,\n", constraints, tostring(config.gag))
-  constraints = string.format("%s  activeTabBGColor = \"<%s,%s,%s>\",\n", constraints, config.activeColors.r, config.activeColors.g, config.activeColors.b)
-  constraints = string.format("%s  inactiveTabBGColor = \"<%s,%s,%s>\",\n", constraints, config.inactiveColors.r, config.inactiveColors.g, config.inactiveColors.b)
-  constraints = string.format("%s  consoleColor = \"<%s,%s,%s>\",\n", constraints, config.windowColors.r, config.windowColors.g, config.windowColors.b)
+  constraints = string.format("%s  activeTabBGColor = \"<%s,%s,%s>\",\n", constraints, config.activeColors.r, config.activeColors.g,
+                              config.activeColors.b)
+  constraints = string.format("%s  inactiveTabBGColor = \"<%s,%s,%s>\",\n", constraints, config.inactiveColors.r, config.inactiveColors.g,
+                              config.inactiveColors.b)
+  constraints =
+    string.format("%s  consoleColor = \"<%s,%s,%s>\",\n", constraints, config.windowColors.r, config.windowColors.g, config.windowColors.b)
   constraints = string.format("%s  activeTabFGColor = \"%s\",\n", constraints, config.activeTabText)
   constraints = string.format("%s  inactiveTabFGColor = \"%s\"", constraints, config.inactiveTabText)
   constraints = string.format("%s\n})", constraints)
@@ -504,7 +518,8 @@ end
 -- with EMCO to achieve the same effect. Is just the invocation
 function EMCO:miniConvertYATCO()
   local constraints = self:readYATCO()
-  cecho("<white>(<blue>EMCO<white>)<reset> Found a YATCO config. Here are the constraints to use with EMCO(x,y,width, and height have been converted to their absolute values):\n\n")
+  cecho(
+    "<white>(<blue>EMCO<white>)<reset> Found a YATCO config. Here are the constraints to use with EMCO(x,y,width, and height have been converted to their absolute values):\n\n")
   echo(constraints .. "\n")
 end
 
@@ -554,10 +569,10 @@ function EMCO:ce(funcName, message)
 end
 
 --- Display the contents of one or more variables to an EMCO tab. like display() but targets the miniconsole
---@tparam string tabName the name of the tab you want to display to
---@param item The thing to display()
---@param[opt] item2 another thing to display()
---@param[optchain] item_n and so on and so on
+-- @tparam string tabName the name of the tab you want to display to
+-- @param tabName string the tab to displayu to
+-- @param item any The thing to display()
+-- @param[opt] any item2 another thing to display()
 function EMCO:display(tabName, ...)
   local funcName = "EMCO:display(tabName, item)"
   if not table.contains(self.consoles, tabName) then
@@ -567,7 +582,7 @@ function EMCO:display(tabName, ...)
 end
 
 --- Remove a tab from the EMCO
---@tparam string tabName the name of the tab you want to remove from the EMCO
+-- @param tabName string the name of the tab you want to remove from the EMCO
 function EMCO:removeTab(tabName)
   local funcName = "EMCO:removeTab(tabName)"
   if not table.contains(self.consoles, tabName) then
@@ -591,9 +606,13 @@ end
 function EMCO:addTab(tabName, position)
   local funcName = "EMCO:addTab(tabName, position)"
   position = self:checkTabPosition(position)
-  if type(position) == "string" then self.ae(funcName, "position as number expected, got " .. position) end
+  if type(position) == "string" then
+    self.ae(funcName, "position as number expected, got " .. position)
+  end
   local tabCheck = self:checkTabName(tabName)
-  if tabCheck ~= "clear" then self.ae(funcName, tabCheck) end
+  if tabCheck ~= "clear" then
+    self.ae(funcName, tabCheck)
+  end
   if position == 0 then
     table.insert(self.consoles, tabName)
     self:createComponentsForTab(tabName)
@@ -604,7 +623,7 @@ function EMCO:addTab(tabName, position)
 end
 
 --- Switches the active, visible tab of the EMCO to tabName
---@param tabName the name of the tab to show
+-- @param tabName string the name of the tab to show
 function EMCO:switchTab(tabName)
   local oldTab = self.currentTab
   if oldTab ~= tabName and oldTab ~= "" then
@@ -631,9 +650,7 @@ function EMCO:switchTab(tabName)
 end
 
 function EMCO:createComponentsForTab(tabName)
-  local tab = Geyser.Label:new({
-    name = string.format("%sTab%s", self.name, tabName)
-  }, self.tabBox)
+  local tab = Geyser.Label:new({name = string.format("%sTab%s", self.name, tabName)}, self.tabBox)
   if self.tabFont then
     tab:setFont(self.tabFont)
   end
@@ -648,7 +665,7 @@ function EMCO:createComponentsForTab(tabName)
   -- set the BGColor if set. if the CSS is set it overrides the setColor, but if it's "" then the setColor actually covers that.
   -- and we set a default for the inactiveBGColor
   tab:setColor(self.inactiveTabBGColor)
-  tab:setClickCallback("EMCOHelper.switchTab", nil, string.format("%s+%s",self.name, tabName))
+  tab:setClickCallback("EMCOHelper.switchTab", nil, string.format("%s+%s", self.name, tabName))
   self.tabs[tabName] = tab
   local window
   local windowConstraints = {
@@ -659,7 +676,7 @@ function EMCO:createComponentsForTab(tabName)
     name = string.format("%sWindow%s", self.name, tabName),
     commandLine = self.commandLine,
     path = self:processTemplate(self.path, tabName),
-    fileName = self:processTemplate(self.fileName, tabName)
+    fileName = self:processTemplate(self.fileName, tabName),
   }
   local parent = self.consoleContainer
   local mapTab = self.mapTab and tabName == self.mapTabName
@@ -704,7 +721,7 @@ function EMCO:setBufferSize(bufferSize, deleteLines)
   deleteLines = deleteLines or self.deleteLines
   self.bufferSize = bufferSize
   self.deleteLines = deleteLines
-  for tabName,window in pairs(self.mc) do
+  for tabName, window in pairs(self.mc) do
     local mapTab = self.mapTab and tabName == self.mapTabName
     if not mapTab then
       window:setBufferSize(bufferSize, deleteLines)
@@ -722,13 +739,16 @@ function EMCO:setBackgroundImage(tabName, imagePath, mode)
   local imagePathType = type(imagePath)
   local modeType = type(mode)
   local funcName = "EMCO:setBackgroundImage(tabName, imagePath, mode)"
-  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then self.ae(funcName, "tabName must be a string and an existing tab") end
-  if imagePathType ~= "string" or not io.exists(imagePath) then self.ae(funcName, "imagePath must be a string and point to an existing image file") end
-  if modeType ~= "string" or not table.contains({"border", "center", "tile", "style"}, mode) then self.ae(funcName, "mode must be one of 'border', 'center', 'tile', or 'style'") end
-  local image = {
-    image = imagePath,
-    mode = mode
-  }
+  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then
+    self.ae(funcName, "tabName must be a string and an existing tab")
+  end
+  if imagePathType ~= "string" or not io.exists(imagePath) then
+    self.ae(funcName, "imagePath must be a string and point to an existing image file")
+  end
+  if modeType ~= "string" or not table.contains({"border", "center", "tile", "style"}, mode) then
+    self.ae(funcName, "mode must be one of 'border', 'center', 'tile', or 'style'")
+  end
+  local image = {image = imagePath, mode = mode}
   self.backgroundImages[tabName] = image
   self:processImage(tabName)
 end
@@ -738,7 +758,9 @@ end
 function EMCO:resetBackgroundImage(tabName)
   local tabNameType = type(tabName)
   local funcName = "EMCO:resetBackgroundImage(tabName)"
-  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then self.ae(funcName, "tabName must be a string and an existing tab") end
+  if tabNameType ~= "string" or not table.contains(self.consoles, tabName) then
+    self.ae(funcName, "tabName must be a string and an existing tab")
+  end
   self.backgroundImages[tabName] = nil
   self:processImage(tabName)
 end
@@ -747,7 +769,9 @@ end
 --- @tparam string tabName the name of the tab to process the image for.
 --- @local
 function EMCO:processImage(tabName)
-  if self.mapTab and tabName == self.mapTabName then return end
+  if self.mapTab and tabName == self.mapTabName then
+    return
+  end
   local image = self.backgroundImages[tabName]
   local window = self.mc[tabName]
   if image then
@@ -760,19 +784,25 @@ function EMCO:processImage(tabName)
 end
 
 --- Replays the last numLines lines from the log for tabName
---@param tabName the name of the tab to replay
---@param numLines the number of lines to replay
+-- @param tabName the name of the tab to replay
+-- @param numLines the number of lines to replay
 function EMCO:replay(tabName, numLines)
-  if not LC then return end
-  if self.mapTab and tabName == self.mapTabName then return end
+  if not LC then
+    return
+  end
+  if self.mapTab and tabName == self.mapTabName then
+    return
+  end
   numLines = numLines or 10
   self.mc[tabName]:replay(numLines)
 end
 
 --- Replays the last numLines in all miniconsoles
---@param numLineses
+-- @param numLineses
 function EMCO:replayAll(numLines)
-  if not LC then return end
+  if not LC then
+    return
+  end
   numLines = numLines or 10
   for _, tabName in ipairs(self.consoles) do
     self:replay(tabName, numLines)
@@ -780,7 +810,7 @@ function EMCO:replayAll(numLines)
 end
 
 --- Formats the string through EMCO's template. |E is replaced with the EMCO's name. |N is replaced with the tab's name.
---@param str the string to replace tokens in
+-- @param str the string to replace tokens in
 function EMCO:processTemplate(str, tabName)
   str = str:gsub("|E", self.name)
   str = str:gsub("|N", tabName or "")
@@ -788,13 +818,15 @@ function EMCO:processTemplate(str, tabName)
 end
 
 --- Sets the path for the EMCO for logging
---@param path the template for the path. @see EMCO:new()
+-- @param path the template for the path. @see EMCO:new()
 function EMCO:setPath(path)
-  if not LC then return end
+  if not LC then
+    return
+  end
   path = path or self.path
   self.path = path
   path = self:processTemplate(path)
-  for name,window in pairs(self.mc) do
+  for name, window in pairs(self.mc) do
     if not (self.mapTab and self.mapTabName == name) then
       window:setPath(path)
     end
@@ -802,13 +834,15 @@ function EMCO:setPath(path)
 end
 
 --- Sets the fileName for the EMCO for logging
---@param fileName the template for the path. @see EMCO:new()
+-- @param fileName the template for the path. @see EMCO:new()
 function EMCO:setFileName(fileName)
-  if not LC then return end
+  if not LC then
+    return
+  end
   fileName = fileName or self.fileName
   self.fileName = fileName
   fileName = self:processTemplate(fileName)
-  for name,window in pairs(self.mc) do
+  for name, window in pairs(self.mc) do
     if not (self.mapTab and self.mapTabName == name) then
       window:setFileName(fileName)
     end
@@ -822,7 +856,9 @@ end
 --- @usage myEMCO:setCmdAction("CT", function(txt) send("ct " .. txt) end) -- functionally the same as the above
 function EMCO:setCmdAction(tabName, template)
   template = template or self.cmdActions[tabName]
-  if template == "" then template = nil end
+  if template == "" then
+    template = nil
+  end
   self.cmdActions[tabName] = template
   local window = self.mc[tabName]
   if template then
@@ -834,7 +870,9 @@ function EMCO:setCmdAction(tabName, template)
     elseif type(template) == "function" then
       window:setCmdAction(template)
     else
-      debugc(string.format("EMCO:setCmdAction(tabName, template): template must be a string or function if provided. Leaving CmdAction for tab %s be. Template type was: %s", tabName, type(template)))
+      debugc(string.format(
+               "EMCO:setCmdAction(tabName, template): template must be a string or function if provided. Leaving CmdAction for tab %s be. Template type was: %s",
+               tabName, type(template)))
     end
   else
     window:resetCmdAction()
@@ -861,7 +899,6 @@ function EMCO:printCmd(tabName, txt)
   return self.mc[tabName]:printCmd(txt)
 end
 
-
 --- Clears tabName's command line
 --- @tparam string tabName the tab whose command line you want to clear
 function EMCO:clearCmd(tabName)
@@ -878,7 +915,7 @@ end
 --- resets the object, redrawing everything
 function EMCO:reset()
   self:createContainers()
-  for _,tabName in ipairs(self.consoles) do
+  for _, tabName in ipairs(self.consoles) do
     self:createComponentsForTab(tabName)
   end
   local default
@@ -892,19 +929,13 @@ end
 
 function EMCO:createContainers()
   self.tabBoxLabel = Geyser.Label:new({
-    x=0,
-    y=0,
+    x = 0,
+    y = 0,
     width = "100%",
     height = tostring(tonumber(self.tabHeight) + 2) .. "px",
-    name = self.name .. "TabBoxLabel"
+    name = self.name .. "TabBoxLabel",
   }, self)
-  self.tabBox = Geyser.HBox:new({
-    x=0,
-    y=0,
-    width = "100%",
-    height = "100%",
-    name = self.name .. "TabBox"
-  }, self.tabBoxLabel)
+  self.tabBox = Geyser.HBox:new({x = 0, y = 0, width = "100%", height = "100%", name = self.name .. "TabBox"}, self.tabBoxLabel)
   self.tabBoxLabel:setStyleSheet(self.tabBoxCSS)
   self.tabBoxLabel:setColor(self.tabBoxColor)
 
@@ -914,7 +945,7 @@ function EMCO:createContainers()
     y = tostring(heightPlusGap) .. "px",
     width = "100%",
     height = "-0px",
-    name = self.name .. "ConsoleContainer"
+    name = self.name .. "ConsoleContainer",
   }, self)
   self.consoleContainer:setStyleSheet(self.consoleContainerCSS)
   self.consoleContainer:setColor(self.consoleContainerColor)
@@ -932,16 +963,8 @@ function EMCO:fuzzyBoolean(bool)
   if type(bool) == "boolean" or bool == nil then
     return bool
   elseif tostring(bool) then
-    local truth = {
-      "yes",
-      "true",
-      "0"
-    }
-    local untruth = {
-      "no",
-      "false",
-      "1"
-    }
+    local truth = {"yes", "true", "0"}
+    local untruth = {"no", "false", "1"}
     local boolstr = tostring(bool)
     if table.contains(truth, boolstr) then
       return true
@@ -970,7 +993,7 @@ end
 
 --- clears all the tabs
 function EMCO:clearAll()
-  for _,tabName in ipairs(self.consoles) do
+  for _, tabName in ipairs(self.consoles) do
     if not self.mapTab or (tabName ~= self.mapTabName) then
       self:clear(tabName)
     end
@@ -981,7 +1004,7 @@ end
 --- @tparam string font the font to use.
 function EMCO:setTabFont(font)
   self.tabFont = font
-  for _,tab in pairs(self.tabs) do
+  for _, tab in pairs(self.tabs) do
     tab:setFont(font)
   end
 end
@@ -1002,12 +1025,13 @@ end
 function EMCO:setFont(font)
   local af = getAvailableFonts()
   if not (af[font] or font == "") then
-    local err = "EMCO:setFont(font): attempt to call setFont with font '" .. font .. "' which is not available, see getAvailableFonts() for valid options\n"
+    local err = "EMCO:setFont(font): attempt to call setFont with font '" .. font ..
+                  "' which is not available, see getAvailableFonts() for valid options\n"
     err = err .. "In the meantime, we will use a similar font which isn't the one you asked for but we hope is close enough"
     debugc(err)
   end
   self.font = font
-  for _,tabName in pairs(self.consoles) do
+  for _, tabName in pairs(self.consoles) do
     if not self.mapTab or tabName ~= self.mapTabName then
       self.mc[tabName]:setFont(font)
     end
@@ -1024,7 +1048,8 @@ function EMCO:setSingleWindowFont(tabName, font)
   end
   local af = getAvailableFonts()
   if not (af[font] or font == "") then
-    local err = "EMCO:setSingleWindowFont(tabName, font): attempt to call setFont with font '" .. font .. "' which is not available, see getAvailableFonts() for valid options\n"
+    local err = "EMCO:setSingleWindowFont(tabName, font): attempt to call setFont with font '" .. font ..
+                  "' which is not available, see getAvailableFonts() for valid options\n"
     err = err .. "In the meantime, we will use a similar font which isn't the one you asked for but we hope is close enough"
     debugc(err)
   end
@@ -1123,7 +1148,8 @@ function EMCO:setTimestampFormat(format)
   local funcName = "EMCO:setTimestampFormat(format)"
   local strippedFormat = self:stripTimeChars(format)
   if strippedFormat ~= "" then
-    self.ae(funcName, "format contains invalid time format characters. Please see https://wiki.mudlet.org/w/Manual:Lua_Functions#getTime for formatting information")
+    self.ae(funcName,
+            "format contains invalid time format characters. Please see https://wiki.mudlet.org/w/Manual:Lua_Functions#getTime for formatting information")
   else
     self.timestampFormat = format
   end
@@ -1146,8 +1172,12 @@ end
 function EMCO:setAllTabName(allTabName)
   local funcName = "EMCO:setAllTabName(allTabName)"
   local allTabNameType = type(allTabName)
-  if allTabNameType ~= "string" then self.ae(funcName, "allTabName expected as string, got" .. allTabNameType) end
-  if not table.contains(self.consoles, allTabName) then self.ae(funcName, "allTabName must be the name of one of the console tabs. Valid options are: " .. table.concat(self.containers, ",")) end
+  if allTabNameType ~= "string" then
+    self.ae(funcName, "allTabName expected as string, got" .. allTabNameType)
+  end
+  if not table.contains(self.consoles, allTabName) then
+    self.ae(funcName, "allTabName must be the name of one of the console tabs. Valid options are: " .. table.concat(self.containers, ","))
+  end
   self.allTabName = allTabName
 end
 
@@ -1166,7 +1196,8 @@ end
 function EMCO:enableMapTab()
   local funcName = "EMCO:enableMapTab()"
   if not self.mapTabName then
-    error(funcName .. ": cannot enable the map tab, mapTabName not set. try running :setMapTabName(mapTabName) first with the name of the tab you want to bind the map to")
+    error(funcName ..
+            ": cannot enable the map tab, mapTabName not set. try running :setMapTabName(mapTabName) first with the name of the tab you want to bind the map to")
   end
   self.mapTab = true
   self:reset()
@@ -1242,13 +1273,15 @@ function EMCO:setBlinkTime(blinkTime)
   local funcName = "EMCO:setBlinkTime(blinkTime)"
   local blinkTimeNumber = tonumber(blinkTime)
   if not blinkTimeNumber then
-    self.ae(funcName, "blinkTime as number expected, got ".. type(blinkTime))
+    self.ae(funcName, "blinkTime as number expected, got " .. type(blinkTime))
   else
     self.blinkTime = blinkTimeNumber
     if self.blinkTimerID then
       killTimer(self.blinkTimerID)
     end
-    self.blinkTimerID = tempTimer(blinkTimeNumber, function() self:blink() end, true)
+    self.blinkTimerID = tempTimer(blinkTimeNumber, function()
+      self:blink()
+    end, true)
   end
 end
 
@@ -1256,7 +1289,7 @@ function EMCO:doBlink()
   if self.hidden or self.auto_hidden or not self.blink then
     return
   end
-  for tab,_ in pairs(self.tabsToBlink) do
+  for tab, _ in pairs(self.tabsToBlink) do
     self.tabs[tab]:flash()
   end
 end
@@ -1271,7 +1304,7 @@ function EMCO:setFontSize(fontSize)
     self.ae(funcName, "fontSize as number expected, got " .. fontSizeType)
   else
     self.fontSize = fontSizeNumber
-    for _,tabName in ipairs(self.consoles) do
+    for _, tabName in ipairs(self.consoles) do
       if self.mapTab and tabName == self.mapTabName then
         -- skip this one
       else
@@ -1283,7 +1316,7 @@ function EMCO:setFontSize(fontSize)
 end
 
 function EMCO:adjustTabNames()
-  for _,console in ipairs(self.consoles) do
+  for _, console in ipairs(self.consoles) do
     if console == self.currentTab then
       self.tabs[console]:echo(console, self.activTabFGColor, 'c')
     else
@@ -1343,7 +1376,7 @@ function EMCO:setConsoleColor(color)
 end
 
 function EMCO:adjustConsoleColors()
-  for _,console in ipairs(self.consoles) do
+  for _, console in ipairs(self.consoles) do
     if self.mapTab and self.mapTabName == console then
       -- skip Map
     else
@@ -1373,8 +1406,8 @@ function EMCO:setTabBoxColor(color)
 end
 
 function EMCO:adjustTabBoxBackground()
-    self.tabBoxLabel:setStyleSheet(self.tabBoxCSS)
-    self.tabBoxLabel:setColor(self.tabBoxColor)
+  self.tabBoxLabel:setStyleSheet(self.tabBoxCSS)
+  self.tabBoxLabel:setColor(self.tabBoxColor)
 end
 
 --- Sets the color for the container which holds the consoles attached to this object.
@@ -1417,7 +1450,7 @@ function EMCO:setTabHeight(tabHeight)
   local funcName = "EMCO:setTabHeight(tabHeight)"
   local tabHeightType = type(tabHeight)
   if not tabHeightNumber then
-    self.ae(funcName, "tabHeight as number expected, got ".. tabHeightType)
+    self.ae(funcName, "tabHeight as number expected, got " .. tabHeightType)
   else
     self.tabHeight = tabHeightNumber
     self:reset()
@@ -1429,7 +1462,7 @@ end
 -- but be warned if you do this it may be overwritten by future calls to EMCO:enableAutoWrap() or :disableAutoWrap()
 function EMCO:enableAutoWrap()
   self.autoWrap = true
-  for _,console in ipairs(self.consoles) do
+  for _, console in ipairs(self.consoles) do
     if self.mapTab and console == self.mapTabName then
       -- skip the map
     else
@@ -1443,7 +1476,7 @@ end
 -- but be warned if you do this it may be overwritten by future calls to EMCO:enableAutoWrap() or :disableAutoWrap()
 function EMCO:disableAutoWrap()
   self.autoWrap = false
-  for _,console in ipairs(self.consoles) do
+  for _, console in ipairs(self.consoles) do
     if self.mapTab and self.mapTabName == console then
       -- skip Map
     else
@@ -1463,7 +1496,7 @@ function EMCO:setWrap(wrapAt)
     self.ae(funcName, "wrapAt as number expect, got " .. wrapAtType)
   else
     self.wrapAt = wrapAtNumber
-    for _,console in ipairs(self.consoles) do
+    for _, console in ipairs(self.consoles) do
       if self.mapTab and self.mapTabName == console then
         -- skip the Map
       else
@@ -1483,7 +1516,7 @@ function EMCO:append(tabName, excludeAll)
   local tabNameType = type(tabName)
   local validTab = table.contains(self.consoles, tabName)
   if tabNameType ~= "string" then
-    self.ae(funcName, "tabName as string expected, got ".. tabNameType)
+    self.ae(funcName, "tabName as string expected, got " .. tabNameType)
   elseif not validTab then
     self.ae(funcName, "tabName must be a tab which is contained in this object. Valid tabnames are: " .. table.concat(self.consoles, ","))
   end
@@ -1512,15 +1545,16 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     error("You cannot send text to the Map tab")
   end
   local console = self.mc[tabName]
-  local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and self.mc[self.allTabName] or false
-  local ofr,ofg,ofb,obr,obg,obb
+  local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and
+                   self.mc[self.allTabName] or false
+  local ofr, ofg, ofb, obr, obg, obb
   if xtype == "a" then
     selectCurrentLine()
-    ofr,ofg,ofb = getFgColor()
-    obr,obg,obb = getBgColor()
+    ofr, ofg, ofb = getFgColor()
+    obr, obg, obb = getBgColor()
     if self.preserveBackground then
-      local r,g,b = Geyser.Color.parse(self.consoleColor)
-      setBgColor(r,g,b)
+      local r, g, b = Geyser.Color.parse(self.consoleColor)
+      setBgColor(r, g, b)
     end
     copy()
     if self.preserveBackground then
@@ -1529,17 +1563,17 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     deselect()
     resetFormat()
   else
-    ofr,ofg,ofb = Geyser.Color.parse("white")
-    obr,obg,obb = Geyser.Color.parse(self.consoleColor)
+    ofr, ofg, ofb = Geyser.Color.parse("white")
+    obr, obg, obb = Geyser.Color.parse(self.consoleColor)
   end
   if self.timestamp then
     local colorString = ""
     if self.customTimestampColor then
-      local tfr,tfg,tfb = Geyser.Color.parse(self.timestampFGColor)
-      local tbr,tbg,tbb = Geyser.Color.parse(self.timestampBGColor)
-      colorString = string.format("<%s,%s,%s:%s,%s,%s>", tfr,tfg,tfb,tbr,tbg,tbb)
+      local tfr, tfg, tfb = Geyser.Color.parse(self.timestampFGColor)
+      local tbr, tbg, tbb = Geyser.Color.parse(self.timestampBGColor)
+      colorString = string.format("<%s,%s,%s:%s,%s,%s>", tfr, tfg, tfb, tbr, tbg, tbb)
     else
-      colorString = string.format("<%s,%s,%s:%s,%s,%s>", ofr,ofg,ofb,obr,obg,obb)
+      colorString = string.format("<%s,%s,%s:%s,%s,%s>", ofr, ofg, ofb, obr, obg, obb)
     end
     local timestamp = getTime(true, self.timestampFormat)
     local fullTimestamp = string.format("%s%s<r> ", colorString, timestamp)
@@ -1563,16 +1597,22 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     if self.gag then
       deleteLine()
       if self.gagPrompt then
-        tempPromptTrigger(function() deleteLine() end, 1)
+        tempPromptTrigger(function()
+          deleteLine()
+        end, 1)
       end
     end
   else
     console[xtype](console, message)
-    if allTab then allTab[xtype](allTab, message) end
+    if allTab then
+      allTab[xtype](allTab, message)
+    end
   end
   if self.blankLine then
     console:echo("\n")
-    if allTab then allTab:echo("\n") end
+    if allTab then
+      allTab:echo("\n")
+    end
   end
 end
 
@@ -1647,18 +1687,19 @@ end
 -- internal function used for handling echoLink/popup
 function EMCO:xLink(tabName, linkType, text, commands, hints, useCurrentFormat, excludeAll)
   local console = self.mc[tabName]
-  local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and self.mc[self.allTabName] or false
+  local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and
+                   self.mc[self.allTabName] or false
   local arguments = {text, commands, hints, useCurrentFormat}
   if self.timestamp then
     local colorString = ""
     if self.customTimestampColor then
-      local tfr,tfg,tfb = Geyser.Color.parse(self.timestampFGColor)
-      local tbr,tbg,tbb = Geyser.Color.parse(self.timestampBGColor)
-      colorString = string.format("<%s,%s,%s:%s,%s,%s>", tfr,tfg,tfb,tbr,tbg,tbb)
+      local tfr, tfg, tfb = Geyser.Color.parse(self.timestampFGColor)
+      local tbr, tbg, tbb = Geyser.Color.parse(self.timestampBGColor)
+      colorString = string.format("<%s,%s,%s:%s,%s,%s>", tfr, tfg, tfb, tbr, tbg, tbb)
     else
-      local ofr,ofg,ofb = Geyser.Color.parse("white")
-      local obr,obg,obb = Geyser.Color.parse(self.consoleColor)
-      colorString = string.format("<%s,%s,%s:%s,%s,%s>", ofr,ofg,ofb,obr,obg,obb)
+      local ofr, ofg, ofb = Geyser.Color.parse("white")
+      local obr, obg, obb = Geyser.Color.parse(self.consoleColor)
+      colorString = string.format("<%s,%s,%s:%s,%s,%s>", ofr, ofg, ofb, obr, obg, obb)
     end
     local timestamp = getTime(true, self.timestampFormat)
     local fullTimestamp = string.format("%s%s<r> ", colorString, timestamp)
@@ -1670,7 +1711,9 @@ function EMCO:xLink(tabName, linkType, text, commands, hints, useCurrentFormat, 
     end
   end
   console[linkType](console, unpack(arguments))
-  if allTab then allTab[linkType](allTab, unpack(arguments)) end
+  if allTab then
+    allTab[linkType](allTab, unpack(arguments))
+  end
 end
 
 --- cechoLink to a tab
@@ -1776,7 +1819,9 @@ end
 function EMCO:addAllTabExclusion(tabName)
   local funcName = "EMCO:addAllTabExclusion(tabName)"
   self:validTabNameOrError(tabName, funcName)
-  if not table.contains(self.allTabExclusions, tabName) then table.insert(self.allTabExclusions, tabName) end
+  if not table.contains(self.allTabExclusions, tabName) then
+    table.insert(self.allTabExclusions, tabName)
+  end
 end
 
 --- removess a tab from the exclusion list for echoing to the allTab
@@ -1785,7 +1830,9 @@ function EMCO:removeAllTabExclusion(tabName)
   local funcName = "EMCO:removeAllTabExclusion(tabName)"
   self:validTabNameOrError(tabName, funcName)
   local index = table.index_of(self.allTabExclusions, tabName)
-  if index then table.remove(self.allTabExclusions, index) end
+  if index then
+    table.remove(self.allTabExclusions, index)
+  end
 end
 
 function EMCO:validTabNameOrError(tabName, funcName)
@@ -1802,14 +1849,18 @@ end
 function EMCO:addTimestampException(tabName)
   local funcName = "EMCO:addTimestampException(tabName)"
   self:validTabNameOrError(tabName, funcName)
-  if not table.contains(self.timestampExceptions, tabName) then table.insert(self.timestampExceptions, tabName) end
+  if not table.contains(self.timestampExceptions, tabName) then
+    table.insert(self.timestampExceptions, tabName)
+  end
 end
 
 function EMCO:removeTimestampException(tabName)
   local funcName = "EMCO:removeTimestampTabException(tabName)"
   self:validTabNameOrError(tabName, funcName)
   local index = table.index_of(self.timestampExceptions, tabName)
-  if index then table.remove(self.timestampExceptions, index) end
+  if index then
+    table.remove(self.timestampExceptions, index)
+  end
 end
 
 --- Enable placing a blank line between all messages.
@@ -1835,7 +1886,7 @@ function EMCO:disableScrollbars()
 end
 
 function EMCO:adjustScrollbars()
-  for _,console in ipairs(self.consoles) do
+  for _, console in ipairs(self.consoles) do
     if self.mapTab and self.mapTabName == console then
       -- skip the Map tab
     else
@@ -1854,7 +1905,7 @@ function EMCOHelper:switchTab(designator)
   local args = string.split(designator, "+")
   local emcoName = args[1]
   local tabName = args[2]
-  for _,emco in ipairs(EMCOHelper.items) do
+  for _, emco in ipairs(EMCOHelper.items) do
     if emco.name == emcoName then
       emco:switchTab(tabName)
       return
@@ -1917,15 +1968,17 @@ function EMCO:save()
     bufferSize = self.bufferSize,
     deleteLines = self.deleteLines,
   }
-  local dirname = getMudletHomeDir().."/EMCO/"
+  local dirname = getMudletHomeDir() .. "/EMCO/"
   local filename = dirname .. self.name .. ".lua"
-  if not(io.exists(dirname)) then lfs.mkdir(dirname) end
+  if not (io.exists(dirname)) then
+    lfs.mkdir(dirname)
+  end
   table.save(filename, configtable)
 end
 
 --- Load and apply a saved config for this EMCO
 function EMCO:load()
-  local dirname = getMudletHomeDir().."/EMCO/"
+  local dirname = getMudletHomeDir() .. "/EMCO/"
   local filename = dirname .. self.name .. ".lua"
   local configTable = {}
   if io.exists(filename) then
@@ -1979,10 +2032,20 @@ function EMCO:load()
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
-  if configTable.fontSize then self:setFontSize(configTable.fontSize) end
-  if configTable.font then self:setFont(configTable.font) end
-  if configTable.tabFont then self:setTabFont(configTable.tabFont) end
-  if configTable.autoWrap then self:enableAutoWrap() else self:disableAutoWrap() end
+  if configTable.fontSize then
+    self:setFontSize(configTable.fontSize)
+  end
+  if configTable.font then
+    self:setFont(configTable.font)
+  end
+  if configTable.tabFont then
+    self:setTabFont(configTable.tabFont)
+  end
+  if configTable.autoWrap then
+    self:enableAutoWrap()
+  else
+    self:disableAutoWrap()
+  end
 end
 
 EMCO.parent = Geyser.Container
