@@ -15,9 +15,35 @@ local SUG = {
   textTemplate = " |c/|m |p%",
   strict = true,
 }
-local pathOfThisFile = (...):match("(.-)[^%.]+$")
-local dt = require(pathOfThisFile .. "demontools")
-local getValueAt = dt.getValueAt
+
+-- ========== Copied from demontools.lua in order to cut the dependency for just this small functionality ==========
+-- internal function, recursively digs for a value within subtables if possible
+local function digForValue(dataFrom, tableTo)
+  if digForValue == nil or table.size(tableTo) == 0 then
+    return dataFrom
+  else
+    local newData = dataFrom[tableTo[1]]
+    table.remove(tableTo, 1)
+    return digForValue(newData, tableTo)
+  end
+end
+
+-- Internal function, used to turn a string variable name into a value
+local function getValueAt(accessString)
+  if accessString == "" then return nil end
+  local tempTable = accessString:split("%.")
+  local accessTable = {}
+  for i,v in ipairs(tempTable) do
+    if tonumber(v) then
+      accessTable[i] = tonumber(v)
+    else
+      accessTable[i] = v
+    end
+  end
+  return digForValue(_G, accessTable)
+end
+
+-- ========== End section copied from demontools.lua
 
 --- Creates a new Self Updating Gauge.
 --@tparam table cons table of options which control the Gauge's behaviour. In addition to all valid contraints for Geyser.Gauge, SUG adds:
