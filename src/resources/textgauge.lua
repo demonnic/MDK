@@ -2,6 +2,7 @@
 --@classmod TextGauge
 --@author Damian Monogue <demonnic@gmail.com>
 --@copyright 2020 Damian Monogue
+--@copyright 2021 Damian Monogue
 --@license MIT, see LICENSE.lua
 
 local TextGauge = {
