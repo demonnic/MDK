@@ -9,6 +9,8 @@ if [ -z $VERSION ]; then
   exit 1
 fi
 
+echo $VERSION > ./src/resources/mdkversion.txt
+
 muddle
 ./gendoc.sh
 zip -r -j $releaseFileName src/resources/*

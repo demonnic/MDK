@@ -77,7 +77,9 @@ SortBox.SortFunctions = {
   end,
 }
 --- Creates a new SortBox
--- @usage mySortBox = SortBox:new({
+-- @usage 
+-- local SortBox = require("MDK.sortbox")
+-- mySortBox = SortBox:new({
 --   name = "mySortBox",
 --   x = 400,
 --   y = 100,

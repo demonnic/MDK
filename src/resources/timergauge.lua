@@ -457,7 +457,9 @@ setmetatable(TimerGauge, Geyser.Gauge)
 -- </tr>
 -- </table><br>
 -- @param parent The Geyser parent for this TimerGauge
--- @usage myTimerGauge = TimerGauge:new({
+-- @usage
+-- local TimerGauge = require("MDK.timergauge")
+-- myTimerGauge = TimerGauge:new({
 --   name = "testGauge",
 --   x = 100,
 --   y = 100,
