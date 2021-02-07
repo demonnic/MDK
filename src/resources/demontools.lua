@@ -1,5 +1,5 @@
 --- Collection of miscellaneous functions and tools which don't necessarily warrant their own module/class
---@module DemonTools
+--@module demontools
 --@author Damian Monogue <demonnic@gmail.com>
 --@copyright 2020 Damian Monogue
 --@license MIT, see LICENSE.lua
