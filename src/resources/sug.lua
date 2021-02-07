@@ -92,7 +92,8 @@ end
 -- </tr>
 -- </table>
 -- @param container The Geyser container for this gauge
--- @usage local SUG = require("MDK-1.sug") --the following will watch "gmcp.Char.Vitals.hp" and "gmcp.Char.Vitals.maxhp" and update itself every 333 milliseconds
+-- @usage
+-- local SUG = require("MDK.sug") --the following will watch "gmcp.Char.Vitals.hp" and "gmcp.Char.Vitals.maxhp" and update itself every 333 milliseconds
 -- myGauge = SUG:new({
 --   name = "myGauge",
 --   currentVariable = "gmcp.Char.Vitals.hp", --if this is nil, it will use the defaultCurrent of 50

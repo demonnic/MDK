@@ -1,4 +1,6 @@
-MDKExample = MDKExample or { version = "2.0.0" }
+MDKExample = MDKExample or {}
+local vfile = getMudletHomeDir() .. "/@PKGNAME@/mdkversion.txt"
+MDKExample.version = io.open(vfile, "r"):read("*a"):trim()
 function MDKExample.exampleFText()
   local fText = require("@PKGNAME@.ftext")
   cecho(fText.fText("Testing!", {width = 40, formatType = 'c', textColor = '<orange>', capColor = '<purple>', cap = '[TEST]'}))

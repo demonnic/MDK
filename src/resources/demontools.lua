@@ -890,7 +890,7 @@ end
 --- Takes a list table and returns it as a table of 'chunks'. If the table has 12 items and you ask for 3 chunks, each chunk will have 4 items in it
 -- @tparam table tbl The table you want to turn into chunks. Must be traversable using ipairs()
 -- @tparam number num_chunks The number of chunks to turn the table into
--- @usage local dt = require("MDK-1.demontools")
+-- @usage local dt = require("MDK.demontools")
 -- testTable = { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten" }
 -- display(dt.chunkify(testTable, 3))
 -- --displays the following
