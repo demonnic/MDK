@@ -102,7 +102,7 @@ end
 --- Takes a string and performs interpolation
 --- Uses {} as the delimiter. Expressions will be evaluated
 ---@param str string: The string to interpolate
----@usage echofile = require("MDK-1.echofile")
+---@usage echofile = require("MDK.echofile")
 --- echofile.f("{1+1}") -- returns "2"
 --- local x = 4
 --- echofile.f"4+3 = {x+3}" -- returns "4+3 = 7"
@@ -115,7 +115,7 @@ end
 ---@param filename string: Full path to file
 ---@see echofile.f
 ---@see echofile.cechoFile
----@usage local ec = require("MDK-1.echofile")
+---@usage local ec = require("MDK.echofile")
 --- local cechoFile,f = ec.cechoFile, ec.f
 --- cechoFile("C:/path/to/file") -- windows1
 --- cechoFile("C:\\path\\to\\file") -- windows2
@@ -126,12 +126,12 @@ function echofile.aechoFile(window, filename)
   return xechoFile(options)
 end
 
---- reads the contents of a file, converts it to decho, interpolates it as per echofile.f and then dechos it
+--- reads the contents of a file and then cechos it
 ---@param window string: Optional window to cecho to
 ---@param filename string: Full path to file
 ---@see echofile.f
 ---@see echofile.cechoFilef
----@usage local ec = require("MDK-1.echofile")
+---@usage local ec = require("MDK.echofile")
 --- local cechoFile,f = ec.cechoFile, ec.f
 --- cechoFile("C:/path/to/file") -- windows1
 --- cechoFile("C:\\path\\to\\file") -- windows2
@@ -146,7 +146,7 @@ end
 ---@param window string: Optional window to cecho to
 ---@param filename string: Full path to file
 ---@see echofile.f
----@usage local ec = require("MDK-1.echofile")
+---@usage local ec = require("MDK.echofile")
 --- local cechoFile,f = ec.cechoFile, ec.f
 --- cechoFile("C:/path/to/file") -- windows1
 --- cechoFile("C:\\path\\to\\file") -- windows2
@@ -161,7 +161,11 @@ end
 ---@param window string: Optional window to cecho to
 ---@param filename string: Full path to file
 ---@see echofile.f
+<<<<<<< HEAD
 ---@usage local ec = require("MDK-1.echofile")
+=======
+---@usage local ec = require("MDK.echofile")
+>>>>>>> 331addadc7c941020973cc69cba2de4716a33e53
 --- local cechoFile,f = ec.cechoFile, ec.f
 --- cechoFile("C:/path/to/file") -- windows1
 --- cechoFile("C:\\path\\to\\file") -- windows2
@@ -233,7 +237,7 @@ function echofile.echoFilef(window, filename)
 end
 
 --- Adds c/d/h/echoFile functions to Geyser miniconsole and userwindow objects
----@usage require("MDK-1.echofile").patchGeyser()
+---@usage require("MDK.echofile").patchGeyser()
 --- myMC = Geyser.MiniConsole:new({name = "myMC"})
 --- myMC:cechoFile(f"{getMudletHomeDir()}/helpfile")
 function echofile.patchGeyser()
@@ -273,7 +277,7 @@ function echofile.patchGeyser()
 end
 
 --- Installs c/d/h/echoFile and f to the global namespace, and adds functions to Geyser
----@usage require("MDK-1.echofile").installGlobal()
+---@usage require("MDK.echofile").installGlobal()
 --- f"{1+2}" -- returns "2"
 --- dechoFile(f"{getMudletHomeDir()}/fileWithDechoLines.txt") 
 --- -- reads contents of fileWithDechoLines.txt from profile directory 

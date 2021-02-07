@@ -1,23 +1,14 @@
 --- Creates a text based gauge, for use in miniconsoles and the like.
---@classmod TextGauge
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
-
-local TextGauge = {
-  width = 24,
-  fillCharacter = ":",
-  emptyCharacter = "-",
-  showPercent = true,
-  showPercentSymbol = true,
-  format = "c",
-  value = 50,
-}
+-- @classmod TextGauge
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @copyright 2021 Damian Monogue
+-- @license MIT, see LICENSE.lua
+local TextGauge = {width = 24, fillCharacter = ":", emptyCharacter = "-", showPercent = true, showPercentSymbol = true, format = "c", value = 50}
 
 --- Creates a new TextGauge.
--- Please see the wiki for more information on valid options.
---@tparam[opt] table options The table of options you would like the TextGauge to start with.
---<br><br>Table of new options
+-- @tparam[opt] table options The table of options you would like the TextGauge to start with.
+-- <br><br>Table of new options
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -94,10 +85,14 @@ local TextGauge = {
 --   </tr>
 -- </tbody>
 -- </table>
+-- @usage
+-- local TextGauge = require("MDK.textgauge")
+-- myTextGauge = TextGauge:new()
+-- gaugeText = myTextGauge:setValue(382, 830)
 function TextGauge:new(options)
   options = options or {}
   local optionsType = type(options)
-  assert(optionsType == "table" or optionsType == "nil", "TextGauge:new(options): options expected as table, got " .. optionsType )
+  assert(optionsType == "table" or optionsType == "nil", "TextGauge:new(options): options expected as table, got " .. optionsType)
   local me = table.deepcopy(options)
   setmetatable(me, self)
   self.__index = self
@@ -106,7 +101,7 @@ function TextGauge:new(options)
 end
 
 --- Sets the width in characters of the gauge
---@tparam number width number of characters wide to make the gauge
+-- @tparam number width number of characters wide to make the gauge
 function TextGauge:setWidth(width)
   local widthType = type(width)
   assert(widthType == "number", string.format("TextGauge:setWidth(width): width as number expected, got %s", widthType))
@@ -119,7 +114,7 @@ function TextGauge:setFormat(format)
 end
 
 --- Sets the character to use for the 'full' part of the gauge
---@tparam string character the character to use.
+-- @tparam string character the character to use.
 function TextGauge:setFillCharacter(character)
   assert(character ~= nil, "TextGauge:setFillCharacter(character): character required, got nil")
   assert(utf8.len(character) == 1, "TextGauge:setFillCharacter(character): character must be a single character")
@@ -127,7 +122,7 @@ function TextGauge:setFillCharacter(character)
 end
 
 --- Sets the character to use for the 'overflow' (>100%) part of the gauge
---@tparam string character the character to use.
+-- @tparam string character the character to use.
 function TextGauge:setOverflowCharacter(character)
   assert(character ~= nil, "TextGauge:setOverflowCharacter(character): character required, got nil")
   assert(utf8.len(character) == 1, "TextGauge:setOverflowCharacter(character): character must be a single character")
@@ -135,7 +130,7 @@ function TextGauge:setOverflowCharacter(character)
 end
 
 --- Sets the character to use for the 'full' part of the gauge
---@tparam string character the character to use.
+-- @tparam string character the character to use.
 function TextGauge:setEmptyCharacter(character)
   assert(character ~= nil, "TextGauge:setEmptyCharacter(character): character required, got nil")
   assert(utf8.len(character) == 1, "TextGauge:setEmptyCharacter(character): character must be a single character")
@@ -143,34 +138,34 @@ function TextGauge:setEmptyCharacter(character)
 end
 
 --- Sets the fill color for the gauge.
---@tparam string color the color to use for the full portion of the gauge. Will be run through Geyser.Golor
+-- @tparam string color the color to use for the full portion of the gauge. Will be run through Geyser.Golor
 function TextGauge:setFillColor(color)
   assert(color ~= nil, "TextGauge:setFillColor(color): color required, got nil")
   self.fillColor = color
 end
 
 --- Sets the overflow color for the gauge.
---@tparam string color the color to use for the full portion of the gauge. Will be run through Geyser.Golor
+-- @tparam string color the color to use for the full portion of the gauge. Will be run through Geyser.Golor
 function TextGauge:setOverflowColor(color)
   assert(color ~= nil, "TextGauge:setOverflowColor(color): color required, got nil")
   self.overflowColor = color
 end
 
 --- Sets the empty color for the gauge.
---@tparam string color the color to use for the empty portion of the gauge. Will be run through Geyser.Golor
+-- @tparam string color the color to use for the empty portion of the gauge. Will be run through Geyser.Golor
 function TextGauge:setEmptyColor(color)
   assert(color ~= nil, "TextGauge:setEmptyColor(color): color required, got nil")
   self.emptyColor = color
 end
 
 --- Sets the fill color for the gauge.
---@tparam string color the color to use for the numeric value. Will be run through Geyser.Golor
+-- @tparam string color the color to use for the numeric value. Will be run through Geyser.Golor
 function TextGauge:setPercentColor(color)
   assert(color ~= nil, "TextGauge:setPercentColor(color): color required, got nil")
   self.percentColor = color
 end
 --- Sets the fill color for the gauge.
---@tparam string color the color to use for the numeric value. Will be run through Geyser.Golor
+-- @tparam string color the color to use for the numeric value. Will be run through Geyser.Golor
 function TextGauge:setPercentSymbolColor(color)
   assert(color ~= nil, "TextGauge:setPercentSymbolColor(color): color required, got nil")
   self.percentSymbolColor = color
@@ -247,7 +242,7 @@ end
 function TextGauge:getColor(color)
   local colorType = self:getColorType()
   if colorType == "c" then
-    return string.format("<%s>",color) -- pass the color back in <> for cecho
+    return string.format("<%s>", color) -- pass the color back in <> for cecho
   elseif colorType == "d" then
     return Geyser.Color.hdec(color) -- return it in decho format
   elseif colorType == "h" then
@@ -258,15 +253,17 @@ function TextGauge:getColor(color)
 end
 
 --- Used to set the gauge's value and return the string representation of the gauge
---@tparam[opt] number current current value. If no value is passed it will use the stored value. Defaults to 50 to prevent errors.
---@tparam[opt] number max maximum value. If not passed, the internally stored one will be used. Defaults to 100 so that it can be used with single values as a percent
---@usage myGauge:setValue(55) -- sets the gauge to 55% full
---@usage myGauge:setValue(2345, 2780) -- will figure out what the percentage fill is based on the given current/max values
-function TextGauge:setValue(current,max)
+-- @tparam[opt] number current current value. If no value is passed it will use the stored value. Defaults to 50 to prevent errors.
+-- @tparam[opt] number max maximum value. If not passed, the internally stored one will be used. Defaults to 100 so that it can be used with single values as a percent
+-- @usage myGauge:setValue(55) -- sets the gauge to 55% full
+-- @usage myGauge:setValue(2345, 2780) -- will figure out what the percentage fill is based on the given current/max values
+function TextGauge:setValue(current, max)
   current = current or self.value
   assert(type(current) == "number", "TextGauge:setValue(current,max) current as number expected, got " .. type(current))
   assert(max == nil or type(max) == "number", "TextGauge:setValue(current, max) option max as number expected, got " .. type(max))
-  if current < 0 then current = 0 end
+  if current < 0 then
+    current = 0
+  end
   max = max or 100
   local value = math.floor(current / max * 100)
   self.value = value
@@ -292,7 +289,9 @@ function TextGauge:setValue(current,max)
   end
   local perc = value / 100
   local overflow = perc - 1
-  if overflow < 0 then overflow = 0 end
+  if overflow < 0 then
+    overflow = 0
+  end
   if overflow > 1 then
     perc = 2
     overflow = 1
@@ -301,9 +300,15 @@ function TextGauge:setValue(current,max)
   local fillWidth = math.floor((perc - overflow) * width)
   local emptyWidth = width - fillWidth
   fillWidth = fillWidth - overflowWidth
-  if value >= 100 and self.showPercent then fillWidth = fillWidth -1 end
-  if value >= 200 and self.showPercent then overflowWidth = overflowWidth -1 end
-  return string.format("%s%s%s%s%s%s%s%s%s%s%s", overflowColor, string.rep(overflowCharacter, overflowWidth), fillColor, string.rep(fillCharacter, fillWidth),resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor, percentString, percentSymbolString, resetColor)
+  if value >= 100 and self.showPercent then
+    fillWidth = fillWidth - 1
+  end
+  if value >= 200 and self.showPercent then
+    overflowWidth = overflowWidth - 1
+  end
+  return string.format("%s%s%s%s%s%s%s%s%s%s%s", overflowColor, string.rep(overflowCharacter, overflowWidth), fillColor,
+                       string.rep(fillCharacter, fillWidth), resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor,
+                       percentString, percentSymbolString, resetColor)
 end
 
 --- Synonym for setValue
