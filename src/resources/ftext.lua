@@ -1,36 +1,36 @@
 --- ftext processing
---@module ftext
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@copyright 2021 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @module ftext
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @copyright 2021 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local ftext = {}
 local dec = {"d", "decimal", "dec"}
 local hex = {"h", "hexidecimal", "hex"}
 local col = {"c", "color", "colour", "col", "name"}
 
 --- Performs wordwrapping on a string, given a length limit. Does not understand colour tags and will count them as characters in the string
---@tparam string str the string to wordwrap
---@tparam number limit the line length to wrap at
+-- @tparam string str the string to wordwrap
+-- @tparam number limit the line length to wrap at
 function ftext.wordWrap(str, limit, indent, indent1)
   -- pulled from http://lua-users.org/wiki/StringRecipes
   indent = indent or ""
   indent1 = indent1 or indent
   limit = limit or 72
-  local here = 1-#indent1
+  local here = 1 - #indent1
   local function check(sp, st, word, fi)
     if fi - here > limit then
       here = st - #indent
-      return "\n"..indent..word
+      return "\n" .. indent .. word
     end
   end
-  return indent1..str:gsub("(%s+)()(%S+)()", check)
+  return indent1 .. str:gsub("(%s+)()(%S+)()", check)
 end
 
 --- Performs wordwrapping on a string, while ignoring color tags of a given type.
---@tparam string text the string you are wordwrapping
---@tparam number limit the line length to wrap at
---@tparam string type What type of color codes to ignore. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else or nil to pass the string on to wordWrap
+-- @tparam string text the string you are wordwrapping
+-- @tparam number limit the line length to wrap at
+-- @tparam string type What type of color codes to ignore. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else or nil to pass the string on to wordWrap
 function ftext.xwrap(text, limit, type)
   local colorPattern
   if table.contains(dec, type) then
@@ -70,8 +70,8 @@ function ftext.xwrap(text, limit, type)
       lineColumn = lineColumn + strLen
     else
       local neededChars = workingLineLength - lineColumn
-      local take = str:sub(1,neededChars)
-      local leave = str:sub(neededChars+1, -1)
+      local take = str:sub(1, neededChars)
+      local leave = str:sub(neededChars + 1, -1)
       strLine = strLine .. take
       line = line .. take
       table.insert(lines, line)
@@ -82,11 +82,15 @@ function ftext.xwrap(text, limit, type)
       workingLine = strippedLines[lineIndex]:split("")
       workingLineLength = #workingLine
       lineColumn = 0
-      if leave:sub(1,1) == " " then leave = leave:sub(2,-1) end
+      if leave:sub(1, 1) == " " then
+        leave = leave:sub(2, -1)
+      end
       while leave ~= "" do
         take = leave:sub(1, workingLineLength)
         leave = leave:sub(workingLineLength + 1, -1)
-        if leave:sub(1,1) == " " then leave = leave:sub(2,-1) end
+        if leave:sub(1, 1) == " " then
+          leave = leave:sub(2, -1)
+        end
         if take:len() < workingLineLength then
           lineColumn = take:len()
           line = line .. take .. color
@@ -104,14 +108,16 @@ function ftext.xwrap(text, limit, type)
       end
     end
   end
-  if line ~= "" then table.insert(lines, line) end
+  if line ~= "" then
+    table.insert(lines, line)
+  end
   return table.concat(lines, "\n")
 end
 
 --- The main course, this function returns a formatted string, based on a table of options
---@tparam string str the string to format
---@tparam table opts the table of options which control the formatting
---<br><br>Table of options
+-- @tparam string str the string to format
+-- @tparam table opts the table of options which control the formatting
+-- <br><br>Table of options
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -189,8 +195,8 @@ function ftext.fText(str, opts)
     local wrapped = ftext.xwrap(str, options.effWidth, options.formatType)
     local lines = wrapped:split("\n")
     local formatted = {}
-		options.fixed = false
-    for _,line in ipairs(lines) do
+    options.fixed = false
+    for _, line in ipairs(lines) do
       table.insert(formatted, ftext.fLine(line, options))
     end
     return table.concat(formatted, "\n")
@@ -201,25 +207,37 @@ end
 
 -- internal function, used to set defaults and type correct the options table
 function ftext.fixFormatOptions(str, opts)
-  if opts.fixed then return table.deepcopy(opts) end
-  --Set up all the things we might call the different echo types
-  if opts == nil then opts = {} end -- don't overwrite options if they passed them
-  --but if they passed something other than a table as the options than oopsie!
+  if opts.fixed then
+    return table.deepcopy(opts)
+  end
+  -- Set up all the things we might call the different echo types
+  if opts == nil then
+    opts = {}
+  end -- don't overwrite options if they passed them
+  -- but if they passed something other than a table as the options than oopsie!
   if type(opts) ~= "table" then
     error("Improper argument: options expected to be passed as table")
   end
-  --now we make a copy of the table, so we don't edit the original during all this
+  -- now we make a copy of the table, so we don't edit the original during all this
   local options = table.deepcopy(opts)
-  if options.wrap == nil then options.wrap = true end --wrap by default.
-  options.formatType = options.formatType or "" --by default, no color formatting.
-  options.width = options.width or 80 --default 80 width
-  options.cap = options.cap or "" --no cap by default
-  options.spacer = options.spacer or " " --default spacer is the space character
-  options.alignment = options.alignment or "center" --default alignment is centered
-  if options.nogap == nil then options.nogap = false end
-  if options.inside == nil then options.inside = false end --by default, we don't put the spacer inside
-  if not options.mirror == false then options.mirror = options.mirror or true end--by default, we do want to use mirroring for the caps
-  --setup default options for colors based on the color formatting type
+  if options.wrap == nil then
+    options.wrap = true
+  end -- wrap by default.
+  options.formatType = options.formatType or "" -- by default, no color formatting.
+  options.width = options.width or 80 -- default 80 width
+  options.cap = options.cap or "" -- no cap by default
+  options.spacer = options.spacer or " " -- default spacer is the space character
+  options.alignment = options.alignment or "center" -- default alignment is centered
+  if options.nogap == nil then
+    options.nogap = false
+  end
+  if options.inside == nil then
+    options.inside = false
+  end -- by default, we don't put the spacer inside
+  if not options.mirror == false then
+    options.mirror = options.mirror or true
+  end -- by default, we do want to use mirroring for the caps
+  -- setup default options for colors based on the color formatting type
   if table.contains(dec, options.formatType) then
     options.capColor = options.capColor or "<255,255,255>"
     options.spacerColor = options.spacerColor or "<255,255,255>"
@@ -272,36 +290,42 @@ function ftext.fixFormatOptions(str, opts)
 end
 
 -- internal function, processes a single line of the wrapped string.
-function ftext.fLine(str,opts)
-  local options = ftext.fixFormatOptions(str,opts)
+function ftext.fLine(str, opts)
+  local options = ftext.fixFormatOptions(str, opts)
   local leftCap = options.leftCap
   local rightCap = options.rightCap
   local leftPadLen = options.leftPadLen
   local rightPadLen = options.rightPadLen
   local capLen = options.capLen
 
-  if options.alignment == "center" then --we're going to center something
-    if options.mirror then --if we're reversing the left cap and the right cap (IE {{[[ turns into ]]}} )
+  if options.alignment == "center" then -- we're going to center something
+    if options.mirror then -- if we're reversing the left cap and the right cap (IE {{[[ turns into ]]}} )
       rightCap = string.gsub(rightCap, "<", ">")
       rightCap = string.gsub(rightCap, "%[", "%]")
       rightCap = string.gsub(rightCap, "{", "}")
       rightCap = string.gsub(rightCap, "%(", "%)")
       rightCap = string.reverse(rightCap)
-    end --otherwise, they'll be the same, so don't do anything
-    if not options.nogap then str = string.format(" %s ", str) end
+    end -- otherwise, they'll be the same, so don't do anything
+    if not options.nogap then
+      str = string.format(" %s ", str)
+    end
 
-  elseif options.alignment == "right" then --we'll right-align the text
+  elseif options.alignment == "right" then -- we'll right-align the text
     leftPadLen = leftPadLen + rightPadLen
     rightPadLen = 0
     rightCap = ""
-    if not options.nogap then str = string.format(" %s", str) end
+    if not options.nogap then
+      str = string.format(" %s", str)
+    end
 
-  else --Ok, so if it's not center or right, we assume it's left. We don't do justified. Sorry.
+  else -- Ok, so if it's not center or right, we assume it's left. We don't do justified. Sorry.
     rightPadLen = rightPadLen + leftPadLen
     leftPadLen = 0
     leftCap = ""
-    if not options.nogap then str = string.format("%s ", str) end
-  end--that's it, took care of both left, right, and center formattings, now to output the durn thing.
+    if not options.nogap then
+      str = string.format("%s ", str)
+    end
+  end -- that's it, took care of both left, right, and center formattings, now to output the durn thing.
   local fullLeftCap = string.format("%s%s%s", options.capColor, leftCap, options.colorReset)
   local fullLeftSpacer = string.format("%s%s%s", options.spacerColor, string.rep(options.spacer, (leftPadLen - capLen)), options.colorReset)
   local fullText = string.format("%s%s%s", options.textColor, str, options.colorReset)
@@ -309,23 +333,22 @@ function ftext.fLine(str,opts)
   local fullRightCap = string.format("%s%s%s", options.capColor, rightCap, options.colorReset)
 
   if options.inside then
-  -- "endcap===== some text =====endcap"
-  -- "endcap===== some text =====pacdne"
-  -- "endcap================= some text"
-  -- "some text =================endcap"
+    -- "endcap===== some text =====endcap"
+    -- "endcap===== some text =====pacdne"
+    -- "endcap================= some text"
+    -- "some text =================endcap"
     local finalString = string.format("%s%s%s%s%s", fullLeftCap, fullLeftSpacer, fullText, fullRightSpacer, fullRightCap)
     return finalString
   else
-  --"=====endcap some text endcap====="
-  --"=====endcap some text pacdne====="
-  --"=================endcap some text"
-  --"some text endcap================="
+    -- "=====endcap some text endcap====="
+    -- "=====endcap some text pacdne====="
+    -- "=================endcap some text"
+    -- "some text endcap================="
 
     local finalString = string.format("%s%s%s%s%s", fullLeftSpacer, fullLeftCap, fullText, fullRightCap, fullRightSpacer)
     return finalString
   end
 end
-
 
 -- Functions below here are honestly for backwards compatibility and subject to removal soon. 
 -- They just force some options table overrides for the most part.
@@ -339,7 +362,7 @@ function ftext.align(str, opts)
   if type(opts) == "table" then
     options = table.deepcopy(opts)
     options.formatType = ""
-		options.wrap = false
+    options.wrap = false
   else
     error("Improper argument: options expected to be passed as table")
   end
@@ -364,7 +387,7 @@ function ftext.dalign(str, opts)
   return ftext.fLine(str, options)
 end
 
---cecho formatting, no wrap
+-- cecho formatting, no wrap
 function ftext.calign(str, opts)
   local options = {}
   if opts == nil then
@@ -381,7 +404,7 @@ function ftext.calign(str, opts)
   return ftext.fLine(str, options)
 end
 
---hecho formatting, no wrap
+-- hecho formatting, no wrap
 function ftext.halign(str, opts)
   local options = {}
   if opts == nil then
@@ -401,7 +424,9 @@ end
 -- literally just fText but forces cecho formatting
 function ftext.cfText(str, opts)
   local options = {}
-  if opts == nil then opts = {} end
+  if opts == nil then
+    opts = {}
+  end
   if type(opts) == "table" then
     options = table.deepcopy(opts)
     options.formatType = "c"
@@ -415,7 +440,9 @@ end
 -- fText but forces decho formatting
 function ftext.dfText(str, opts)
   local options = {}
-  if opts == nil then opts = {} end
+  if opts == nil then
+    opts = {}
+  end
   if type(opts) == "table" then
     options = table.deepcopy(opts)
     options.formatType = "d"
@@ -429,7 +456,9 @@ end
 -- fText but forces hecho formatting
 function ftext.hfText(str, opts)
   local options = {}
-  if opts == nil then opts = {} end
+  if opts == nil then
+    opts = {}
+  end
   if type(opts) == "table" then
     options = table.deepcopy(opts)
     options.formatType = "h"
@@ -442,15 +471,15 @@ end
 
 --- Stand alone text formatter object. Remembers the options you set and can be adjusted as needed
 -- @type ftext.TextFormatter
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 
 local TextFormatter = {}
-TextFormatter.validFormatTypes = { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
+TextFormatter.validFormatTypes = {'d', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
 
 --- Set's the formatting type whether it's for cecho, decho, or hecho
---@tparam string typeToSet What type of formatter is this? Valid options are { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
+-- @tparam string typeToSet What type of formatter is this? Valid options are { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
 function TextFormatter:setType(typeToSet)
   local isNotValid = not table.contains(self.validFormatTypes, typeToSet)
   if isNotValid then
@@ -484,18 +513,19 @@ function TextFormatter:checkString(str)
 end
 
 --- Sets whether or not we should do word wrapping.
---@tparam boolean shouldWrap should we do wordwrapping?
+-- @tparam boolean shouldWrap should we do wordwrapping?
 function TextFormatter:setWrap(shouldWrap)
   local argumentType = type(shouldWrap)
   shouldWrap = self:toBoolean(shouldWrap)
   if shouldWrap == nil then
-    error("TextFormatter:setWrap(shouldWrap) Argument error, boolean expected, got " .. argumentType .. ", if you want to set the number of characters wide to format for, use setWidth()")
+    error("TextFormatter:setWrap(shouldWrap) Argument error, boolean expected, got " .. argumentType ..
+            ", if you want to set the number of characters wide to format for, use setWidth()")
   end
   self.options.wrap = shouldWrap
 end
 
 --- Sets the width we should format for
---@tparam number width the width we should format for
+-- @tparam number width the width we should format for
 function TextFormatter:setWidth(width)
   if type(width) ~= "number" then
     if tonumber(width) then
@@ -508,66 +538,73 @@ function TextFormatter:setWidth(width)
 end
 
 --- Sets the cap for the formatter
---@tparam string cap the string to use for capping the formatted string.
+-- @tparam string cap the string to use for capping the formatted string.
 function TextFormatter:setCap(cap)
   local argumentType = type(cap)
   local cap = self:checkString(cap)
-  if cap == nil then error("TextFormatter:setCap(cap): Argument error, string expect, got " .. argumentType) end
+  if cap == nil then
+    error("TextFormatter:setCap(cap): Argument error, string expect, got " .. argumentType)
+  end
   self.options.cap = cap
 end
 
 --- Sets the color for the format cap
---@tparam string capColor Color which can be formatted via Geyser.Color.parse()
+-- @tparam string capColor Color which can be formatted via Geyser.Color.parse()
 function TextFormatter:setCapColor(capColor)
   local argumentType = type(capColor)
   local capColor = self:checkString(capColor)
-  if capColor == nil then error("TextFormatter:setCapColor(capColor): Argument error, string expected, got " .. argumentType) end
+  if capColor == nil then
+    error("TextFormatter:setCapColor(capColor): Argument error, string expected, got " .. argumentType)
+  end
   self.options.capColor = capColor
 end
 
 --- Sets the color for spacing character
---@tparam string spacerColor Color which can be formatted via Geyser.Color.parse()
+-- @tparam string spacerColor Color which can be formatted via Geyser.Color.parse()
 function TextFormatter:setSpacerColor(spacerColor)
   local argumentType = type(spacerColor)
   local spacerColor = self:checkString(spacerColor)
-  if spacerColor == nil then error("TextFormatter:setSpacerColor(spacerColor): Argument error, string expected, got " .. argumentType) end
+  if spacerColor == nil then
+    error("TextFormatter:setSpacerColor(spacerColor): Argument error, string expected, got " .. argumentType)
+  end
   self.options.spacerColor = spacerColor
 end
 
 --- Sets the color for formatted text
---@tparam string textColor Color which can be formatted via Geyser.Color.parse()
+-- @tparam string textColor Color which can be formatted via Geyser.Color.parse()
 function TextFormatter:setTextColor(textColor)
   local argumentType = type(textColor)
   local textColor = self:checkString(textColor)
-  if textColor == nil then error("TextFormatter:setTextColor(textColor): Argument error, string expected, got " .. argumentType) end
+  if textColor == nil then
+    error("TextFormatter:setTextColor(textColor): Argument error, string expected, got " .. argumentType)
+  end
   self.options.textColor = textColor
 end
 
 --- Sets the spacing character to use. Should be a single character
---@tparam string spacer the character to use for spacing
+-- @tparam string spacer the character to use for spacing
 function TextFormatter:setSpacer(spacer)
   local argumentType = type(spacer)
   local spacer = self:checkString(spacer)
-  if spacer == nil then error("TextFormatter:setSpacer(spacer): Argument error, string expect, got " .. argumentType) end
+  if spacer == nil then
+    error("TextFormatter:setSpacer(spacer): Argument error, string expect, got " .. argumentType)
+  end
   self.options.spacer = spacer
 end
 
 --- Set the alignment to format for
---@tparam string alignment How to align the formatted string. Valid options are 'left', 'right', or 'center'
+-- @tparam string alignment How to align the formatted string. Valid options are 'left', 'right', or 'center'
 function TextFormatter:setAlignment(alignment)
-  local validAlignments = {
-    "left",
-    "right",
-    "center"
-  }
+  local validAlignments = {"left", "right", "center"}
   if not table.contains(validAlignments, alignment) then
-    error("TextFormatter:setAlignment(alignment): Argument error: Only valid arguments for setAlignment are 'left', 'right', or 'center'. You sent" .. alignment)
+    error("TextFormatter:setAlignment(alignment): Argument error: Only valid arguments for setAlignment are 'left', 'right', or 'center'. You sent" ..
+            alignment)
   end
   self.options.alignment = alignment
 end
 
 --- Set whether the the spacer should go inside the the cap or outside of it
---@tparam boolean spacerInside 
+-- @tparam boolean spacerInside 
 function TextFormatter:setInside(spacerInside)
   local argumentType = type(spacerInside)
   spacerInside = self:toBoolean(spacerInside)
@@ -578,7 +615,7 @@ function TextFormatter:setInside(spacerInside)
 end
 
 --- Set whether we should mirror/reverse the caps. IE << becomes >> if set to true
---@tparam boolean shouldMirror
+-- @tparam boolean shouldMirror
 function TextFormatter:setMirror(shouldMirror)
   local argumentType = type(shouldMirror)
   shouldMirror = self:toBoolean(shouldMirror)
@@ -589,14 +626,14 @@ function TextFormatter:setMirror(shouldMirror)
 end
 
 --- Format a string based on the stored options
---@tparam string str The string to format
+-- @tparam string str The string to format
 function TextFormatter:format(str)
   return ftext.fText(str, self.options)
 end
 
 --- Creates and returns a new TextFormatter. For valid options, please see https://github.com/demonnic/fText/wiki/fText
---@tparam table options the options for the text formatter to use when running format()
---<br><br>Table of options
+-- @tparam table options the options for the text formatter to use when running format()
+-- <br><br>Table of options
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -670,21 +707,14 @@ end
 -- </table>
 
 function TextFormatter:new(options)
-  if options == nil then options = {} end
+  if options == nil then
+    options = {}
+  end
   if options and type(options) ~= "table" then
     error("TextFormatter:new(options): Argument error, table expected, got " .. type(options))
   end
   local me = {}
-  me.options = {
-    formatType = "c",
-    wrap = true,
-    width = 80,
-    cap = "",
-    spacer = " ",
-    alignment = "center",
-    inside = true,
-    mirror = false,
-  }
+  me.options = {formatType = "c", wrap = true, width = 80, cap = "", spacer = " ", alignment = "center", inside = true, mirror = false}
   for option, value in pairs(options) do
     me.options[option] = value
   end
@@ -695,10 +725,10 @@ end
 ftext.TextFormatter = TextFormatter
 
 --- Easy formatting for text tables
---@type ftext.TableMaker
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @type ftext.TableMaker
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 
 local TableMaker = {
   headCharacter = "*",
@@ -713,7 +743,9 @@ local TableMaker = {
 }
 
 function TableMaker:checkPosition(position, func)
-  if position == nil then position = 0 end
+  if position == nil then
+    position = 0
+  end
   if type(position) ~= "number" then
     if tonumber(position) then
       position = tonumber(position)
@@ -733,11 +765,15 @@ function TableMaker:insert(tbl, pos, item)
 end
 
 --- Adds a column definition for the table.
---@tparam table options Table of options suitable for a TextFormatter object. See https://github.com/demonnic/fText/wiki/fText
---@tparam number position The position of the column you're adding, counting from the left. If not provided will add it as the last column
+-- @tparam table options Table of options suitable for a TextFormatter object. See https://github.com/demonnic/fText/wiki/fText
+-- @tparam number position The position of the column you're adding, counting from the left. If not provided will add it as the last column
 function TableMaker:addColumn(options, position)
-  if options == nil then options = {} end
-  if not type(options) == "table" then error("TableMaker:addColumn(options, position): Argument error: options expected as table, got " .. type(options)) end
+  if options == nil then
+    options = {}
+  end
+  if not type(options) == "table" then
+    error("TableMaker:addColumn(options, position): Argument error: options expected as table, got " .. type(options))
+  end
   local options = table.deepcopy(options)
   position = self:checkPosition(position, "TableMaker:addColumn(options, position)")
   options.width = options.width or 20
@@ -747,25 +783,37 @@ function TableMaker:addColumn(options, position)
 end
 
 --- Deletes a column at the given position
---@tparam number position the column you wish to delete
+-- @tparam number position the column you wish to delete
 function TableMaker:deleteColumn(position)
-  if position == nil then error("TableMaker:deleteColumn(position): Argument Error: position as number expected, got nil") end
+  if position == nil then
+    error("TableMaker:deleteColumn(position): Argument Error: position as number expected, got nil")
+  end
   position = self:checkPosition(position)
   local maxColumn = #self.columns
-  if position > maxColumn then error("TableMaker:deleteColumn(position): Argument Error: position provided was larger than number of columns in the table. Number of columns: " .. #self.columns) end
+  if position > maxColumn then
+    error(
+      "TableMaker:deleteColumn(position): Argument Error: position provided was larger than number of columns in the table. Number of columns: " ..
+        #self.columns)
+  end
   table.remove(self.columns, position)
 end
 
 --- Replaces a column at a specific position with the newly provided formatting
---@tparam table options table of options suitable for a TextFormatter object. See https://github.com/demonnic/fText/wiki/fText
---@tparam number position which column you are replacing, counting from the left.
+-- @tparam table options table of options suitable for a TextFormatter object. See https://github.com/demonnic/fText/wiki/fText
+-- @tparam number position which column you are replacing, counting from the left.
 function TableMaker:replaceColumn(options, position)
   if position == nil then
     error("TableMaker:replaceColumn(options, position): Argument error: position as number expected, got nil")
   end
   position = self:checkPosition(position)
-  if type(options) ~= "table" then error("TableMaker:replaceColumn(options, position): Argument error: options as table expected, got " .. type(options)) end
-  if #self.columns < position then error("TableMaker:replaceColumn(options, position): you cannot specify a position higher than the number of columns currently in the TableMaker. You sent:" .. position .. " and there are: " .. #self.columns .. "columns in the TableMaker") end
+  if type(options) ~= "table" then
+    error("TableMaker:replaceColumn(options, position): Argument error: options as table expected, got " .. type(options))
+  end
+  if #self.columns < position then
+    error(
+      "TableMaker:replaceColumn(options, position): you cannot specify a position higher than the number of columns currently in the TableMaker. You sent:" ..
+        position .. " and there are: " .. #self.columns .. "columns in the TableMaker")
+  end
   options.width = options.width or 20
   options.name = options.name or ""
   local formatter = TextFormatter:new(options)
@@ -773,18 +821,20 @@ function TableMaker:replaceColumn(options, position)
 end
 
 --- Adds a row of output to the table
---@tparam table columnEntries This indexed table contains an entry for each column in the table. Entries in the table must be strings, a table of options for insertPopup or insertLink, or a function which returns one of these things
---@tparam number position position for the row you want to add, counting from the top down. If not provided defaults to the last line in the table.
+-- @tparam table columnEntries This indexed table contains an entry for each column in the table. Entries in the table must be strings, a table of options for insertPopup or insertLink, or a function which returns one of these things
+-- @tparam number position position for the row you want to add, counting from the top down. If not provided defaults to the last line in the table.
 function TableMaker:addRow(columnEntries, position)
   local columnEntriesType = type(columnEntries)
   if columnEntriesType ~= "table" then
     error("TableMaker:addRow(columnEntries, position): Argument error, columnEntries expected as table, got " .. columnEntriesType)
   end
-  for _,entry in ipairs(columnEntries) do
+  for _, entry in ipairs(columnEntries) do
     local entryCheck = self:checkEntry(entry)
     if entryCheck == 0 then
       if type(entry) == "function" then
-        error("TableMaker:addRow(columnEntries, position): Argument Error, you provided a function for a columnEntry but it does not return a string. We need a string. It was entry number " .. _ .. "in columnEntries")
+        error(
+          "TableMaker:addRow(columnEntries, position): Argument Error, you provided a function for a columnEntry but it does not return a string. We need a string. It was entry number " ..
+            _ .. "in columnEntries")
       else
         error("TableMaker:addRow(columnEntries, position): Argument error, columnEntries items expected as string, got:" .. type(entry))
       end
@@ -795,31 +845,39 @@ function TableMaker:addRow(columnEntries, position)
 end
 
 --- Deletes the row at the given position
---@tparam number position the row to delete
+-- @tparam number position the row to delete
 function TableMaker:deleteRow(position)
-  if position == nil then error("TableMaker:deleteRow(position): Argument Error: position as number expected, got nil") end
+  if position == nil then
+    error("TableMaker:deleteRow(position): Argument Error: position as number expected, got nil")
+  end
   position = self:checkPosition(position, "TableMaker:deleteRow(position)")
   local maxRow = #self.rows
-  if position > maxRow then error("TableMaker:deleteRow(position): Argument Error: position given was > the number of rows we have # of rows is:" .. maxRow) end
+  if position > maxRow then
+    error("TableMaker:deleteRow(position): Argument Error: position given was > the number of rows we have # of rows is:" .. maxRow)
+  end
   table.remove(self.rows, position)
 end
 
 --- Replaces a row of output in the table
---@tparam table columnEntries This indexed table contains an entry for each column in the table. Entries in the table must be strings, a table of options for insertPopup or insertLink, or a function which returns one of these things
---@tparam number position position for the row you want to add, counting from the top down.
+-- @tparam table columnEntries This indexed table contains an entry for each column in the table. Entries in the table must be strings, a table of options for insertPopup or insertLink, or a function which returns one of these things
+-- @tparam number position position for the row you want to add, counting from the top down.
 function TableMaker:replaceRow(columnEntries, position)
   if position == nil then
     error("TableMaker:replaceRow(columnEntries, position): ArgumentError: position expected as number, received nil")
   end
   position = self:checkPosition(position, "TableMaker:replaceRow(columnEntries, position)")
   if #self.rows < position then
-    error("TableMaker:replaceRow(columnEntries, position): position cannot be greater than the number of rows already in the tablemaker. You provided: " .. position .. " and there are " .. #self.rows .. "rows in the TableMaker")
+    error(
+      "TableMaker:replaceRow(columnEntries, position): position cannot be greater than the number of rows already in the tablemaker. You provided: " ..
+        position .. " and there are " .. #self.rows .. "rows in the TableMaker")
   end
-  for _,entry in ipairs(columnEntries) do
+  for _, entry in ipairs(columnEntries) do
     local entryCheck = self:checkEntry(entry)
     if entryCheck == 0 then
       if type(entry) == "function" then
-        error("TableMaker:replaceRow(columnEntries, position): Argument Error: you provided a function for a columnEntry but it does not return a string. We need a string. It was entry number " .. _ .. "in columnEntries")
+        error(
+          "TableMaker:replaceRow(columnEntries, position): Argument Error: you provided a function for a columnEntry but it does not return a string. We need a string. It was entry number " ..
+            _ .. "in columnEntries")
       else
         error("TableMaker:replaceRow(columnEntries, position): Argument error: columnEntries items expected as string, got:" .. type(entry))
       end
@@ -829,9 +887,7 @@ function TableMaker:replaceRow(columnEntries, position)
 end
 
 function TableMaker:checkEntry(entry)
-  local allowedTypes = {
-    "string"
-  }
+  local allowedTypes = {"string"}
   if self.allowPopups then
     table.insert(allowedTypes, "table")
   end
@@ -847,32 +903,45 @@ function TableMaker:checkEntry(entry)
 end
 
 function TableMaker:checkNumber(num)
-  if num == nil then num = 0 end
-  if not tonumber(num) then num = 0 end
+  if num == nil then
+    num = 0
+  end
+  if not tonumber(num) then
+    num = 0
+  end
   return tonumber(num)
 end
 
 --- Sets a specific cell's display information
---@tparam number row the row number of the cell, counted from the top down
---@tparam number column the column number of the cell, counted from the left
---@param entry What to set the entry to. Must be a string, or a table of options for insertLink/insertPopup if allowPopups is set. Or a function which returns one of these things
+-- @tparam number row the row number of the cell, counted from the top down
+-- @tparam number column the column number of the cell, counted from the left
+-- @param entry What to set the entry to. Must be a string, or a table of options for insertLink/insertPopup if allowPopups is set. Or a function which returns one of these things
 function TableMaker:setCell(row, column, entry)
   local maxRow = #self.rows
   local maxColumn = #self.columns
   local ae = "TableMaker:setCell(row, column, entry): Argument Error:"
   row = self:checkNumber(row)
-  if row == 0 then error(ae .. " row must be a number, you provided " .. type(row)) end
+  if row == 0 then
+    error(ae .. " row must be a number, you provided " .. type(row))
+  end
   column = self:checkNumber(column)
-  if column == 0 then error(ae .. " column must be a number, you provided " .. type(column)) end
-  if row > maxRow then error(ae .. " row is higher than the number of rows in the table. Highest row:" .. maxRow) end
-  if column > maxColumn then error(ae .. " column is higher than the number of columns in the table. Highest column:" .. maxColumn) end
+  if column == 0 then
+    error(ae .. " column must be a number, you provided " .. type(column))
+  end
+  if row > maxRow then
+    error(ae .. " row is higher than the number of rows in the table. Highest row:" .. maxRow)
+  end
+  if column > maxColumn then
+    error(ae .. " column is higher than the number of columns in the table. Highest column:" .. maxColumn)
+  end
   local entryType = type(entry)
   entry = self:checkEntry(entry)
   if entry == 0 then
     if type(entry) == "function" then
       error(ae .. " entry was provided as a function, but does not return a string. We need a string in the end")
     else
-      error("TableMaker:setCell(row, column, entry): Argument Error: entry must be a string, or a function which returns a string. You provided a " .. entryType)
+      error("TableMaker:setCell(row, column, entry): Argument Error: entry must be a string, or a function which returns a string. You provided a " ..
+              entryType)
     end
   end
   self.rows[row][column] = entry
@@ -883,7 +952,7 @@ function TableMaker:totalWidth()
   local numberOfColumns = #self.columns
   local separatorWidth = string.len(self.separator)
   local edgeWidth = string.len(self.edgeCharacter) * 2
-  for _,column in ipairs(self.columns) do
+  for _, column in ipairs(self.columns) do
     width = width + column.options.width
   end
   separatorWidth = separatorWidth * (numberOfColumns - 1)
@@ -910,7 +979,9 @@ function TableMaker:echo(message, echoType, ...)
   local fType = self:getType()
   local consoleType = type(self.autoEchoConsole)
   local console = ""
-  if echoType == nil then echoType = "" end
+  if echoType == nil then
+    echoType = ""
+  end
   if consoleType == "string" then
     console = self.autoEchoConsole
   else
@@ -937,31 +1008,35 @@ function TableMaker:scanRow(rowToScan)
 
   if rowEntries < numberOfColumns then
     local entriesNeeded = numberOfColumns - rowEntries
-    for i = 1,entriesNeeded do
+    for i = 1, entriesNeeded do
       table.insert(row, "")
     end
   end
-  for index,formatter in ipairs(self.columns) do
+  for index, formatter in ipairs(self.columns) do
     local str = row[index]
     local column = ""
-    if type(str) == "function" then str = str() end
+    if type(str) == "function" then
+      str = str()
+    end
     column = formatter:format(str)
     table.insert(columns, column:split("\n"))
   end
-  for _,rowLines in ipairs(columns) do
-    if linesInRow < #rowLines then linesInRow = #rowLines end
+  for _, rowLines in ipairs(columns) do
+    if linesInRow < #rowLines then
+      linesInRow = #rowLines
+    end
   end
-  for index,rowLines in ipairs(columns) do
+  for index, rowLines in ipairs(columns) do
     if #rowLines < linesInRow then
       local neededLines = linesInRow - #rowLines
-      for i=1,neededLines do
+      for i = 1, neededLines do
         table.insert(rowLines, self.columns[index]:format(""))
       end
     end
   end
-  for i= 1,linesInRow do
+  for i = 1, linesInRow do
     local thisLine = ec
-    for index,column in ipairs(columns) do
+    for index, column in ipairs(columns) do
       if index == 1 then
         thisLine = string.format("%s%s", thisLine, column[i])
       else
@@ -988,34 +1063,38 @@ function TableMaker:echoRow(rowToScan)
   local sep = self.separatorColor .. self.separator .. self.colorReset
   if rowEntries < numberOfColumns then
     local entriesNeeded = numberOfColumns - rowEntries
-    for i = 1,entriesNeeded do
+    for i = 1, entriesNeeded do
       table.insert(row, "")
     end
   end
-  for index,formatter in ipairs(self.columns) do
+  for index, formatter in ipairs(self.columns) do
     local str = row[index]
     local column = ""
-    if type(str) == "function" then str = str() end
+    if type(str) == "function" then
+      str = str()
+    end
     if type(str) == "table" then
       str = str[1]
     end
     column = formatter:format(str)
     table.insert(columns, column:split("\n"))
   end
-  for _,rowLines in ipairs(columns) do
-    if linesInRow < #rowLines then linesInRow = #rowLines end
+  for _, rowLines in ipairs(columns) do
+    if linesInRow < #rowLines then
+      linesInRow = #rowLines
+    end
   end
-  for index,rowLines in ipairs(columns) do
+  for index, rowLines in ipairs(columns) do
     if #rowLines < linesInRow then
       local neededLines = linesInRow - #rowLines
-      for i=1,neededLines do
+      for i = 1, neededLines do
         table.insert(rowLines, self.columns[index]:format(""))
       end
     end
   end
-  for i= 1,linesInRow do
+  for i = 1, linesInRow do
     self:echo(ec)
-    for index,column in ipairs(columns) do
+    for index, column in ipairs(columns) do
       local message = column[i]
       if index ~= 1 then
         self:echo(sep)
@@ -1048,7 +1127,7 @@ function TableMaker:makeHeader()
   local columnHeaders = ""
   if self.printHeaders then
     local columnEntries = {}
-    for _,v in ipairs(self.columns) do
+    for _, v in ipairs(self.columns) do
       table.insert(columnEntries, v:format(v.options.name))
     end
     local divWithNewlines = string.format("\n%s", self:createRowDivider())
@@ -1060,7 +1139,7 @@ end
 
 function TableMaker:createRowDivider()
   local columnPieces = {}
-  for _,v in ipairs(self.columns) do
+  for _, v in ipairs(self.columns) do
     local piece = string.format("%s%s%s", self.separatorColor, string.rep(self.rowSeparator, v.options.width), self.colorReset)
     table.insert(columnPieces, piece)
   end
@@ -1100,7 +1179,7 @@ function TableMaker:disableAutoClear()
 end
 
 --- Set the miniconsole to echo to
---@param console The miniconsole to autoecho to. Set to "main" or do not pass the parameter to autoecho to the main console. Can be a string name of the console, or a Geyser MiniConsole
+-- @param console The miniconsole to autoecho to. Set to "main" or do not pass the parameter to autoecho to the main console. Can be a string name of the console, or a Geyser MiniConsole
 function TableMaker:setAutoEchoConsole(console)
   local funcName = "TableMaker:setAutoEchoConsole(console)"
   if console == nil then
@@ -1110,7 +1189,8 @@ function TableMaker:setAutoEchoConsole(console)
   if consoleType ~= "string" and consoleType ~= "table" then
     error(funcName .. " ArgumentError: console as string or Geyser.MiniConsole expected, got " .. consoleType)
   elseif consoleType == "table" and console.type ~= "miniConsole" then
-    error(funcName .. " ArgumentError: console received was a table and may be a Geyser object, but console.type is not miniConsole, it is " .. console.type)
+    error(funcName .. " ArgumentError: console received was a table and may be a Geyser object, but console.type is not miniConsole, it is " ..
+            console.type)
   end
   self.autoEchoConsole = console
 end
@@ -1138,7 +1218,7 @@ function TableMaker:popupAssemble()
   local header = self:makeHeader() .. "\n"
   local footer = string.format("\n%s%s%s\n", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
   self:echo(header)
-  for _,row in ipairs(self.rows) do
+  for _, row in ipairs(self.rows) do
     if _ ~= 1 then
       self:echo(divWithNewLines)
     end
@@ -1150,7 +1230,7 @@ end
 function TableMaker:textAssemble()
   local sheet = ""
   local rows = {}
-  for _,row in ipairs(self.rows) do
+  for _, row in ipairs(self.rows) do
     table.insert(rows, self:scanRow(row))
   end
   local divWithNewlines = string.format("\n%s\n", self:createRowDivider())
@@ -1158,7 +1238,9 @@ function TableMaker:textAssemble()
   sheet = string.format("%s\n%s\n%s\n", self:makeHeader(), table.concat(rows, divWithNewlines), footer)
   if self.autoEcho then
     local console = self.autoEchoConsole or "main"
-    if type(console) == "table" then console = console.name end
+    if type(console) == "table" then
+      console = console.name
+    end
     if self.autoClear and console ~= "main" then
       clearWindow(console)
     end
@@ -1168,8 +1250,8 @@ function TableMaker:textAssemble()
 end
 
 --- Creates and returns a new TableMaker. See https://github.com/demonnic/fText/wiki/TableMaker for valid entries to the options table.
---@tparam table options table of options for the TableMaker object
---<br><br>Table of new options
+-- @tparam table options table of options for the TableMaker object
+-- <br><br>Table of new options
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -1252,7 +1334,9 @@ function TableMaker:new(options)
   local me = {}
   setmetatable(me, self)
   self.__index = self
-  if options == nil then options = {} end
+  if options == nil then
+    options = {}
+  end
   if type(options) ~= "table" then
     error("TableMaker:new(options): ArgumentError: options expected as table, got " .. type(options))
   end
@@ -1264,13 +1348,19 @@ function TableMaker:new(options)
   end
   local columns = false
   if options.columns then
-    if type(options.columns) ~= "table" then error("TableMaker:new(options): option error: You provided an options.columns entry of type " .. type(options.columns) .. " and columns must a table with entries suitable for TableFormatter:addColumn().") end
+    if type(options.columns) ~= "table" then
+      error("TableMaker:new(options): option error: You provided an options.columns entry of type " .. type(options.columns) ..
+              " and columns must a table with entries suitable for TableFormatter:addColumn().")
+    end
     columns = table.deepcopy(options.columns)
     options.columns = nil
   end
   local rows = false
   if options.rows then
-    if type(options.rows) ~= "table" then error("TableMaker:new(options): option error: You provided an options.rows entry of type " .. type(options.rows) .. " and rows must be a table with entrys suitable for TableFormatter:addRow()") end
+    if type(options.rows) ~= "table" then
+      error("TableMaker:new(options): option error: You provided an options.rows entry of type " .. type(options.rows) ..
+              " and rows must be a table with entrys suitable for TableFormatter:addRow()")
+    end
     rows = table.deepcopy(options.rows)
     options.rows = nil
   end
@@ -1300,12 +1390,12 @@ function TableMaker:new(options)
   me.columns = {}
   me.rows = {}
   if columns then
-    for _,column in ipairs(columns) do
+    for _, column in ipairs(columns) do
       me:addColumn(column)
     end
   end
   if rows then
-    for _,row in ipairs(rows) do
+    for _, row in ipairs(rows) do
       me:addRow(row)
     end
   end
