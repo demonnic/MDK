@@ -1,23 +1,27 @@
 --- Collection of miscellaneous functions and tools which don't necessarily warrant their own module/class
---@module demontools
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @module demontools
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local DemonTools = {}
-local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000 })
+local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000})
 cheatConsole:hide()
 local function exists(path)
   local ok, err, code = os.rename(path, path)
-  if not ok and code == 13 then return true end
+  if not ok and code == 13 then
+    return true
+  end
   return ok, err
 end
 
 local function isWindows()
-  return package.config:sub(1,1) == [[\]]
+  return package.config:sub(1, 1) == [[\]]
 end
 
 local function isDir(path)
-  if not path:ends("/") then path = path .. "/" end
+  if not path:ends("/") then
+    path = path .. "/"
+  end
   return exists(path)
 end
 
@@ -25,8 +29,10 @@ local function mkdir_p(path)
   path = path:gsub("\\", "/")
   local pathTbl = path:split("/")
   local cwd = "/"
-  if isWindows() then cwd = "" end
-  for index,dirName in ipairs(pathTbl) do
+  if isWindows() then
+    cwd = ""
+  end
+  for index, dirName in ipairs(pathTbl) do
     if index == 1 then
       cwd = cwd .. dirName
     else
@@ -90,10 +96,12 @@ end
 
 -- Internal function, used to turn a string variable name into a value
 local function getValueAt(accessString)
-  if accessString == "" then return nil end
+  if accessString == "" then
+    return nil
+  end
   local tempTable = accessString:split("%.")
   local accessTable = {}
-  for i,v in ipairs(tempTable) do
+  for i, v in ipairs(tempTable) do
     if tonumber(v) then
       accessTable[i] = tonumber(v)
     else
@@ -104,102 +112,100 @@ local function getValueAt(accessString)
 end
 
 -- internal sorting function, sorts first by hue, then luminosity, then value
-local sortColorsByHue =
-  function(lhs, rhs)
-    local lh, ll, lv = unpack(lhs.sort)
-    local rh, rl, rv = unpack(rhs.sort)
-    if lh < rh then
-      return true
-    elseif lh > rh then
-      return false
-    elseif ll < rl then
-      return true
-    elseif ll > rl then
-      return false
-    else
-      return lv < rv
-    end
+local function sortColorsByHue(lhs, rhs)
+  local lh, ll, lv = unpack(lhs.sort)
+  local rh, rl, rv = unpack(rhs.sort)
+  if lh < rh then
+    return true
+  elseif lh > rh then
+    return false
+  elseif ll < rl then
+    return true
+  elseif ll > rl then
+    return false
+  else
+    return lv < rv
   end
+end
+
 -- internal sorting function, removes _ from snake_case and compares to camelCase
-local sortColorsByName =
-  function(a, b)
-    local aname = string.gsub(string.lower(a.name), "_", "")
-    local bname = string.gsub(string.lower(b.name), "_", "")
-    return aname < bname
-  end
+local function sortColorsByName(a, b)
+  local aname = string.gsub(string.lower(a.name), "_", "")
+  local bname = string.gsub(string.lower(b.name), "_", "")
+  return aname < bname
+end
+
 -- internal function used to turn sorted colors table into columns
-local chunkify =
-  function(tbl, num_chunks)
-    local pop =
-      function(t)
-        return table.remove(t, 1)
-      end
-    tbl = table.deepcopy(tbl)
-    local tblsize = #tbl
-    local base_chunk_size = tblsize / num_chunks
-    local chunky_chunks = tblsize % num_chunks
-    local chunks = {}
-    for i = 1, num_chunks do
-      local chunk_size = base_chunk_size
-      if i <= chunky_chunks then
-        chunk_size = chunk_size + 1
-      end
-      local chunk = {}
-      for j = 1, chunk_size do
-        chunk[j] = pop(tbl)
-      end
-      chunks[i] = chunk
-    end
-    return chunks
+local function chunkify(tbl, num_chunks)
+  local pop = function(t)
+    return table.remove(t, 1)
   end
+  tbl = table.deepcopy(tbl)
+  local tblsize = #tbl
+  local base_chunk_size = tblsize / num_chunks
+  local chunky_chunks = tblsize % num_chunks
+  local chunks = {}
+  for i = 1, num_chunks do
+    local chunk_size = base_chunk_size
+    if i <= chunky_chunks then
+      chunk_size = chunk_size + 1
+    end
+    local chunk = {}
+    for j = 1, chunk_size do
+      chunk[j] = pop(tbl)
+    end
+    chunks[i] = chunk
+  end
+  return chunks
+end
+
 -- internal function, converts rgb to hsv
 -- found at https://github.com/EmmanuelOga/columns/blob/master/utils/color.lua#L89
-local rgbToHsv =
-  function(r, g, b)
-    r, g, b = r / 255, g / 255, b / 255
-    local max, min = math.max(r, g, b), math.min(r, g, b)
-    local h, s, v
-    v = max
-    local d = max - min
-    if max == 0 then
-      s = 0
-    else
-      s = d / max
-    end
-    if max == min then
-      h = 0
-      -- achromatic
-    else
-      if max == r then
-        h = (g - b) / d
-        if g < b then
-          h = h + 6
-        end
-      elseif max == g then
-        h = (b - r) / d + 2
-      elseif max == b then
-        h = (r - g) / d + 4
-      end
-      h = h / 6
-    end
-    return h, s, v
+local function rgbToHsv(r, g, b)
+  r, g, b = r / 255, g / 255, b / 255
+  local max, min = math.max(r, g, b), math.min(r, g, b)
+  local h, s, v
+  v = max
+  local d = max - min
+  if max == 0 then
+    s = 0
+  else
+    s = d / max
   end
+  if max == min then
+    h = 0
+    -- achromatic
+  else
+    if max == r then
+      h = (g - b) / d
+      if g < b then
+        h = h + 6
+      end
+    elseif max == g then
+      h = (b - r) / d + 2
+    elseif max == b then
+      h = (r - g) / d + 4
+    end
+    h = h / 6
+  end
+  return h, s, v
+end
+
 -- internal stepping function, removes some of the noise for a more pleasing sort
 -- cribbed from the python on https://www.alanzucconi.com/2015/09/30/colour-sorting/
-local step =
-  function(r, g, b)
-    local lum = math.sqrt(.241 * r + .691 * g + .068 * b)
-    local reps = 8
-    local h, s, v = rgbToHsv(r, g, b)
-    local h2 = math.floor(h * reps)
-    local lum2 = math.floor(lum * reps)
-    local v2 = math.floor(v * reps)
-    if h2 % 2 == 1 then
-      v2 = reps - v2
-      lum2 = reps - lum2
-    end
-    return h2, lum2, v2
+local function step(r, g, b)
+  local lum = math.sqrt(.241 * r + .691 * g + .068 * b)
+  local reps = 8
+  local h, s, v = rgbToHsv(r, g, b)
+  local h2 = math.floor(h * reps)
+  local lum2 = math.floor(lum * reps)
+  local v2 = math.floor(v * reps)
+  if h2 % 2 == 1 then
+    v2 = reps - v2
+    lum2 = reps - lum2
   end
+  return h2, lum2, v2
+end
 
 local function calc_luminosity(r, g, b)
   r = r < 11 and r / (255 * 12.92) or ((0.055 + r / 255) / 1.055) ^ 2.4
@@ -233,24 +239,13 @@ local function echoColor(color, options)
     if options.echoOnly then
       cecho(colorString)
     else
-      cechoLink(
-        colorString,
-        [[appendCmdLine("]] .. color.name .. [[")]],
-        table.concat(rgb, ", "),
-        true
-      )
+      cechoLink(colorString, [[appendCmdLine("]] .. color.name .. [[")]], table.concat(rgb, ", "), true)
     end
   else
-   if options.echoOnly then
+    if options.echoOnly then
       cecho(options.window, colorString)
     else
-      cechoLink(
-        options.window,
-        colorString,
-        [[appendCmdLine("]] .. color.name .. [[")]],
-        table.concat(rgb, ", "),
-        true
-      )
+      cechoLink(options.window, colorString, [[appendCmdLine("]] .. color.name .. [[")]], table.concat(rgb, ", "), true)
     end
   end
 end
@@ -258,11 +253,13 @@ end
 local cnames = {}
 
 local function _color_name(rgb)
-  if cnames[rgb] then return cnames[rgb] end
+  if cnames[rgb] then
+    return cnames[rgb]
+  end
   local least_distance = math.huge
   local cname = ""
   for name, color in pairs(color_table) do
-    local color_distance = math.sqrt((color[1] - rgb[1])^2 + (color[2] - rgb[2])^2 + (color[3] - rgb[3])^2)
+    local color_distance = math.sqrt((color[1] - rgb[1]) ^ 2 + (color[2] - rgb[2]) ^ 2 + (color[3] - rgb[3]) ^ 2)
     if color_distance < least_distance then
       least_distance = color_distance
       cname = name
@@ -296,19 +293,11 @@ local function hexToAnsi(hexcode)
   local fore = cols[1]
   local back = cols[2]
   if fore ~= "" then
-    local components = {
-      tonumber(fore:sub(1,2),16),
-      tonumber(fore:sub(3,4),16),
-      tonumber(fore:sub(5,6),16)
-    }
+    local components = {tonumber(fore:sub(1, 2), 16), tonumber(fore:sub(3, 4), 16), tonumber(fore:sub(5, 6), 16)}
     result = string.format("%s\27[38:2::%s:%s:%sm", result, components[1] or "0", components[2] or "0", components[3] or "0")
   end
   if back then
-    local components = {
-      tonumber(back:sub(1,2),16),
-      tonumber(back:sub(3,4),16),
-      tonumber(back:sub(5,6),16)
-    }
+    local components = {tonumber(back:sub(1, 2), 16), tonumber(back:sub(3, 4), 16), tonumber(back:sub(5, 6), 16)}
     result = string.format("%s\27[48:2::%s:%s:%sm", result, components[1] or "0", components[2] or "0", components[3] or "0")
   end
   return result
@@ -320,11 +309,11 @@ local function hexToRgb(hexcode)
   local fore = cols[1]
   local back = cols[2]
   if fore ~= "" then
-    local r,g,b = Geyser.Color.parse("#" .. fore)
+    local r, g, b = Geyser.Color.parse("#" .. fore)
     result = string.format("%s%s,%s,%s", result, r, g, b)
   end
   if back then
-    local r,g,b = Geyser.Color.parse("#" .. back)
+    local r, g, b = Geyser.Color.parse("#" .. back)
     result = string.format("%s:%s,%s,%s", result, r, g, b)
   end
   return string.format("%s>", result)
@@ -336,11 +325,11 @@ local function rgbToHex(rgb)
   local fore = cols[1]
   local back = cols[2]
   if fore ~= "" then
-    local r,g,b = unpack(string.split(fore, ","))
+    local r, g, b = unpack(string.split(fore, ","))
     result = string.format("%s%02x%02x%02x", result, r, g, b)
   end
   if back then
-    local r,g,b = unpack(string.split(back, ","))
+    local r, g, b = unpack(string.split(back, ","))
     result = string.format("%s,%02x%02x%02x", result, r, g, b)
   end
   return result
@@ -366,41 +355,20 @@ local function cnameToRgb(cname)
   local fore = cols[1]
   local back = cols[2]
   if fore ~= "" then
-    local rgb = color_table[fore] or {0,0,0}
+    local rgb = color_table[fore] or {0, 0, 0}
     result = string.format("%s%s", result, table.concat(rgb, ","))
   end
   if back then
-    local rgb = color_table[back] or {0,0,0}
+    local rgb = color_table[back] or {0, 0, 0}
     result = string.format("%s:%s", result, table.concat(rgb, ","))
   end
   return string.format("%s>", result)
 end
 
 local function toFromDecho(from, to, text)
-  local patterns = {
-    d = _Echos.Patterns.Decimal[1],
-    c = _Echos.Patterns.Color[1],
-    h = _Echos.Patterns.Hex[1],
-  }
-  local funcs = {
-    d = {
-      c = rgbToCname,
-      h = rgbToHex,
-      a = rgbToAnsi
-    },
-    c = {
-      d = cnameToRgb,
-    },
-    h = {
-      d = hexToRgb,
-    }
-  }
-  local resetCodes = {
-    d = "<r>",
-    h = "#r",
-    c = "<reset>",
-    a = "\27[39;49m"
-  }
+  local patterns = {d = _Echos.Patterns.Decimal[1], c = _Echos.Patterns.Color[1], h = _Echos.Patterns.Hex[1]}
+  local funcs = {d = {c = rgbToCname, h = rgbToHex, a = rgbToAnsi}, c = {d = cnameToRgb}, h = {d = hexToRgb}}
+  local resetCodes = {d = "<r>", h = "#r", c = "<reset>", a = "\27[39;49m"}
 
   local colorPattern = patterns[from]
   local func = funcs[from][to]
@@ -409,9 +377,11 @@ local function toFromDecho(from, to, text)
   for str, color, res in rex.split(text, colorPattern) do
     result = result .. str
     if color then
-      if color:sub(1,1) == "|" then color = color:gsub("|c", "#") end
+      if color:sub(1, 1) == "|" then
+        color = color:gsub("|c", "#")
+      end
       if from == "h" then
-        result = result .. func(color:sub(2,-1))
+        result = result .. func(color:sub(2, -1))
       else
         result = result .. func(color:match("<(.+)>"))
       end
@@ -466,7 +436,7 @@ local function ansi2decho(tstring)
     [4] = color_table.ansiBlue,
     [5] = color_table.ansiMagenta,
     [6] = color_table.ansiCyan,
-    [7] = color_table.ansiWhite
+    [7] = color_table.ansiWhite,
   }
   local lightColours = {
     [0] = color_table.ansiLightBlack,
@@ -476,7 +446,7 @@ local function ansi2decho(tstring)
     [4] = color_table.ansiLightBlue,
     [5] = color_table.ansiLightMagenta,
     [6] = color_table.ansiLightCyan,
-    [7] = color_table.ansiLightWhite
+    [7] = color_table.ansiLightWhite,
   }
 
   local function colorCodeToRGB(color, parts)
@@ -497,10 +467,16 @@ local function ansi2decho(tstring)
         local r = parts[4] or 0
         local g = parts[5] or 0
         local b = parts[6] or 0
-        if r == "" then r = 0 end
-        if g == "" then g = 0 end
-        if b == "" then b = 0 end
-        rgb = {r,g,b}
+        if r == "" then
+          r = 0
+        end
+        if g == "" then
+          g = 0
+        end
+        if b == "" then
+          b = 0
+        end
+        rgb = {r, g, b}
       end
     end
     return rgb
@@ -520,11 +496,11 @@ local function ansi2decho(tstring)
         end
         local code = parts[1]
         if code:starts("3") then
-          color = tonumber(code:sub(2,2))
+          color = tonumber(code:sub(2, 2))
           local rgb = colorCodeToRGB(color, parts)
           result = string.format("%s<%s,%s,%s>", result, rgb[1], rgb[2], rgb[3])
         elseif code:starts("4") then
-          color = tonumber(code:sub(2,2))
+          color = tonumber(code:sub(2, 2))
           local rgb = colorCodeToRGB(color, parts)
           result = string.format("%s<:%s,%s,%s>", result, rgb[1], rgb[2], rgb[3])
         elseif tonumber(code) >= 90 and tonumber(code) <= 97 then
@@ -561,8 +537,10 @@ local function hecho2ansi(text)
   for str, color, res in rex.split(text, colorPattern) do
     result = result .. str
     if color then
-      if color:sub(1,1) == "|" then color = color:gsub("|c", "#") end
-      result = result .. hexToAnsi(color:sub(2,-1))
+      if color:sub(1, 1) == "|" then
+        color = color:gsub("|c", "#")
+      end
+      result = result .. hexToAnsi(color:sub(2, -1))
     end
     if res then
       result = result .. "\27[39;49m"
@@ -579,10 +557,7 @@ end
 local function displayColors(options)
   options = options or {}
   local optionsType = type(options)
-  assert(
-    optionsType == "table",
-    "displayColors(options) argument error: options as table expects, got " .. optionsType
-  )
+  assert(optionsType == "table", "displayColors(options) argument error: options as table expects, got " .. optionsType)
   options.cols = options.cols or 4
   options.search = options.search or ""
   options.sort = options.sort or false
@@ -631,7 +606,7 @@ local function displayColors(options)
   else
     local i = 1
     for _, k in ipairs(colors) do
-      echoColor(k,options)
+      echoColor(k, options)
       if i == cols then
         echo(options.window, "\n")
         i = 1
@@ -704,11 +679,17 @@ local function consoleToString(options)
   options.win = options.win or "main"
   options.format = options.format or "d"
   options.start_line = options.start_line or 0
-  if options.includeHtmlWrapper == nil then options.includeHtmlWrapper = true end
+  if options.includeHtmlWrapper == nil then
+    options.includeHtmlWrapper = true
+  end
   local console_line_count = options.win == "main" and getLineCount() or getLineCount(options.win)
-  if not options.end_line then options.end_line = console_line_count end
-  if options.end_line > console_line_count then options.end_line = console_line_count end
-  local start,finish,format = options.start_line, options.end_line, options.format
+  if not options.end_line then
+    options.end_line = console_line_count
+  end
+  if options.end_line > console_line_count then
+    options.end_line = console_line_count
+  end
+  local start, finish, format = options.start_line, options.end_line, options.format
   local current_x, current_y
   if options.win == "main" then
     current_x = getColumnNumber()
@@ -718,9 +699,9 @@ local function consoleToString(options)
     current_y = getLineNumber(options.win)
   end
 
-  local function move(x,y)
+  local function move(x, y)
     if options.win == "main" then
-      return moveCursor(x,y)
+      return moveCursor(x, y)
     else
       return moveCursor(options.win, x, y)
     end
@@ -755,9 +736,9 @@ local function consoleToString(options)
   if format == "h" and options.includeHtmlWrapper then
     lines[#lines + 1] = htmlHeader
   end
-  for line_number = start,finish do
-    move(0,line_number)
-    lines[#lines+1] = gcl()
+  for line_number = start, finish do
+    move(0, line_number)
+    lines[#lines + 1] = gcl()
   end
   if format == "h" and options.includeHtmlWrapper then
     lines[#lines + 1] = "</span></body></html>"
@@ -799,7 +780,7 @@ local function scientific_round(number, sigDigits)
       table.insert(numberTable, digit)
     end
     local endNumber = ""
-    for i,digit in ipairs(numberTable) do
+    for i, digit in ipairs(numberTable) do
       if i < sigDigits then
         endNumber = endNumber .. digit
       end
@@ -814,7 +795,7 @@ local function scientific_round(number, sigDigits)
         endNumber = endNumber .. "0"
       end
     end
-    return tonumber(endNumber)      
+    return tonumber(endNumber)
   else
     local decimalDigits = sigDigits - decimalPlace + 1
     return tonumber(string.format("%" .. decimalPlace - 1 .. "." .. decimalDigits .. "f", number))
@@ -826,8 +807,8 @@ local function roundInt(number)
 end
 
 function string.tobyte(self)
-  return (self:gsub('.', function (c)
-	  return string.byte(c)
+  return (self:gsub('.', function(c)
+    return string.byte(c)
   end))
 end
 
@@ -841,8 +822,10 @@ function string.tocolor(self)
   local strTable = {}
   local part1 = {}
   local part2 = {}
-  self:gsub(".",function(c) table.insert(strTable,c) end)
-  for index,value in ipairs(strTable) do
+  self:gsub(".", function(c)
+    table.insert(strTable, c)
+  end)
+  for index, value in ipairs(strTable) do
     if (index % 2 == 0) then
       table.insert(part1, value)
     else
@@ -851,12 +834,12 @@ function string.tocolor(self)
   end
   local newStr = string.reverse(table.concat(part1)) .. table.concat(part2)
   -- end munging of the original string to get more uniqueness
-  math.randomseed(string.cut(newStr:tobyte(),18))
-  local r = math.random(0,255)
-  local g = math.random(0,255)
-  local b = math.random(0,255)
+  math.randomseed(string.cut(newStr:tobyte(), 18))
+  local r = math.random(0, 255)
+  local g = math.random(0, 255)
+  local b = math.random(0, 255)
   math.randomseed(os.time())
-  return {r,g,b}
+  return {r, g, b}
 end
 
 local function colorMunge(strForColor, strToEcho, format)
@@ -878,9 +861,15 @@ local function colorMungeEcho(strForColor, strToEcho, format, win)
   win = win or "main"
   local str = colorMunge(strForColor, strToEcho, format)
   local func
-  if format == "d" then func = decho end
-  if format == "c" then func = cecho end
-  if format == "h" then func = hecho end
+  if format == "d" then
+    func = decho
+  end
+  if format == "c" then
+    func = cecho
+  end
+  if format == "h" then
+    func = hecho
+  end
   if win == "main" then
     func(str)
   else
@@ -936,7 +925,6 @@ function DemonTools.ansi2cecho(text)
   local dtext = ansi2decho(text)
   return decho2cecho(dtext)
 end
-
 
 --- Takes an ansi colored text string and returns a decho colored one. Handles 256 color SGR codes better than Mudlet's ansi2decho
 -- @tparam string text the text to convert
@@ -1046,19 +1034,19 @@ function DemonTools.html2hecho(text)
 end
 
 --- Takes a cecho string and returns it without the formatting
---@param text the text to transform
+-- @param text the text to transform
 function DemonTools.cecho2string(text)
   return cecho2string(text)
 end
 
 --- Takes a decho string and returns it without the formatting
---@param text the text to transform
+-- @param text the text to transform
 function DemonTools.decho2string(text)
   return decho2string(text)
 end
 
 --- Takes a hecho string and returns it without the formatting
---@param text the text to transform
+-- @param text the text to transform
 function DemonTools.hecho2string(text)
   return hecho2string(text)
 end
@@ -1130,8 +1118,8 @@ end
 --     <td class="tg-odd">If the format is html, should it include the front and back portions required to make it a functioning html page?</td>
 --     <td class="tg-odd">true</td>
 --   </tr>
---</tbody>
---</table>
+-- </tbody>
+-- </table>
 function DemonTools.consoleToString(options)
   return consoleToString(options)
 end
@@ -1192,8 +1180,8 @@ end
 --     <td class="tg-odd">Table of colors to display. If you provide your own table, it must be in the same format as Mudlet's own color_table</td>
 --     <td class="tg-odd">color_table</td>
 --   </tr>
---</tbody>
---</table>
+-- </tbody>
+-- </table>
 function DemonTools.displayColors(options)
   return displayColors(options)
 end
@@ -1244,8 +1232,8 @@ function DemonTools.colorMungeEcho(strForColor, strToEcho, format, win)
 end
 
 --- Converts milliseconds to hours:minutes:seconds:milliseconds
---@tparam number milliseconds the number of milliseconds to convert
---@tparam boolean tbl if true, returns the time as a key/value table instead
+-- @tparam number milliseconds the number of milliseconds to convert
+-- @tparam boolean tbl if true, returns the time as a key/value table instead
 -- @usage dt.milliToHuman(37194572) --returns "10:19:54:572"
 -- @usage display(dt.milliToHuman(37194572, true))
 -- {
@@ -1265,7 +1253,7 @@ function DemonTools.milliToHuman(milliseconds, tbl)
       minutes = tonumber(timetbl[2]),
       seconds = tonumber(timetbl[3]),
       milliseconds = tonumber(timetbl[4]),
-      original = milliseconds
+      original = milliseconds,
     }
   else
     output = human
@@ -1276,7 +1264,7 @@ end
 --- Takes the name of a variable as a string and returns the value. "health" will return the value in varable health, "gmcp.Char.Vitals" will return the table at gmcp.Char.Vitals, etc
 -- @tparam string variableString the string name of the variable you want the value of
 -- @usage currentHP = 50
---dt.getValueAt("currentHP") -- returns 50
+-- dt.getValueAt("currentHP") -- returns 50
 function DemonTools.getValueAt(variableString)
   return getValueAt(variableString)
 end

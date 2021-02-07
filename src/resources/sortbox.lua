@@ -1,9 +1,8 @@
 ---An H/VBox alternative which can be set to either vertical or horizontal, and will autosort the windows
---@classmod SortBox
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
-
+-- @classmod SortBox
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local SortBox = Geyser.Container:new({
   name = "SortBoxClass",
   autoSort = true,
@@ -13,48 +12,52 @@ local SortBox = Geyser.Container:new({
   maxHeight = 0,
   maxWidth = 0,
   boxType = "v",
-  sortFunction = "gaugeValue"
+  sortFunction = "gaugeValue",
 })
 local BIGNUMBER = 999999999
 
 --- Sorting functions for spairs, should you wish
---@table SortFunctions
---@field gaugeValue sorts Geyser gauges by value, ascending
---@field reverseGaugeValue sorts Geyser gauges by value, descending
---@field timeLeft sorts TimerGauges by how much time is left, ascending
---@field reverseTimeLeft sorts TimerGauges by how much time is left, descending.
---@field name sorts Geyser objects by name, ascending
---@field reverseName sorts Geyser objects by name, descending
---@field message sorts Geyser labels and gauges by their echoed text, ascending
---@field reverseMessage sorts Geyser labels and gauges by their echoed text, descending
+-- @table SortFunctions
+-- @field gaugeValue sorts Geyser gauges by value, ascending
+-- @field reverseGaugeValue sorts Geyser gauges by value, descending
+-- @field timeLeft sorts TimerGauges by how much time is left, ascending
+-- @field reverseTimeLeft sorts TimerGauges by how much time is left, descending.
+-- @field name sorts Geyser objects by name, ascending
+-- @field reverseName sorts Geyser objects by name, descending
+-- @field message sorts Geyser labels and gauges by their echoed text, ascending
+-- @field reverseMessage sorts Geyser labels and gauges by their echoed text, descending
 SortBox.SortFunctions = {
-  gaugeValue = function(t,a,b)
+  gaugeValue = function(t, a, b)
     local avalue = t[a].value or BIGNUMBER
     local bvalue = t[b].value or BIGNUMBER
     return avalue < bvalue
   end,
-  reverseGaugeValue = function(t,a,b)
+  reverseGaugeValue = function(t, a, b)
     local avalue = t[a].value or BIGNUMBER
     local bvalue = t[b].value or BIGNUMBER
-    return avalue >  bvalue
+    return avalue > bvalue
   end,
-  timeLeft = function(t,a,b) 
+  timeLeft = function(t, a, b)
     a = t[a]
     b = t[b]
     local avalue = a.getTime and tonumber(a:getTime("S.mm")) or BIGNUMBER
     local bvalue = b.getTime and tonumber(b:getTime("S.mm")) or BIGNUMBER
     return avalue < bvalue
   end,
-  reverseTimeLeft = function(t,a,b) 
+  reverseTimeLeft = function(t, a, b)
     a = t[a]
     b = t[b]
     local avalue = a.getTime and tonumber(a:getTime("S.mm")) or BIGNUMBER
     local bvalue = b.getTime and tonumber(b:getTime("S.mm")) or BIGNUMBER
     return avalue > bvalue
   end,
-  name = function(t,a,b) return t[a].name < t[b].name end,
-  reverseName = function(t,a,b) return t[a].name > t[b].name end,
-  message = function(t,a,b)
+  name = function(t, a, b)
+    return t[a].name < t[b].name
+  end,
+  reverseName = function(t, a, b)
+    return t[a].name > t[b].name
+  end,
+  message = function(t, a, b)
     a = t[a]
     b = t[b]
     local avalue = a.text and a.text.message or a.message
@@ -63,7 +66,7 @@ SortBox.SortFunctions = {
     bvalue = bvalue or ""
     return avalue < bvalue
   end,
-  reverseMessage = function(t,a,b)
+  reverseMessage = function(t, a, b)
     a = t[a]
     b = t[b]
     local avalue = a.text and a.text.message or a.message
@@ -74,7 +77,7 @@ SortBox.SortFunctions = {
   end,
 }
 --- Creates a new SortBox
---@usage mySortBox = SortBox:new({
+-- @usage mySortBox = SortBox:new({
 --   name = "mySortBox",
 --   x = 400,
 --   y = 100,
@@ -82,9 +85,9 @@ SortBox.SortFunctions = {
 --   width = 300,
 --   sortFunction = "timeLeft"
 -- })
---@tparam table options the options to use for the SortBox. See table below for added options
---@param[opt] container the container to add the SortBox into
---<br><br>Table of new options
+-- @tparam table options the options to use for the SortBox. See table below for added options
+-- @param[opt] container the container to add the SortBox into
+-- <br><br>Table of new options
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -142,20 +145,24 @@ function SortBox:new(options, container)
   local me = self.parent:new(options, container)
   setmetatable(me, self)
   self.__index = self
-  if me.timerSort then me:enableTimer() end
+  if me.timerSort then
+    me:enableTimer()
+  end
   me:setBoxType(me.boxType)
   return me
 end
 
 --- Iterates a key:value pair table in a sorted fashion
---@local
+-- @local
 -- I first found this on https://stackoverflow.com/questions/15706270/sort-a-table-in-lua
 -- modified slightly, as Mudlet already has table.keys to collect keys, and I don't want
 -- to sort if no function to sort with is given. In this case, I want it to work like pairs.
 local function spairs(t, order)
   local keys = table.keys(t)
   if order then
-    table.sort(keys, function(a,b) return order(t, a, b) end)
+    table.sort(keys, function(a, b)
+      return order(t, a, b)
+    end)
   end
 
   local i = 0
@@ -203,7 +210,7 @@ function SortBox:organize()
 end
 
 --- replicates Geyser.HBox functionality, but with the option of sorting
---@local
+-- @local
 function SortBox:horganize()
   local window_width = (self:calculate_dynamic_window_size().width / self:get_width()) * 100
   local start_x = 0
@@ -221,7 +228,7 @@ function SortBox:horganize()
 end
 
 --- replicates Geyser.VBox functionality, but with the option of sorting
---@local
+-- @local
 function SortBox:vorganize()
   local window_height = (self:calculate_dynamic_window_size().height / self:get_height()) * 100
   local start_y = 0
@@ -239,7 +246,7 @@ function SortBox:vorganize()
 end
 
 --- handles a single window during the shuffle process
---@local
+-- @local
 function SortBox:handleWindow(window, start, window_dimension)
   local width = (window:get_width() / self:get_width()) * 100
   local height = (window:get_height() / self:get_height()) * 100
@@ -247,7 +254,7 @@ function SortBox:handleWindow(window, start, window_dimension)
     self.contains_fixed = true
   end
   if self.boxType == "v" then
-    window:move("0%", start.."%")
+    window:move("0%", start .. "%")
     if window.h_policy == Geyser.Dynamic then
       width = 100
       if window.width ~= width then
@@ -262,7 +269,7 @@ function SortBox:handleWindow(window, start, window_dimension)
     end
     return height
   else
-    window:move(start.."%", "0%")
+    window:move(start .. "%", "0%")
     if window.h_policy == Geyser.Dynamic then
       width = window_dimension * window.h_stretch_factor
       if window.width ~= width then
@@ -280,9 +287,11 @@ function SortBox:handleWindow(window, start, window_dimension)
 end
 
 ---handles actually resizing the window if elastic
---@local
+-- @local
 function SortBox:handleElastic()
-  if not self.elastic or table.is_empty(self.windows) then return end
+  if not self.elastic or table.is_empty(self.windows) then
+    return
+  end
   if self.boxType == "v" then
     local contentHeight, canElastic = self:getContentHeight()
     if not canElastic then
@@ -315,7 +324,7 @@ function SortBox:handleElastic()
 end
 
 ---prevents gaps from forming during resize if it doesn't autoorganize on a timer.
---@local
+-- @local
 function SortBox:reposition()
   Geyser.Container.reposition(self)
   if self.contains_fixed then
@@ -324,14 +333,14 @@ function SortBox:reposition()
 end
 
 --- Returns the sum of the heights of the contents, and whether this SortBox can be elastic in height
---@local
+-- @local
 function SortBox:getContentHeight()
   if self.boxType ~= "v" then
     return self:get_height()
   end
   local canElastic = true
   local contentHeight = 0
-  for _,window in pairs(self.windowList) do
+  for _, window in pairs(self.windowList) do
     contentHeight = contentHeight + window:get_height()
     if window.v_policy == Geyser.Dynamic then
       canElastic = false
@@ -341,14 +350,14 @@ function SortBox:getContentHeight()
 end
 
 --- Returns the sum of the widths of the contents, and whether this SortBox can be elastic in width.
---@local
+-- @local
 function SortBox:getContentWidth()
   if self.boxType == "v" then
     return self:get_width()
   end
   local canElastic = true
   local contentWidth = 0
-  for _,window in pairs(self.windowList) do
+  for _, window in pairs(self.windowList) do
     contentWidth = contentWidth + window:get_width()
     if window.h_policy == Geyser.Dynamic then
       canElastic = false
@@ -368,13 +377,13 @@ function SortBox:disableElastic()
 end
 
 --- Set elasticity specifically
---@tparam boolean enabled if true, enable elasticity. If false, disable it.
+-- @tparam boolean enabled if true, enable elasticity. If false, disable it.
 function SortBox:setElastic(enabled)
   self.elastic = enabled and true or false
 end
 
 --- Set the max width of the SortBox if it's elastic
---@tparam number maxWidth The maximum width in pixels to resize the SortBox to. Use 0 for unlimited.
+-- @tparam number maxWidth The maximum width in pixels to resize the SortBox to. Use 0 for unlimited.
 function SortBox:setMaxWidth(maxWidth)
   local mwtype = type(maxWidth)
   assert(mwtype == "number", string.format("SortBox:setMaxWidth(maxWidth): SortBox: %s maxWidth as number expected, got %s", self.name, mwtype))
@@ -383,7 +392,7 @@ function SortBox:setMaxWidth(maxWidth)
 end
 
 --- Set the max height of the SortBox if it's elastic
---@tparam number maxHeight The maximum height in pixels to resize the SortBox to. Use 0 for unlimited.
+-- @tparam number maxHeight The maximum height in pixels to resize the SortBox to. Use 0 for unlimited.
 function SortBox:setMaxHeight(maxHeight)
   local mhtype = type(maxHeight)
   assert(mhtype == "number", string.format("SortBox:setMaxHeight(maxHeight): SortBox: %s maxHeight as number expected, got %s", self.name, mhtype))
@@ -393,9 +402,13 @@ end
 
 --- Starts the SortBox sorting and organizing itself on a timer
 function SortBox:enableTimer()
-  if self.timerID then self:disableTimer() end
+  if self.timerID then
+    self:disableTimer()
+  end
   self.timerSort = true
-  self.timerID = tempTimer(self.sortInterval / 1000, function() self:organize() end, true)
+  self.timerID = tempTimer(self.sortInterval / 1000, function()
+    self:organize()
+  end, true)
 end
 
 --- Stops the SortBox from sorting and organizing itself on a timer
@@ -406,7 +419,7 @@ function SortBox:disableTimer()
 end
 
 --- Sets the sortInterval, or amount of time in milliseconds between auto sorting on a timer if timerSort is true
---@tparam number sortInterval time in milliseconds between auto sorting if timerSort is true
+-- @tparam number sortInterval time in milliseconds between auto sorting if timerSort is true
 function SortBox:setSortInterval(sortInterval)
   local sitype = type(sortInterval)
   assert(sitype == "number", string.format("SortBox:setSortInterval(sortInterval): sortInterval as number expected, got %s", sitype))
@@ -429,8 +442,8 @@ function SortBox:disableSort()
 end
 
 ---Set whether the SortBox acts as a VBox or HBox.
---@tparam string boxType If you pass 'h' or 'horizontal' it will act like an HBox. Anything else it will act like a VBox.
---@usage mySortBox:setBoxType("v") -- behave like a VBox
+-- @tparam string boxType If you pass 'h' or 'horizontal' it will act like an HBox. Anything else it will act like a VBox.
+-- @usage mySortBox:setBoxType("v") -- behave like a VBox
 -- mySortBox:setBoxType("h") -- behave like an HBox
 -- mySortBox:setBoxType("beeblebrox") -- why?! Why would you do this? It'll behave like a VBox
 function SortBox:setBoxType(boxType)
@@ -443,10 +456,10 @@ function SortBox:setBoxType(boxType)
 end
 
 ---Sets the type of sorting in use by this SortBox.
---<br>If an item in the box does not have the appropriate property or function, then 999999999 is used for sorting except as otherwise noted.
---<br>If an invalid option is given, then existing H/VBox behaviour is maintained, just like if autoSort is false.
---@usage mySortBox:setSortFunction("gaugeValue")
---@tparam string functionName what type of sorting should we use? See table below for valid options and their descriptions.
+-- <br>If an item in the box does not have the appropriate property or function, then 999999999 is used for sorting except as otherwise noted.
+-- <br>If an invalid option is given, then existing H/VBox behaviour is maintained, just like if autoSort is false.
+-- @usage mySortBox:setSortFunction("gaugeValue")
+-- @tparam string functionName what type of sorting should we use? See table below for valid options and their descriptions.
 -- <table class="tg">
 -- <thead>
 --   <tr>
