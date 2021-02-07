@@ -1,8 +1,8 @@
 --- MiniConsole with logging capabilities
---@classmod LoggingConsole
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
+-- @classmod LoggingConsole
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local homedir = getMudletHomeDir():gsub("\\", "/")
 local pathOfThisFile = (...):match("(.-)[^%.]+$")
 local dt = require(pathOfThisFile .. "demontools")
@@ -24,15 +24,10 @@ local htmlHeader = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitiona
   </head>
 <body><span>]=]
 
-local LoggingConsole = {
-  log = true,
-  logFormat = "h",
-  path = "|h/log/consoleLogs/|y/|m/|d/",
-  fileName = "|n.|e",
-}
+local LoggingConsole = {log = true, logFormat = "h", path = "|h/log/consoleLogs/|y/|m/|d/", fileName = "|n.|e"}
 
 --- Creates and returns a new LoggingConsole.
---@param cons table of constraints. Includes all the valid Geyser.MiniConsole constraints, plus
+-- @param cons table of constraints. Includes all the valid Geyser.MiniConsole constraints, plus
 -- <table class="tg">
 -- <thead>
 --   <tr>
@@ -62,9 +57,9 @@ local LoggingConsole = {
 --     <td class="tg-even">The name of the log file. It is templated, same as path above</td>
 --     <td class="tg-even">"|n.|e"</td>
 --   </tr>
---</tbody>
---</table>
---@param container the container for the console
+-- </tbody>
+-- </table>
+-- @param container the container for the console
 function LoggingConsole:new(cons, container)
   cons = cons or {}
   local consType = type(cons)
@@ -106,12 +101,14 @@ end
 --- Returns the path to the logfile for this console
 function LoggingConsole:getPath()
   local path = self:transformTemplate(self.path)
-  if not path:ends("/") then path = path .. "/" end
+  if not path:ends("/") then
+    path = path .. "/"
+  end
   return path
 end
 
 --- Sets the path to use for the log file.
---@param path the path to put the log file in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)
+-- @param path the path to put the log file in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)
 function LoggingConsole:setPath(path)
   self.path = path
 end
@@ -123,7 +120,7 @@ function LoggingConsole:getFileName()
 end
 
 --- Sets the fileName to use for the log file.
---@param fileName the fileName to use for the logfile. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)
+-- @param fileName the fileName to use for the logfile. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)
 function LoggingConsole:setFileName(fileName)
   self.fileName = fileName
 end
@@ -150,7 +147,9 @@ end
 ---@local
 function LoggingConsole:createPathIfNotExists()
   local path = self:transformTemplate(self.path)
-  if not path:ends("/") then path = path .. "/" end
+  if not path:ends("/") then
+    path = path .. "/"
+  end
   if not exists(path) then
     local ok, err = dt.mkdir_p(path)
     if not ok then
@@ -169,7 +168,7 @@ function LoggingConsole:writeToLog(str)
     str = htmlHeader .. str
   end
   local file, err = io.open(fileName, "a")
-  if not file then 
+  if not file then
     echo(err .. "\n")
     return
   end
@@ -189,7 +188,11 @@ function LoggingConsole:xEcho(str, etype, log)
   end
   local logStr
   local logType = self.logFormat
-  if logType:find("h") then logType = "h" else logType = "l" end
+  if logType:find("h") then
+    logType = "h"
+  else
+    logType = "l"
+  end
   if etype == "d" then -- decho
     if logType == "h" then
       logStr = dt.decho2html(str)
@@ -236,11 +239,13 @@ function LoggingConsole:xEcho(str, etype, log)
     end
     parent.echo(self, str)
   end
-  if log then self:writeToLog(logStr) end
+  if log then
+    self:writeToLog(logStr)
+  end
 end
 
 --- Does the actual lifting of echoing links/popups
---@local
+-- @local
 function LoggingConsole:xEchoLink(text, lType, command, hint, useFormat, log)
   if log == nil then
     log = self.log
@@ -299,131 +304,132 @@ function LoggingConsole:xEchoLink(text, lType, command, hint, useFormat, log)
 end
 
 --- cechoLink for LoggingConsole
---@param text the text to use for the link
---@param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
---@param hint A tooltip which is displayed when the mouse is over the link
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
+-- @param hint A tooltip which is displayed when the mouse is over the link
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:cechoLink(text, command, hint, log)
   self:xEchoLink(text, "c", command, hint, true, log)
 end
 
 --- dechoLink for LoggingConsole
---@param text the text to use for the link
---@param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
---@param hint A tooltip which is displayed when the mouse is over the link
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
+-- @param hint A tooltip which is displayed when the mouse is over the link
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:dechoLink(text, command, hint, log)
   self:xEchoLink(text, "d", command, hint, true, log)
 end
 
 --- hechoLink for LoggingConsole
---@param text the text to use for the link
---@param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
---@param hint A tooltip which is displayed when the mouse is over the link
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
+-- @param hint A tooltip which is displayed when the mouse is over the link
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:hechoLink(text, command, hint, log)
   self:xEchoLink(text, "h", command, hint, true, log)
 end
 
 --- echoLink for LoggingConsole
---@param text the text to use for the link
---@param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
---@param hint A tooltip which is displayed when the mouse is over the link
---@param useCurrentFormat If set to true, will look like the text around it. If false it will be blue and underline.
---@param log Should we log this line? Defaults to self.log if not passed. If you want to pass this you must pass in useCurrentFormat
---@usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep") -- text "This is a link" will send("sleep") when clicked and be blue w/ underline. Defaut log behaviour (self.log)
---@usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep", false, false) -- same as above, but forces it not to log regardless of self.log setting
---@usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep", true, true) -- same as above, but forces it to log regardless of self.log setting and the text will look like anything else echoed to the console.
+-- @param text the text to use for the link
+-- @param command the command to send when the link is clicked, as text. IE [[send("sleep")]]
+-- @param hint A tooltip which is displayed when the mouse is over the link
+-- @param useCurrentFormat If set to true, will look like the text around it. If false it will be blue and underline.
+-- @param log Should we log this line? Defaults to self.log if not passed. If you want to pass this you must pass in useCurrentFormat
+-- @usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep") -- text "This is a link" will send("sleep") when clicked and be blue w/ underline. Defaut log behaviour (self.log)
+-- @usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep", false, false) -- same as above, but forces it not to log regardless of self.log setting
+-- @usage myLoggingConsole:echoLink("This is a link!", [[send("sleep")]], "sleep", true, true) -- same as above, but forces it to log regardless of self.log setting and the text will look like anything else echoed to the console.
 function LoggingConsole:echoLink(text, command, hint, useCurrentFormat, log)
   self:xEchoLink(text, "e", command, hint, useCurrentFormat, log)
 end
 
 --- cechoPopup for LoggingConsole
---@param text the text to use for the link
---@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
---@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
+-- @param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:cechoPopup(text, commands, hints, log)
   self:xEchoLink(text, "cp", commands, hints, true, log)
 end
 
 --- dechoPopup for LoggingConsole
---@param text the text to use for the link
---@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
---@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
+-- @param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:dechoPopup(text, commands, hints, log)
   self:xEchoLink(text, "dp", commands, hints, true, log)
 end
 
 --- hechoPopup for LoggingConsole
---@param text the text to use for the link
---@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
---@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
---@param log Should we log this line? Defaults to self.log if not passed.
+-- @param text the text to use for the link
+-- @param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
+-- @param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
+-- @param log Should we log this line? Defaults to self.log if not passed.
 function LoggingConsole:hechoPopup(text, commands, hints, log)
   self:xEchoLink(text, "hp", commands, hints, true, log)
 end
 
 --- echoPopup for LoggingConsole
---@param text the text to use for the link
---@param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
---@param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
---@param useCurrentFormat If set to true, will look like the text around it. If false it will be blue and underline.
---@param log Should we log this line? Defaults to self.log if not passed. If you want to pass this you must pass in useCurrentFormat
---@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}) -- text "This is a link" will send("sleep") when clicked and be blue w/ underline. Defaut log behaviour (self.log)
---@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, false, false) -- same as above, but forces it not to log regardless of self.log setting
---@usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, true, true) -- same as above, but forces it to log regardless of self.log setting and the text will look like anything else echoed to the console.
+-- @param text the text to use for the link
+-- @param commands the commands to send when the popup is activated, as table. IE {[[send("sleep")]], [[send("stand")]]}
+-- @param hints A tooltip which is displayed when the mouse is over the link. IE {{"sleep", "stand"}}
+-- @param useCurrentFormat If set to true, will look like the text around it. If false it will be blue and underline.
+-- @param log Should we log this line? Defaults to self.log if not passed. If you want to pass this you must pass in useCurrentFormat
+-- @usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}) -- text "This is a link" will send("sleep") when clicked and be blue w/ underline. Defaut log behaviour (self.log)
+-- @usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, false, false) -- same as above, but forces it not to log regardless of self.log setting
+-- @usage myLoggingConsole:echoPopup("This is a link!", {[[send("sleep")]], [[send("stand")]], {"sleep", "stand"}, true, true) -- same as above, but forces it to log regardless of self.log setting and the text will look like anything else echoed to the console.
 function LoggingConsole:echoPopup(text, commands, hints, useCurrentFormat, log)
   self:xEchoLink(text, "ep", commands, hints, useCurrentFormat, log)
 end
 
-
 --- Append copy()ed text to the console
---@param log should we log this?
+-- @param log should we log this?
 function LoggingConsole:appendBuffer(log)
   self:xEcho("", "a", log)
 end
 
 --- Append copy()ed text to the console
---@param log should we log this?
+-- @param log should we log this?
 function LoggingConsole:append(log)
   self:xEcho("", "a", log)
 end
 
 --- echo's a string to the console.
---@param str the string to echo
---@param log should this be logged? Used to override the .log constraint
+-- @param str the string to echo
+-- @param log should this be logged? Used to override the .log constraint
 function LoggingConsole:echo(str, log)
   self:xEcho(str, "e", log)
 end
 
 --- hecho's a string to the console.
---@param str the string to hecho
---@param log should this be logged? Used to override the .log constraint
+-- @param str the string to hecho
+-- @param log should this be logged? Used to override the .log constraint
 function LoggingConsole:hecho(str, log)
   self:xEcho(str, "h", log)
 end
 
 --- decho's a string to the console.
---@param str the string to decho
---@param log should this be logged? Used to override the .log constraint
+-- @param str the string to decho
+-- @param log should this be logged? Used to override the .log constraint
 function LoggingConsole:decho(str, log)
   self:xEcho(str, "d", log)
 end
 
 --- cecho's a string to the console.
---@param str the string to cecho
---@param log should this be logged? Used to override the .log constraint
+-- @param str the string to cecho
+-- @param log should this be logged? Used to override the .log constraint
 function LoggingConsole:cecho(str, log)
   self:xEcho(str, "c", log)
 end
 
 --- Replays the last X lines from the console's log file, if it exists
---@param numberOfLines The number of lines to replay from the end of the file
+-- @param numberOfLines The number of lines to replay from the end of the file
 function LoggingConsole:replay(numberOfLines)
   local fileName = self:getFullFilename()
-  if not exists(fileName) then return end
+  if not exists(fileName) then
+    return
+  end
   local file = io.open(fileName, "r")
   local lines = file:read("*a")
   if self:getExtension() == "html" then
@@ -438,7 +444,7 @@ function LoggingConsole:replay(numberOfLines)
   else
     result = ""
     local start = #linesTbl - numberOfLines
-    for index,str in ipairs(linesTbl) do
+    for index, str in ipairs(linesTbl) do
       if index >= start then
         result = string.format("%s\n%s", result, str)
       end

@@ -1,9 +1,8 @@
 --- Self Updating Gauge, extends <a href="https://www.mudlet.org/geyser/files/geyser/GeyserGauge.html">Geyser.Gauge</a>
---@classmod SUG
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2020 Damian Monogue
---@license MIT, see LICENSE.lua
-
+-- @classmod SUG
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2020 Damian Monogue
+-- @license MIT, see LICENSE.lua
 local SUG = {
   name = "SelfUpdatingGaugeClass",
   active = true,
@@ -30,10 +29,12 @@ end
 
 -- Internal function, used to turn a string variable name into a value
 local function getValueAt(accessString)
-  if accessString == "" then return nil end
+  if accessString == "" then
+    return nil
+  end
   local tempTable = accessString:split("%.")
   local accessTable = {}
-  for i,v in ipairs(tempTable) do
+  for i, v in ipairs(tempTable) do
     if tonumber(v) then
       accessTable[i] = tonumber(v)
     else
@@ -46,52 +47,52 @@ end
 -- ========== End section copied from demontools.lua
 
 --- Creates a new Self Updating Gauge.
---@tparam table cons table of options which control the Gauge's behaviour. In addition to all valid contraints for Geyser.Gauge, SUG adds:
---<br>
---<table class="tg">
---<tr>
+-- @tparam table cons table of options which control the Gauge's behaviour. In addition to all valid contraints for Geyser.Gauge, SUG adds:
+-- <br>
+-- <table class="tg">
+-- <tr>
 --  <th>name</th>
 --  <th>description</th>
 --  <th>default</th>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-odd">active</td>
 --  <td class="tg-odd">boolean, if true starts the timer updating</td>
 --  <td class="tg-odd">true</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-even">updateTime</td>
 --  <td class="tg-even">How often should the gauge autoupdate? Milliseconds</td>
 --  <td class="tg-even">333</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-odd">currentVariable</td>
 --  <td class="tg-odd">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "currentHP" or "gmcp.Char.Vitals.hp"</td>
 --  <td class="tg-odd">""</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-even">maxVariable</td>
 --  <td class="tg-even">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "maxHP" or "gmcp.Char.Vitals.maxhp"</td>
 --  <td class="tg-even">""</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-odd">textTemplate</td>
 --  <td class="tg-odd">Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
 --  <td class="tg-odd">" |c/|m |p%"</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-even">defaultCurrent</td>
 --  <td class="tg-even">What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
 --  <td class="tg-even">50</td>
---</tr>
---<tr>
+-- </tr>
+-- <tr>
 --  <td class="tg-odd">defaultMax</td>
 --  <td class="tg-odd">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
 --  <td class="tg-odd">100</td>
---</tr>
---</table>
---@param container The Geyser container for this gauge
---@usage local SUG = require("MDK-1.sug") --the following will watch "gmcp.Char.Vitals.hp" and "gmcp.Char.Vitals.maxhp" and update itself every 333 milliseconds
+-- </tr>
+-- </table>
+-- @param container The Geyser container for this gauge
+-- @usage local SUG = require("MDK-1.sug") --the following will watch "gmcp.Char.Vitals.hp" and "gmcp.Char.Vitals.maxhp" and update itself every 333 milliseconds
 -- myGauge = SUG:new({
 --   name = "myGauge",
 --   currentVariable = "gmcp.Char.Vitals.hp", --if this is nil, it will use the defaultCurrent of 50
@@ -113,25 +114,29 @@ function SUG:new(cons, container)
     end
     me:setStyleSheet(me.cssFront, me.cssBack, me.cssText)
   end
-  if me.active then me:start() end
+  if me.active then
+    me:start()
+  end
   return me
 end
 
 --- Set the name of the variable the Self Updating Gauge watches for the 'current' value of the gauge
---@tparam string variableName The name of the variable to get the current value for the gauge. For instance "currentHP", "gmcp.Char.Vitals.hp" etc
+-- @tparam string variableName The name of the variable to get the current value for the gauge. For instance "currentHP", "gmcp.Char.Vitals.hp" etc
 function SUG:setCurrentVariable(variableName)
   local nameType = type(variableName)
   local funcName = "SUG:setCurrentVariable(variableName)"
-  assert(nameType == "string", string.format("%s: variableName as string expected, got: %s",funcName, nameType))
+  assert(nameType == "string", string.format("%s: variableName as string expected, got: %s", funcName, nameType))
   local val = getValueAt(variableName)
   local valType = type(tonumber(val))
-  assert(valType == "number", string.format("%s: variableName must point to a variable which is a number or coercable into one. %s points to a %s", funcName, variableName, type(val)))
+  assert(valType == "number",
+         string.format("%s: variableName must point to a variable which is a number or coercable into one. %s points to a %s", funcName, variableName,
+                       type(val)))
   self.currentVariable = variableName
   self:update()
 end
 
 --- Set the name of the variable the Self Updating Gauge watches for the 'max' value of the gauge
---@tparam string variableName The name of the variable to get the max value for the gauge. For instance "maxHP", "gmcp.Char.Vitals.maxhp" etc. Set to "" to only check the current value
+-- @tparam string variableName The name of the variable to get the max value for the gauge. For instance "maxHP", "gmcp.Char.Vitals.maxhp" etc. Set to "" to only check the current value
 function SUG:setMaxVariable(variableName)
   if variableName == "" then
     self.maxVariable = variableName
@@ -140,16 +145,18 @@ function SUG:setMaxVariable(variableName)
   end
   local nameType = type(variableName)
   local funcName = "SUG:setMaxVariable(variableName)"
-  assert(nameType == "string", string.format("%s: variableName as string expected, got: %s",funcName, nameType))
+  assert(nameType == "string", string.format("%s: variableName as string expected, got: %s", funcName, nameType))
   local val = getValueAt(variableName)
   local valType = type(tonumber(val))
-  assert(valType == "number", string.format("%s: variableName must point to a variable which is a number or coercable into one. %s points to a %s", funcName, variableName, type(val)))
+  assert(valType == "number",
+         string.format("%s: variableName must point to a variable which is a number or coercable into one. %s points to a %s", funcName, variableName,
+                       type(val)))
   self.maxVariable = variableName
   self:update()
 end
 
 --- Set the template for the Self Updating Gauge to set the text with. "|c" is replaced by the current value, "|m" is replaced by the max value, and "|p" is replaced by the percentage current/max
---@tparam string template The template to use for the text on the gauge. If the max value is 200 and current is 68, then |c will be replace by 68, |m replaced by 200, and |p replaced by 34.
+-- @tparam string template The template to use for the text on the gauge. If the max value is 200 and current is 68, then |c will be replace by 68, |m replaced by 200, and |p replaced by 34.
 function SUG:setTextTemplate(template)
   local templateType = type(template)
   local funcName = "SUG:setTextTemplate(template)"
@@ -171,7 +178,9 @@ end
 function SUG:start()
   SUG:stop()
   self.active = true
-  self.timer = tempTimer(self.updateTime / 1000, function() self:update() end, true)
+  self.timer = tempTimer(self.updateTime / 1000, function()
+    self:update()
+  end, true)
 end
 
 --- Reads the values from currentVariable and maxVariable, and updates the gauge's value and text.
@@ -182,12 +191,16 @@ function SUG:update()
   max = tonumber(max)
   if current == nil then
     current = self.defaultCurrent
-    debugc(string.format("Self Updating Gauge named %s is trying to update with an invalid current value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'", self.name, self.currentVariable, self.maxVariable))
+    debugc(string.format(
+             "Self Updating Gauge named %s is trying to update with an invalid current value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'",
+             self.name, self.currentVariable, self.maxVariable))
   end
   if max == nil then
     max = self.defaultMax
     if self.maxVariable ~= "" then
-      debugc(string.format("Self Updating Gauge named %s is trying to update with an invalid max value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'", self.name, self.currentVariable, self.maxVariable))
+      debugc(string.format(
+               "Self Updating Gauge named %s is trying to update with an invalid max value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'",
+               self.name, self.currentVariable, self.maxVariable))
     end
   end
   local text = self.textTemplate

@@ -1,12 +1,12 @@
 --- Module which provides for creating color gradients for your text.
 -- Original functions found on <a href="https://forums.lusternia.com/discussion/3261/anyone-want-text-gradients">the Lusternia Forums</a>
---<br> I added functions to work with hecho.
---<br> I also made performance enhancements by storing already calculated gradients after first use for the session and only including the colorcode in the returned string if the color changed.
---@module gradientmaker
---@author Sylphas on the Lusternia forums
---@author Damian Monogue <demonnic@gmail.com>
---@copyright 2018 Sylphas
---@copyright 2020 Damian Monogue
+-- <br> I added functions to work with hecho.
+-- <br> I also made performance enhancements by storing already calculated gradients after first use for the session and only including the colorcode in the returned string if the color changed.
+-- @module gradientmaker
+-- @author Sylphas on the Lusternia forums
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2018 Sylphas
+-- @copyright 2020 Damian Monogue
 local gradientmaker = {}
 local gradient_table = {}
 
@@ -26,7 +26,9 @@ local function _gradient(length, rgb1, rgb2)
     return {rgb1, rgb2}
   else
     local step = {}
-    for color = 1, 3 do step[color] = (rgb2[color] - rgb1[color]) / (length - 2) end
+    for color = 1, 3 do
+      step[color] = (rgb2[color] - rgb1[color]) / (length - 2)
+    end
     local gradient = {rgb1}
     for iter = 1, length - 2 do
       gradient[iter + 1] = {}
@@ -36,7 +38,9 @@ local function _gradient(length, rgb1, rgb2)
     end
     gradient[length] = rgb2
     for index, color in ipairs(gradient) do
-      for iter = 1, 3 do gradient[index][iter] = _clamp(color[iter], rgb1[iter], rgb2[iter]) end
+      for iter = 1, 3 do
+        gradient[index][iter] = _clamp(color[iter], rgb1[iter], rgb2[iter])
+      end
     end
     return gradient
   end
@@ -44,9 +48,9 @@ end
 
 local function gradient_to_string(gradient)
   local gradstring = ""
-  for _,grad in ipairs(gradient) do
+  for _, grad in ipairs(gradient) do
     local nodestring = ""
-    for _,col in ipairs(grad) do
+    for _, col in ipairs(grad) do
       nodestring = string.format("%s%03d", nodestring, col)
     end
     if _ == 1 then
@@ -85,7 +89,9 @@ local function _gradients(length, ...)
     local gradients = {}
     for section = 1, #arg - 1 do
       local slength = quotient
-      if section <= remainder then slength = slength + 1 end
+      if section <= remainder then
+        slength = slength + 1
+      end
       local gradient = _gradient(slength, arg[section], arg[section + 1])
       for _, rgb in ipairs(gradient) do
         table.insert(gradients, rgb)
@@ -100,7 +106,7 @@ local function _color_name(rgb)
   local least_distance = math.huge
   local cname = ""
   for name, color in pairs(color_table) do
-    local color_distance = math.sqrt((color[1] - rgb[1])^2 + (color[2] - rgb[2])^2 + (color[3] - rgb[3])^2)
+    local color_distance = math.sqrt((color[1] - rgb[1]) ^ 2 + (color[2] - rgb[2]) ^ 2 + (color[3] - rgb[3]) ^ 2)
     if color_distance < least_distance then
       least_distance = color_distance
       cname = name
@@ -132,7 +138,7 @@ local function dgradient(text, ...)
     local new_color = "<" .. table.concat(gradients[character], ",") .. ">"
     local char = text:sub(character, character)
     if new_color == current_color then
-      dgrad = dgrad ..  char
+      dgrad = dgrad .. char
     else
       dgrad = dgrad .. new_color .. char
       current_color = new_color
@@ -176,7 +182,7 @@ local function hgradient_table(text, ...)
   local grads = _gradients(#text, ...)
   local hgrads = {}
   for character = 1, #text do
-    table.insert(hgrads, {hex(unpack(grads[character])):sub(2,-1), text:sub(character, character)})
+    table.insert(hgrads, {hex(unpack(grads[character])):sub(2, -1), text:sub(character, character)})
   end
   return hgrads
 end
@@ -206,111 +212,126 @@ local function color_name(...)
   elseif #arg == 3 then
     return _color_name(arg)
   else
-    local errmsg = "color_name: You must pass either a table of r,g,b values: color_name({r,g,b})\nor the three r,g,b values separately: color_name(r,g,b)"
+    local errmsg =
+      "color_name: You must pass either a table of r,g,b values: color_name({r,g,b})\nor the three r,g,b values separately: color_name(r,g,b)"
     error(errmsg)
   end
 end
 
 --- Returns the closest color name to a given r,g,b color
---@param r The red component. Can also pass the full color as a table, IE { 255, 0, 0 }
---@param g The green component. If you pass the color as a table as noted above, this param should be empty
---@param b the blue components. If you pass the color as a table as noted above, this param should be empty
---@usage closest_color = gradientmaker.color_name(128,200,30) -- returns "ansi_149"
---closest_color = gradientmaker.color_name({128, 200, 30}) -- this is functionally equivalent to the first one
+-- @param r The red component. Can also pass the full color as a table, IE { 255, 0, 0 }
+-- @param g The green component. If you pass the color as a table as noted above, this param should be empty
+-- @param b the blue components. If you pass the color as a table as noted above, this param should be empty
+-- @usage closest_color = gradientmaker.color_name(128,200,30) -- returns "ansi_149"
+-- closest_color = gradientmaker.color_name({128, 200, 30}) -- this is functionally equivalent to the first one
 function gradientmaker.color_name(...)
   return color_name(...)
 end
 
 --- Returns the text, with the defined color gradients applied and formatted for us with decho. Usage example below produces the following text
---<br><img src="https://demonnic.github.io/mdk/images/dechogradient.png" alt="dgradient example">
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see cgradient
---@see hgradient
---@usage
---decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
---decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
---decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+-- <br><img src="https://demonnic.github.io/mdk/images/dechogradient.png" alt="dgradient example">
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see cgradient
+-- @see hgradient
+-- @usage
+-- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
 function gradientmaker.dgradient(text, ...)
   return dgradient(text, ...)
 end
 
 --- Returns the text, with the defined color gradients applied and formatted for us with cecho. Usage example below produces the following text
---<br><img src="https://demonnic.github.io/mdk/images/cechogradient.png" alt="cgradient example">
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see dgradient
---@see hgradient
---@usage
---cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
---cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
---cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+-- <br><img src="https://demonnic.github.io/mdk/images/cechogradient.png" alt="cgradient example">
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see dgradient
+-- @see hgradient
+-- @usage
+-- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
 function gradientmaker.cgradient(text, ...)
   return cgradient(text, ...)
 end
 
 --- Returns the text, with the defined color gradients applied and formatted for us with hecho. Usage example below produces the following text
---<br><img src="https://demonnic.github.io/mdk/images/hechogradient.png" alt="hgradient example">
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see cgradient
---@see dgradient
---@usage
---hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
---hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
---hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+-- <br><img src="https://demonnic.github.io/mdk/images/hechogradient.png" alt="hgradient example">
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see cgradient
+-- @see dgradient
+-- @usage
+-- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
 function gradientmaker.hgradient(text, ...)
   return hgradient(text, ...)
 end
 
 --- Returns a table, each element of which is a table, the first element of which is the color name to use and the character which should be that color
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see cgradient
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see cgradient
 function gradientmaker.cgradient_table(text, ...)
   return cgradient_table(text, ...)
 end
 
 --- Returns a table, each element of which is a table, the first element of which is the color({r,g,b} format) to use and the character which should be that color
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see dgradient
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see dgradient
 function gradientmaker.dgradient_table(text, ...)
   return dgradient_table(text, ...)
 end
 
 --- Returns a table, each element of which is a table, the first element of which is the color(in hex) to use and the second element of which is the character which should be that color
---@tparam string text The text you want to apply the color gradients to
---@param first_color The color you want it to start at. Table of colors in { r, g, b } format
---@param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
---@param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
---@see hgradient
+-- @tparam string text The text you want to apply the color gradients to
+-- @param first_color The color you want it to start at. Table of colors in { r, g, b } format
+-- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
+-- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
+-- @see hgradient
 function gradientmaker.hgradient_table(text, ...)
   return hgradient_table(text, ...)
 end
 
 --- Creates global copies of the c/d/hgradient(_table) functions and color_name for use without accessing the module table
---@usage
---gradientmaker.install_global()
---cecho(cgradient(...)) -- use cgradient directly now
+-- @usage
+-- gradientmaker.install_global()
+-- cecho(cgradient(...)) -- use cgradient directly now
 function gradientmaker.install_global()
-  _G["hgradient"] = function(...) return hgradient(...) end
-  _G["dgradient"] = function(...) return dgradient(...) end
-  _G["cgradient"] = function(...) return cgradient(...) end
-  _G["hgradient_table"] = function(...) return hgradient_table(...) end
-  _G["dgradient_table"] = function(...) return dgradient_table(...) end
-  _G["cgradient_table"] = function(...) return cgradient_table(...) end
-  _G["color_name"] = function(...) return color_name(...) end
+  _G["hgradient"] = function(...)
+    return hgradient(...)
+  end
+  _G["dgradient"] = function(...)
+    return dgradient(...)
+  end
+  _G["cgradient"] = function(...)
+    return cgradient(...)
+  end
+  _G["hgradient_table"] = function(...)
+    return hgradient_table(...)
+  end
+  _G["dgradient_table"] = function(...)
+    return dgradient_table(...)
+  end
+  _G["cgradient_table"] = function(...)
+    return cgradient_table(...)
+  end
+  _G["color_name"] = function(...)
+    return color_name(...)
+  end
 end
 
 -- function gradientmaker.getGrads()
