@@ -1,4 +1,5 @@
---- ftext processing
+--- ftext
+-- functions to format and print text, and the objects which use them
 -- @module ftext
 -- @author Damian Monogue <demonnic@gmail.com>
 -- @copyright 2020 Damian Monogue
@@ -705,6 +706,16 @@ end
 --   </tr>
 -- </tbody>
 -- </table>
+-- @usage
+-- local TextFormatter = require("MDK.ftext").TextFormatter
+-- myFormatter = TextFormatter:new( {
+--   width = 40, 
+--   cap = "[CAP]",
+--   capColor = "<orange>",
+--   textColor = "<light_blue>"
+-- })
+-- myMessage = "This is a test of the emergency broadcasting system. This is only a test"
+-- cecho(myFormatter:format(myMessage))
 
 function TextFormatter:new(options)
   if options == nil then
@@ -1250,6 +1261,7 @@ function TableMaker:textAssemble()
 end
 
 --- Creates and returns a new TableMaker. See https://github.com/demonnic/fText/wiki/TableMaker for valid entries to the options table.
+-- see https://github.com/demonnic/tempwiki/wiki/fText%3A-TableMaker%3A-Examples for usage
 -- @tparam table options table of options for the TableMaker object
 -- <br><br>Table of new options
 -- <table class="tg">

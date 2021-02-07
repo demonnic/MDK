@@ -7,7 +7,6 @@
 local TextGauge = {width = 24, fillCharacter = ":", emptyCharacter = "-", showPercent = true, showPercentSymbol = true, format = "c", value = 50}
 
 --- Creates a new TextGauge.
--- Please see the wiki for more information on valid options.
 -- @tparam[opt] table options The table of options you would like the TextGauge to start with.
 -- <br><br>Table of new options
 -- <table class="tg">
@@ -86,6 +85,10 @@ local TextGauge = {width = 24, fillCharacter = ":", emptyCharacter = "-", showPe
 --   </tr>
 -- </tbody>
 -- </table>
+-- @usage
+-- local TextGauge = require("MDK.textgauge")
+-- myTextGauge = TextGauge:new()
+-- gaugeText = myTextGauge:setValue(382, 830)
 function TextGauge:new(options)
   options = options or {}
   local optionsType = type(options)

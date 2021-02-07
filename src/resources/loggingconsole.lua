@@ -60,6 +60,15 @@ local LoggingConsole = {log = true, logFormat = "h", path = "|h/log/consoleLogs/
 -- </tbody>
 -- </table>
 -- @param container the container for the console
+-- @usage
+-- local LoggingConsole = require("MDK.loggingconsole")
+-- myLoggingConsole = LoggingConsole:new({
+-- name = "my logging console",
+--   x = 0,
+--   y = 0,
+--   height = 200,
+--   width = 400,
+-- }) -- just like making a miniconsole, really
 function LoggingConsole:new(cons, container)
   cons = cons or {}
   local consType = type(cons)
