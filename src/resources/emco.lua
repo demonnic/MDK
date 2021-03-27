@@ -1916,7 +1916,7 @@ end
 --- Save an EMCO's configuration for reloading later. Filename is based on the EMCO's name property.
 function EMCO:save()
   local configtable = {
-    timeStamp = self.timeStamp,
+    timestamp = self.timestamp,
     blankLine = self.blankLine,
     scrollbars = self.scrollbars,
     customTimestampColor = self.customTimestampColor,
@@ -1986,7 +1986,7 @@ function EMCO:load()
   else
     debugc(string.format("Attempted to load config for EMCO named %s but the file could not be found. Filename: %s", self.name, filename))
   end
-  self.timeStamp = configTable.timeStamp
+  self.timestamp = configTable.timestamp
   self.blankLine = configTable.blankLine
   self.scrollbars = configTable.scrollbars
   self.customTimestampColor = configTable.customTimestampColor
