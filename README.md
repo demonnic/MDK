@@ -6,7 +6,7 @@ This is a collection of lua modules I wrote which you can include in your Mudlet
 local fText = require("MyPackage.ftext")
 ```
 
-## documentation
+## Documentation
 
 The [MDK wiki](https://github.com/demonnic/MDK/wiki) contains an entry for each module or class, as well as examples.
 
@@ -29,7 +29,7 @@ You can include all of them if you wish, or only the ones you actually make use 
 They should go in the root of your package, so that when your package is installed the files can be found at `getMudletHomeDir() .. "/<packagename>/emco.lua"`. You would then use `local EMCO = require("<mypackagename>.emco")`
 So for example if your package name is "MySuperCoolPackage" and it installs to `getMudletHomeDir() .. "/MySuperCoolPackage/"` then you use `local EMCO = require("MySuperCoolPackage.emco")` and the emco.lua file should be at `getMudletHomeDir() .. "/MySuperCoolPackage/emco.lua"`
 
-## list of files
+## Files/Mobules/Classes
 
 These files contain the modules in the MDK. You only need to include those files which you intend to use, except as noted in the descriptions below.
 If you include any of the modules from the MDK, you should also include LICENSE.lua or LICENSE-MDK.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
