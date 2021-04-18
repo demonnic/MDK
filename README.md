@@ -8,12 +8,32 @@ local fText = require("MyPackage.ftext")
 
 ## documentation
 
+The [MDK wiki](https://github.com/demonnic/MDK/wiki) contains an entry for each module or class, as well as examples.
+
 Starting with alpha2 of the MDK, I will be including the ldocs I generate from my code in the zipped releases. The current release's ldocs can always be viewed at <https://demonnic.github.io/mdk/current/>
+
+## Installation
+
+How you 'install' the MDK depends on how you intend to use it.
+
+### I just want to install the MDK for my own personal use
+
+You just want to get your hands on the goods, and aren't looking to use any MDK items in an exported package for sharing or anything like that.
+Well, you are who the mdk mpackage is for! Download the MDK.mpackage from your desired release on the [Releases](https://github.com/demonnic/MDK/releases) page and install it in the package manager. The examples in the [wiki](https://demonnic.github.io/mdk/current/) are written with this in mind, and you would require the items you need as `local EMCO = require("MDK.emco")`
+
+### I am a package author looking to include/use one of the MDK modules or classes in my package
+
+You should download the `demonnic-MDK-<version>.zip` file for your desired release on the [Releases](https://github.com/demonnic/MDK/releases) page.
+Inside are the individual .lua files for the modules and classes described in the [wiki](https://demonnic.github.io/mdk/current/) and [API docs](https://demonnic.github.io/mdk/current/).
+You can include all of them if you wish, or only the ones you actually make use of. I ask that you include the LICENSE.lua or LICENSE-MDK.lua file (depending on the release) file in addition.
+They should go in the root of your package, so that when your package is installed the files can be found at `getMudletHomeDir() .. "/<packagename>/emco.lua"`. You would then use `local EMCO = require("<mypackagename>.emco")`
+So for example if your package name is "MySuperCoolPackage" and it installs to `getMudletHomeDir() .. "/MySuperCoolPackage/"` then you use `local EMCO = require("MySuperCoolPackage.emco")` and the emco.lua file should be at `getMudletHomeDir() .. "/MySuperCoolPackage/emco.lua"`
 
 ## list of files
 
-These files contain the modules in the MDK. You only need to include those files which you intend to use, except as noted in the descriptions below. If you include any of the modules from the MDK, you should also include LICENSE.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
-You should also include demontools.lua, as it notes below several other of the MDK modules make use of items within it.
+These files contain the modules in the MDK. You only need to include those files which you intend to use, except as noted in the descriptions below.
+If you include any of the modules from the MDK, you should also include LICENSE.lua or LICENSE-MDK.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
+You should maybe also include demontools.lua, as it notes below several other of the MDK modules make use of items within it.
 
 * chyron.lua
   * Label which moves a message across its face from right to left, like a stock ticker or the news chyrons. Documentation at <https://github.com/demonnic/MDK/wiki/Chyron>
