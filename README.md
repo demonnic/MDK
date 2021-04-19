@@ -1,12 +1,12 @@
 # the demonnic MDK and You
 
-This is a collection of Lua 'classes' and modules I wrote for Mudlet. They are largely targeted at scripters, and comes packaged in two ways depending on how you intend to use/distribute them. Please see [Installation](#installation) for more details
+This is a collection of Lua 'classes' and modules I wrote for Mudlet. It is largely targeted at scripters, and comes packaged in two ways depending on how you intend to use/distribute your work. Please see [Installation](#installation) for more details
 
 ## Documentation
 
 The [MDK wiki](https://github.com/demonnic/MDK/wiki) contains an entry for each module or class, as well as examples.
 
-Starting with alpha2 of the MDK, I will be including the ldocs I generate from my code in the zipped releases. The current release's ldocs can always be viewed at <https://demonnic.github.io/mdk/current/>
+Starting with alpha2 of the MDK, the ldocs generated from code are included in the zipped releases. The current release's ldocs can always be viewed at <https://demonnic.github.io/mdk/current/>
 
 ## Installation
 
