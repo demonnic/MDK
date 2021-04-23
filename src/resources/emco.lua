@@ -798,7 +798,7 @@ function EMCO:replay(tabName, numLines)
 end
 
 --- Replays the last numLines in all miniconsoles
--- @param numLineses
+-- @param numLines
 function EMCO:replayAll(numLines)
   if not LC then
     return
@@ -811,6 +811,7 @@ end
 
 --- Formats the string through EMCO's template. |E is replaced with the EMCO's name. |N is replaced with the tab's name.
 -- @param str the string to replace tokens in
+-- @param tabName optional, if included will be used for |N in the templated string.
 function EMCO:processTemplate(str, tabName)
   str = str:gsub("|E", self.name)
   str = str:gsub("|N", tabName or "")

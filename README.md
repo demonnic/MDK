@@ -50,6 +50,9 @@ You should maybe also include demontools.lua, as it notes below several other of
 * loggingconsole.lua
   * Self logging extension to the mini console. Works just like a Geyser.MiniConsole but adds a templated path and fileName constraint, as well as logFormat so it can log what is echod or appended to it. Requires demontools.lua in order to work.
 
+* mastermindsolver.lua
+  * A class which will help you solve Master Mind puzzles. <https://github.com/demonnic/MDK/wiki/MasterMindSolver>
+
 * sortbox.lua
   * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at <https://github.com/demonnic/MDK/wiki/SortBox>
 
