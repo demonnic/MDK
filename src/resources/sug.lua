@@ -177,7 +177,7 @@ end
 
 --- Starts the Self Updating Gauge updating. If it is already updating, it will restart it.
 function SUG:start()
-  SUG:stop()
+  self:stop()
   self.active = true
   self.timer = tempTimer(self.updateTime / 1000, function()
     self:update()

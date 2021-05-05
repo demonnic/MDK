@@ -6,23 +6,7 @@
 local homedir = getMudletHomeDir():gsub("\\", "/")
 local pathOfThisFile = (...):match("(.-)[^%.]+$")
 local dt = require(pathOfThisFile .. "demontools")
-local exists, isDir = dt.exists, dt.isDir
-local htmlHeader = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-    <link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>
-    <style type="text/css">
-      body {
-        background-color: black;
-        font-family: 'Droid Sans Mono';
-        white-space: pre-wrap; 
-        font-size: 12px;
-      }
-    </style>
-  </head>
-<body><span>]=]
+local exists, htmlHeader, htmlHeaderPattern = dt.exists, dt.htmlHeader, dt.htmlHeaderPattern
 
 local LoggingConsole = {log = true, logFormat = "h", path = "|h/log/consoleLogs/|y/|m/|d/", fileName = "|n.|e"}
 
@@ -442,6 +426,11 @@ function LoggingConsole:replay(numberOfLines)
   local file = io.open(fileName, "r")
   local lines = file:read("*a")
   if self:getExtension() == "html" then
+    for _, line in ipairs(htmlHeaderPattern:split("\n")) do
+      if line ~= "" then
+        lines = lines:gsub(line .. "\n", "")
+      end
+    end
     lines = dt.html2decho(lines)
   else
     lines = ansi2decho(lines)
