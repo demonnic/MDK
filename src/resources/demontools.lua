@@ -4,7 +4,7 @@
 -- @copyright 2020 Damian Monogue
 -- @license MIT, see LICENSE.lua
 local DemonTools = {}
-local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000})
+local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000, color = "black"})
 cheatConsole:hide()
 local function exists(path)
   local ok, err, code = os.rename(path, path)
@@ -19,6 +19,7 @@ local function isWindows()
 end
 
 local function isDir(path)
+  path = path:gsub("\\", "/")
   if not path:ends("/") then
     path = path .. "/"
   end
@@ -64,7 +65,8 @@ local htmlHeader = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitiona
       }
     </style>
   </head>
-<body><span>]=]
+<body><span>
+]=]
 
 local htmlHeaderPattern = [=[  <!DOCTYPE HTML PUBLIC "%-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
@@ -81,7 +83,8 @@ local htmlHeaderPattern = [=[  <!DOCTYPE HTML PUBLIC "%-//W3C//DTD HTML 4.01 Tra
       }
     </style>
   </head>
-<body><span>]=]
+<body><span>
+]=]
 
 -- internal function, recursively digs for a value within subtables if possible
 local function digForValue(dataFrom, tableTo)
@@ -1291,5 +1294,8 @@ end
 function DemonTools.mkdir_p(path)
   return mkdir_p(path)
 end
+
+DemonTools.htmlHeader = htmlHeader
+DemonTools.htmlHeaderPattern = htmlHeaderPattern
 
 return DemonTools
