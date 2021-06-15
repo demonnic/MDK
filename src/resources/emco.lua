@@ -1249,8 +1249,8 @@ end
 function EMCO:enableBlink()
   self.blink = true
   if not self.blinkTimerID then
-    self.blinkTimerID = tempTimer(me.blinkTime, function()
-      me:doBlink()
+    self.blinkTimerID = tempTimer(self.blinkTime, function()
+      self.doBlink()
     end, true)
   end
 end
