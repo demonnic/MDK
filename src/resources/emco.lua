@@ -431,9 +431,6 @@ function EMCO:new(cons, container)
   me.tabs = {}
   me.tabsToBlink = {}
   me.mc = {}
-  self.blinkTimerID = tempTimer(me.blinkTime, function()
-    me:doBlink()
-  end, true)
   me:reset()
   if me.allTab then
     me:setAllTabName(me.allTabName or me.consoles[1])
@@ -1251,11 +1248,20 @@ end
 --- Enables tab blinking when new information comes in to an inactive tab
 function EMCO:enableBlink()
   self.blink = true
+  if not self.blinkTimerID then
+    self.blinkTimerID = tempTimer(me.blinkTime, function()
+      me:doBlink()
+    end, true)
+  end
 end
 
 --- Disables tab blinking when new information comes in to an inactive tab
 function EMCO:disableBlink()
   self.blink = false
+  if self.blinkTimerID then
+    killTimer(self.blinkTimerID)
+    self.blinkTimerID = nil
+  end
 end
 
 --- Enables preserving the chat's background over the background of an incoming :append()
