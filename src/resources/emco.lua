@@ -431,6 +431,9 @@ function EMCO:new(cons, container)
   me.tabs = {}
   me.tabsToBlink = {}
   me.mc = {}
+  if me.blink then
+    me:enableBlink()
+  end
   me:reset()
   if me.allTab then
     me:setAllTabName(me.allTabName or me.consoles[1])
@@ -1250,7 +1253,7 @@ function EMCO:enableBlink()
   self.blink = true
   if not self.blinkTimerID then
     self.blinkTimerID = tempTimer(self.blinkTime, function()
-      self.doBlink()
+      self:doBlink()
     end, true)
   end
 end
