@@ -752,6 +752,8 @@ local TableMaker = {
   formatType = "c",
   printHeaders = true,
   autoEcho = false,
+  title = "",
+  printTitle = false,
 }
 
 function TableMaker:checkPosition(position, func)
@@ -1143,10 +1145,20 @@ function TableMaker:makeHeader()
       table.insert(columnEntries, v:format(v.options.name))
     end
     local divWithNewlines = string.format("\n%s", self:createRowDivider())
-    columnHeaders = string.format("\n%s%s%s%s", ec, table.concat(columnEntries, sep), ec, divWithNewlines)
+    columnHeaders = string.format("\n%s%s%s%s", ec, table.concat(columnEntries, sep), ec, self.separateRows and divWithNewlines or '')
   end
-  header = string.format("%s%s", header, columnHeaders)
+  local title = self:makeTitle(totalWidth, header)
+  header = string.format("%s%s%s", header, title, columnHeaders)
   return header
+end
+
+function TableMaker:makeTitle(totalWidth, header)
+  if not self.printTitle then
+    return ""
+  end
+  local title = ftext.fText(self.title, {width = totalWidth, alignment = "center", cap = self.headCharacter, capColor = self.frameColor, inside = true, textColor = self.titleColor, formatType = self.formatType})
+  title = string.format("\n%s\n%s", title, header)
+  return title
 end
 
 function TableMaker:createRowDivider()
@@ -1158,6 +1170,31 @@ function TableMaker:createRowDivider()
   local ec = self.frameColor .. self.edgeCharacter .. self.colorReset
   local sep = self.separatorColor .. self.separator .. self.colorReset
   return string.format("%s%s%s", ec, table.concat(columnPieces, sep), ec)
+end
+
+--- set the title of the table
+function TableMaker:setTitle(title)
+  self.title = title
+end
+
+--- enable printing the title of the table
+function TableMaker:enablePrintTitle()
+  self.printTitle = true
+end
+
+--- enable printing the title of the table
+function TableMaker:disablePrintTitle()
+  self.printTitle = false
+end
+
+--- enable printing the separator line between rows
+function TableMaker:enableRowSeparator()
+  self.separateRows = true
+end
+
+--- enable printing the separator line between rows
+function TableMaker:disableRowSeparator()
+  self.separateRows = false
 end
 
 --- enables making cells which incorporate insertLink/insertPopup
@@ -1345,6 +1382,21 @@ end
 --     <td class="tg-even">When false, will not print the separator line between rows</td>
 --     <td class="tg-even">true</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-odd">title</td>
+--     <td class="tg-odd">The overall title of the table. Displayed at the top</td>
+--     <td class="tg-odd">""</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">titleColor</td>
+--     <td class="tg-even">What color to use for the title text</td>
+--     <td class="tg-even">formatColor</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-odd">printTitle</td>
+--     <td class="tg-odd">Should we print the title of the table at the very tip-top?</td>
+--     <td class="tg-odd">false</td>
+--   </tr>
 -- </tbody>
 -- </table>
 function TableMaker:new(options)
@@ -1391,18 +1443,22 @@ function TableMaker:new(options)
   if table.contains(dec, me.formatType) then
     me.frameColor = me.frameColor or "<255,255,255>"
     me.separatorColor = me.separatorColor or me.frameColor
+    me.titleColor = me.titleColor or me.frameColor
     me.colorReset = "<r>"
   elseif table.contains(hex, me.formatType) then
     me.frameColor = me.frameColor or "#ffffff"
     me.separatorColor = me.separatorColor or me.frameColor
+    me.titleColor = me.titleColor or me.frameColor
     me.colorReset = "#r"
   elseif table.contains(col, me.formatType) then
     me.frameColor = me.frameColor or "<white>"
     me.separatorColor = me.separatorColor or me.frameColor
+    me.titleColor = me.titleColor or me.frameColor
     me.colorReset = "<reset>"
   else
     me.frameColor = ""
     me.separatorColor = ""
+    me.titleColor = ""
     me.colorReset = ""
   end
   me.columns = {}
