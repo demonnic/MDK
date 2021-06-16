@@ -747,6 +747,7 @@ local TableMaker = {
   edgeCharacter = "*",
   rowSeparator = "-",
   separator = "|",
+  separateRows = true,
   colorReset = "<reset>",
   formatType = "c",
   printHeaders = true,
@@ -1230,7 +1231,7 @@ function TableMaker:popupAssemble()
   local footer = string.format("\n%s%s%s\n", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
   self:echo(header)
   for _, row in ipairs(self.rows) do
-    if _ ~= 1 then
+    if _ ~= 1 and self.separateRows then
       self:echo(divWithNewLines)
     end
     self:echoRow(row)
@@ -1246,7 +1247,7 @@ function TableMaker:textAssemble()
   end
   local divWithNewlines = string.format("\n%s\n", self:createRowDivider())
   local footer = string.format("%s%s%s", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
-  sheet = string.format("%s\n%s\n%s\n", self:makeHeader(), table.concat(rows, divWithNewlines), footer)
+  sheet = string.format("%s\n%s\n%s\n", self:makeHeader(), table.concat(rows, self.separateRows and divWithNewlines or "\n"), footer)
   if self.autoEcho then
     local console = self.autoEchoConsole or "main"
     if type(console) == "table" then
@@ -1338,6 +1339,11 @@ end
 --     <td class="tg-odd">setting this to true allows you to make cells in the table clickable, as well as give them right-click menus.<br>
 --                        Please see Clickable Tables <a href="https://github.com/demonnic/fText/wiki/ClickableTables">HERE</a></td>
 --     <td class="tg-odd">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-even">separateRows</td>
+--     <td class="tg-even">When false, will not print the separator line between rows</td>
+--     <td class="tg-even">true</td>
 --   </tr>
 -- </tbody>
 -- </table>
