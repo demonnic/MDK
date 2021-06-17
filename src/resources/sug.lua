@@ -62,7 +62,7 @@ end
 -- </tr>
 -- <tr>
 --  <td class="tg-even">updateTime</td>
---  <td class="tg-even">How often should the gauge autoupdate? Milliseconds</td>
+--  <td class="tg-even">How often should the gauge autoupdate? Milliseconds. 0 to disable the timer but still allow event updates</td>
 --  <td class="tg-even">333</td>
 -- </tr>
 -- <tr>
@@ -89,6 +89,11 @@ end
 --  <td class="tg-odd">defaultMax</td>
 --  <td class="tg-odd">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
 --  <td class="tg-odd">100</td>
+-- </tr>
+-- <tr>
+--  <td class="tg-even">updateEvent</td>
+--  <td class="tg-even">The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
+--  <td class="tg-even">""</td>
 -- </tr>
 -- </table>
 -- @param container The Geyser container for this gauge
@@ -118,7 +123,30 @@ function SUG:new(cons, container)
   if me.active then
     me:start()
   end
+  me:update()
   return me
+end
+
+--- Set how often to update the gauge on a timer
+-- @tparam number time time in milliseconds. 0 to disable the timer
+function SUG:setUpdateTime(time)
+  if type(time) ~= "number" then
+    debugc("SUG:setUpdateTime(time) time as number expected, got " .. type(time))
+    return
+  end
+  self.updateTime = time
+  if self.active then self:start() end
+end
+
+--- Set the event to listen for to update the gauge
+-- @tparam string event the name of the event to listen for, use "" to disable events without stopping any existing timers
+function SUG:setUpdateEvent(event)
+  if type(event) ~= string then
+    debugc("SUG:setUpdateEvent(event) event name as string expected, got " .. type(event))
+    return
+  end
+  self.updateEvent = event
+  if self.active then self:start() end
 end
 
 --- Set the name of the variable the Self Updating Gauge watches for the 'current' value of the gauge
@@ -173,15 +201,24 @@ function SUG:stop()
     killTimer(self.timer)
     self.timer = nil
   end
+  if self.eventHandler then
+    killAnonymousEventHandler(self.eventHandler)
+    self.eventHandler = nil
+  end
 end
 
 --- Starts the Self Updating Gauge updating. If it is already updating, it will restart it.
 function SUG:start()
   self:stop()
   self.active = true
-  self.timer = tempTimer(self.updateTime / 1000, function()
-    self:update()
-  end, true)
+  local update = function() self:update() end
+  if self.updateTime > 0 then
+    self.timer = tempTimer(self.updateTime / 1000, update, true)
+  end
+  local updateEvent = self.updateEvent
+  if updateEvent and updateEvent ~= "" and updateEvent ~= "*" then
+    self.eventHandler = registerAnonymousEventHandler(self.updateEvent, update)
+  end
 end
 
 --- Reads the values from currentVariable and maxVariable, and updates the gauge's value and text.
