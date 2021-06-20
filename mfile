@@ -1,7 +1,8 @@
 {
   "package": "MDK",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "author": "Demonnic",
   "title": "Collection of useful objects/classes",
-  "icon": "computer.png"
+  "icon": "computer.png",
+  "outputFile": true
 }

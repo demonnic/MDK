@@ -84,7 +84,7 @@ function Chyron:new(cons, container)
   setmetatable(me, self)
   self.__index = self
   me.pos = 0
-  me:setDisplayWidth(self.displayWidth)
+  me:setDisplayWidth(me.displayWidth)
   me:setMessage(me.text)
   if me.enabled then
     me:start()
