@@ -88,7 +88,7 @@ local htmlHeaderPattern = [=[  <!DOCTYPE HTML PUBLIC "%-//W3C//DTD HTML 4.01 Tra
 
 -- internal function, recursively digs for a value within subtables if possible
 local function digForValue(dataFrom, tableTo)
-  if digForValue == nil or table.size(tableTo) == 0 then
+  if dataFrom == nil or table.size(tableTo) == 0 then
     return dataFrom
   else
     local newData = dataFrom[tableTo[1]]
