@@ -14,6 +14,29 @@ local EMCO = Geyser.Container:new({
   fileName = "|N.|e",
   bufferSize = "100000",
   deleteLines = "1000",
+  blinkTime = 3,
+  tabFontSize = 8,
+  tabAlignment = "c",
+  fontSize = 9,
+  activeTabCSS = "",
+  inactiveTabCSS = "",
+  activeTabFGColor = "purple",
+  inactiveTabFGColor = "white",
+  activeTabBGColor = "<0,180,0>",
+  inactiveTabBGColor = "<60,60,60>",
+  consoleColor = "black",
+  tabBoxCSS = "",
+  tabBoxColor = "black",
+  consoleContainerCSS = "",
+  consoleContainerColor = "black",
+  tabHeight = 25,
+  leftMargin = 0,
+  rightMargin = 0,
+  topMargin = 0,
+  bottomMargin = 0,
+  gap = 1,
+  wrapAt = 300,
+  autoWrap = true,
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -318,7 +341,7 @@ function EMCO:new(cons, container)
   cons.consoles = cons.consoles or {"All"}
   if cons.mapTab then
     if not type(cons.mapTabName) == "string" then
-      self:ce(funcName, [["mapTab" is true, thus constraint "mapTabName" and string expected, got ]] .. type(cons.mapTabName))
+      self:ce(funcName, [["mapTab" is true, thus constraint "mapTabName" as string expected, got ]] .. type(cons.mapTabName))
     elseif not table.contains(cons.consoles, cons.mapTabName) then
       self:ce(funcName, [["mapTabName" must be one of the consoles contained within constraint "consoles". Valid option for tha mapTab are: ]] ..
                 table.concat(cons.consoles, ","))
@@ -396,37 +419,10 @@ function EMCO:new(cons, container)
   me.tabUnderline = me:fuzzyBoolean(cons.tabUnderline) and true or false
   me.tabBold = me:fuzzyBoolean(cons.tabBold) and true or false
   me.tabItalics = me:fuzzyBoolean(cons.tabItalics) and true or false
-  me.tabFontSize = cons.tabFontSize or 8
-  me.tabAlignment = cons.tabAlignment or "c"
-  me.blinkTime = cons.blinkTime or 3
-  me.fontSize = cons.fontSize or 9
-  me.activeTabCSS = cons.activeTabCSS or ""
-  me.inactiveTabCSS = cons.inactiveTabCSS or ""
-  me.activeTabFGColor = cons.activeTabFGColor or "purple"
-  me.inactiveTabFGColor = cons.inactiveTabFGColor or "white"
-  me.activeTabBGColor = cons.activeTabBGColor or "<0,180,0>"
-  me.inactiveTabBGColor = cons.inactiveTabBGColor or "<60,60,60>"
-  me.consoleColor = cons.consoleColor or "black"
-  me.tabBoxCSS = cons.tabBoxCSS or ""
-  me.tabBoxColor = cons.tabBoxColor or "black"
-  me.consoleContainerCSS = cons.consoleContainerCSS or ""
-  me.consoleContainerColor = cons.consoleContainerColor or "black"
   me.commandLine = me:fuzzyBoolean(cons.commandLine) and true or false
-  me.gap = cons.gap or 1
   me.consoles = cons.consoles
-  me.tabHeight = cons.tabHeight or 25
-  me.leftMargin = cons.leftMargin or 0
-  me.rightMargin = cons.rightMargin or 0
-  me.topMargin = cons.topMargin or 0
-  me.bottomMargin = cons.bottomMargin or 0
-  if cons.autoWrap == nil then
-    me.autoWrap = true
-  else
-    me.autoWrap = cons.autoWrap
-  end
   me.font = cons.font
   me.tabFont = cons.tabFont
-  me.wrapAt = cons.wrapAt or 300
   me.currentTab = ""
   me.tabs = {}
   me.tabsToBlink = {}
