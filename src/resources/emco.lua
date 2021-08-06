@@ -37,6 +37,7 @@ local EMCO = Geyser.Container:new({
   gap = 1,
   wrapAt = 300,
   autoWrap = true,
+  logExclusions = {},
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -674,6 +675,9 @@ function EMCO:createComponentsForTab(tabName)
     path = self:processTemplate(self.path, tabName),
     fileName = self:processTemplate(self.fileName, tabName),
   }
+  if table.contains(self.logExclusions, tabName) then
+    windowConstraints.log = false
+  end
   local parent = self.consoleContainer
   local mapTab = self.mapTab and tabName == self.mapTabName
   if mapTab then
@@ -1973,6 +1977,7 @@ function EMCO:save()
     tabAlignment = self.tabAlignment,
     bufferSize = self.bufferSize,
     deleteLines = self.deleteLines,
+    logExclusions = self.logExclusions,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
   local filename = dirname .. self.name .. ".lua"
@@ -2035,6 +2040,7 @@ function EMCO:load()
   self.tabAlignment = configTable.tabAlignment
   self.bufferSize = configTable.bufferSize
   self.deleteLines = configTable.deleteLines
+  self.logExclusions = configTable.logExclusions
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
@@ -2051,6 +2057,49 @@ function EMCO:load()
     self:enableAutoWrap()
   else
     self:disableAutoWrap()
+  end
+end
+
+--- Enables logging for tabName
+--@tparam string tabName the name of the tab you want to enable logging for
+function EMCO:enableTabLogging(tabName)
+  local console = self.mc[tabName]
+  if not console then
+    debugc(f"EMCO:enableTabLogging(tabName): tabName {tabName} not found.")
+    return
+  end
+  console.log = true
+  local logDisabled = table.index_of(self.logExclusions, tabName)
+  if logDisabled then table.remove(self.logExclusions, logDisabled) end
+end
+
+--- Disables logging for tabName
+--@tparam string tabName the name of the tab you want to disable logging for
+function EMCO:disableTabLogging(tabName)
+  local console = self.mc[tabName]
+  if not console then
+    debugc(f"EMCO:disableTabLogging(tabName): tabName {tabName} not found.")
+    return
+  end
+  console.log = false
+  local logDisabled = table.index_of(self.logExclusions, tabName)
+  if not logDisabled then table.insert(self.logExclusions, tabName) end
+end
+
+--- Enables logging on all EMCO managed consoles
+function EMCO:enableAllLogging()
+  for _,console in pairs(self.mc) do
+    console.log = true
+  end
+  self.logExclusions = {}
+end
+
+--- Disables logging on all EMCO managed consoles
+function EMCO:disableAllLogging()
+  self.logExclusions = {}
+  for tabName,console in pairs(self.mc) do
+    console.log = false
+    self.logExclusions[#self.logExclusions+1] = tabName
   end
 end
 
