@@ -644,6 +644,7 @@ function EMCO:switchTab(tabName)
   end
   self.mc[tabName]:show()
   self.currentTab = tabName
+  raiseEvent("EMCO tab change", self.name, oldTab, tabName)
 end
 
 function EMCO:createComponentsForTab(tabName)
