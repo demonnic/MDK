@@ -157,8 +157,11 @@ end
 function LoggingConsole:writeToLog(str)
   local fileName = self:getFullFilename()
   self:createPathIfNotExists()
-  if self:getExtension() == "html" and not io.exists(fileName) then
-    str = htmlHeader .. str
+  if self:getExtension() == "html" then
+    if not io.exists(fileName) then
+      str = htmlHeader .. str
+    end
+    str = str .. "\n" -- html doesn't care about the extra whitespace, but it makes the raw file much easier to read
   end
   local file, err = io.open(fileName, "a")
   if not file then
