@@ -1127,9 +1127,7 @@ function TableMaker:echoRow(rowToScan)
       end
     end
     self:echo(ec)
-    if i ~= linesInRow then
-      self:echo("\n")
-    end
+    self:echo("\n")
   end
 end
 
@@ -1265,7 +1263,7 @@ function TableMaker:popupAssemble()
   end
   local divWithNewLines = string.format("\n%s\n", self:createRowDivider())
   local header = self:makeHeader() .. "\n"
-  local footer = string.format("\n%s%s%s\n", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
+  local footer = string.format("%s%s%s\n", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
   self:echo(header)
   for _, row in ipairs(self.rows) do
     if _ ~= 1 and self.separateRows then
