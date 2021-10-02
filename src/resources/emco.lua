@@ -38,6 +38,7 @@ local EMCO = Geyser.Container:new({
   wrapAt = 300,
   autoWrap = true,
   logExclusions = {},
+  gags = {},
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -331,6 +332,11 @@ end
 --     <td class="tg-odd">Number of lines to delete if a console's buffer fills up.</td>
 --     <td class="tg-odd">1000</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-even">gags</td>
+--     <td class="tg-even">A table of Lua patterns you wish to gag from being added to the EMCO. Useful for removing mob says and such example: {[[^A green leprechaun says, ".*"$]], "^Bob The Dark Lord of the Keep mutters darkly to himself.$"} see <a href="http://lua-users.org/wiki/PatternsTutorial">this tutorial</a> on Lua patterns for more information.</td>
+--     <td class="tg-even">{}</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -430,6 +436,10 @@ function EMCO:new(cons, container)
   me.mc = {}
   if me.blink then
     me:enableBlink()
+  end
+  me.gags = {}
+  for _,pattern in ipairs(cons.gags or {}) do
+    me:addGag(pattern)
   end
   me:reset()
   if me.allTab then
@@ -1553,6 +1563,40 @@ function EMCO:checkEchoArgs(funcName, tabName, message, excludeAll)
   end
 end
 
+--- Adds a pattern to the gag list for the EMCO
+--@tparam pattern string a Lua pattern to gag. http://lua-users.org/wiki/PatternsTutorial
+--@return true if it was added, false if it was already included.
+function EMCO:addGag(pattern)
+  if self.gags[pattern] then
+    return false
+  end
+  self.gags[pattern] = true
+  return true
+end
+
+--- Removes a pattern from the gag list for the EMCO
+--@tparam pattern string a Lua pattern to no longer gag. http://lua-users.org/wiki/PatternsTutorial
+--@return true if it was removed, false if it was not there to remove.
+function EMCO:removeGag(pattern)
+  if self.gags[pattern] then
+    self.gags[pattern] = nil
+    return true
+  end
+  return false
+end
+
+--- Checks if a string matches any of the EMCO's gag patterns
+--@tparam str string The text you're testing against the gag patterns
+--@return false if it does not match any gag patterns. true and the matching pattern if it does match.
+function EMCO:matchesGag(str)
+  for pattern,_ in pairs(self.gags) do
+    if str:match(pattern) then
+      return true, pattern
+    end
+  end
+  return false
+end
+
 function EMCO:xEcho(tabName, message, xtype, excludeAll)
   if self.mapTab and self.mapTabName == tabName then
     error("You cannot send text to the Map tab")
@@ -1562,6 +1606,12 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
                    self.mc[self.allTabName] or false
   local ofr, ofg, ofb, obr, obg, obb
   if xtype == "a" then
+    local line = getCurrentLine()
+    local mute, reason = self:matchesGag(line)
+    if mute then
+      debugc(f"{self.name}:append(tabName) denied because current line matches the pattern '{reason}'")
+      return
+    end
     selectCurrentLine()
     ofr, ofg, ofb = getFgColor()
     obr, obg, obb = getBgColor()
@@ -1576,6 +1626,11 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     deselect()
     resetFormat()
   else
+    local mute, reason = self:matchesGag(message)
+    if mute then
+      debugc(f"{self.name}:{xtype}(tabName, msg, excludeAll) denied because msg matches '{reason}'")
+      return
+    end
     ofr, ofg, ofb = Geyser.Color.parse("white")
     obr, obg, obb = Geyser.Color.parse(self.consoleColor)
   end
@@ -1699,6 +1754,11 @@ end
 
 -- internal function used for handling echoLink/popup
 function EMCO:xLink(tabName, linkType, text, commands, hints, useCurrentFormat, excludeAll)
+  local gag, reason = self:matchesGag(text)
+  if gag then
+    debugc(f"{self.name}:{linkType}(tabName, text, command, hint, excludeAll) denied because text matches '{reason}'")
+    return
+  end
   local console = self.mc[tabName]
   local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and
                    self.mc[self.allTabName] or false
@@ -1981,6 +2041,7 @@ function EMCO:save()
     bufferSize = self.bufferSize,
     deleteLines = self.deleteLines,
     logExclusions = self.logExclusions,
+    gags = self.gags,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
   local filename = dirname .. self.name .. ".lua"
@@ -2044,6 +2105,7 @@ function EMCO:load()
   self.bufferSize = configTable.bufferSize
   self.deleteLines = configTable.deleteLines
   self.logExclusions = configTable.logExclusions
+  self.gags = configTable.gags
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
