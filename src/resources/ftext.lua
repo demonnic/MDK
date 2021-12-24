@@ -1261,7 +1261,7 @@ function TableMaker:popupAssemble()
       clearWindow(console)
     end
   end
-  local divWithNewLines = string.format("\n%s\n", self:createRowDivider())
+  local divWithNewLines = string.format("%s\n", self:createRowDivider())
   local header = self:makeHeader() .. "\n"
   local footer = string.format("%s%s%s\n", self.frameColor, string.rep(self.footCharacter, self:totalWidth()), self.colorReset)
   self:echo(header)
