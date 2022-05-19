@@ -9,7 +9,6 @@ describe("ftext:", function()
       local actual = fText("some text", {width = 20})
       assert.equals(expected, actual)
       assert.equals(20, actual:len())
-      assert.equals(1,2)
     end)
 
     it("Should properly pad left aligned text", function()
