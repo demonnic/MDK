@@ -41,6 +41,6 @@ jobs:
       
       - name: Run Busted tests
         uses: demonnic/test-in-mudlet@main
-          with:
-            pretestPackage: ${{ github.workspace }}/build/MDK.mpackage
+        with:
+          pretestPackage: ${{ github.workspace }}/build/MDK.mpackage
 
