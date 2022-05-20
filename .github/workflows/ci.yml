@@ -25,6 +25,6 @@ jobs:
           path: build/tmp/
       
       - name: Run Busted tests
-        uses: demonnic/test-in-mudlet@v1.0
+        uses: demonnic/test-in-mudlet@v1.1
         with:
           pretestPackage: ${{ github.workspace }}/build/MDK.mpackage
