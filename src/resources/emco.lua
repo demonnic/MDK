@@ -38,6 +38,7 @@ local EMCO = Geyser.Container:new({
   wrapAt = 300,
   autoWrap = true,
   logExclusions = {},
+  logFormat = "h",
   gags = {},
 })
 
@@ -687,6 +688,7 @@ function EMCO:createComponentsForTab(tabName)
     commandLine = self.commandLine,
     path = self:processTemplate(self.path, tabName),
     fileName = self:processTemplate(self.fileName, tabName),
+    logFormat = self.logFormat
   }
   if table.contains(self.logExclusions, tabName) then
     windowConstraints.log = false
