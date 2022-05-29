@@ -191,6 +191,24 @@ describe("ftext:", function()
       assert.equals(expectedStripped, actualStripped)
       assert.equals(20, actualStripped:len())
     end)
+
+    it("Should wrap cecho lines to the correct length", function()
+      local str = "This is a test of the emergency broadcast system. This is only a test"
+      local options = {
+        width = 10,
+        alignment = "centered",
+      }
+      local actual = cfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(cecho2string(line):len(), 10)
+      end
+      options.width = 15
+      actual = cfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(cecho2string(line):len(), 15)
+      end
+    end)
+
   end)
 
   describe("ftext.dfText", function()
@@ -223,6 +241,23 @@ describe("ftext:", function()
       assert.equals(expectedStripped, actualStripped)
       assert.equals(20, actualStripped:len())
     end)
+
+    it("Should wrap decho lines to the correct length", function()
+      local str = "This is a test of the emergency broadcast system. This is only a test"
+      local options = {
+        width = 10,
+        alignment = "centered",
+      }
+      local actual = dfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(decho2string(line):len(), 10)
+      end
+      options.width = 15
+      actual = dfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(decho2string(line):len(), 15)
+      end
+    end)
   end)
 
   describe("ftext.hfText", function()
@@ -238,7 +273,7 @@ describe("ftext:", function()
       spacerColor = "#00ff00",
       textColor = "#ff0000",
     }
-    it("Should handle decho colored text", function()
+    it("Should handle hecho colored text", function()
       local expectedStripped = "[=== some text ====]"
       local expected = "#a020f0[#r#00ff00===#r#ff0000 some text #r#00ff00====#r#a020f0]#r"
       local actual = hfText(str, options)
@@ -254,6 +289,147 @@ describe("ftext:", function()
       assert.equals(expected, actual)
       assert.equals(expectedStripped, actualStripped)
       assert.equals(20, actualStripped:len())
+    end)
+
+    it("Should wrap hecho lines to the correct length", function()
+      local str = "This is a test of the emergency broadcast system. This is only a test"
+      local options = {
+        width = 10,
+        alignment = "centered",
+      }
+      local actual = hfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(hecho2string(line):len(), 10)
+      end
+      options.width = 15
+      actual = hfText(str, options)
+      for _,line in ipairs(actual:split("\n")) do
+        assert.equals(hecho2string(line):len(), 15)
+      end
+    end)
+  end)
+
+  describe("ftext.TextFormatter", function()
+    local tf = ftext.TextFormatter
+    local str = "some text"
+    local formatter
+
+    before_each(function()
+      formatter = tf:new({width = 20})
+    end)
+
+    it("Should let you change width using :setWidth", function()
+      formatter:setWidth(80)
+      local expected = "<white><reset><white>                                  <reset><white> some text <reset><white>                                   <reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+      assert.equals(80, cecho2string(actual):len())
+    end)
+
+    it("Should format for cecho by default", function()
+      local expected = "<white><reset><white>    <reset><white> some text <reset><white>     <reset><white><reset>"
+      local expectedStripped ="     some text      "
+      local actual = formatter:format(str)
+      local actualStripped = cecho2string(actual)
+      assert.equals(expected, actual)
+      assert.equals(expectedStripped, actualStripped)
+      assert.equals(20, actualStripped:len())
+    end)
+
+    it("Should produce the same line as cfText given the same options", function()
+      local expected = ftext.cfText(str, formatter.options)
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should let you change type using :setType", function()
+      formatter:setType("h")
+      local expected = ftext.hfText(str, formatter.options)
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+      formatter:setType("d")
+      expected = ftext.dfText(str, formatter.options)
+      actual = formatter:format(str)
+      assert.equals(expected, actual)
+      formatter:setType("")
+      expected = ftext.fText(str, formatter.options)
+      actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it ("Should default to word wrapping, and let you change it with :setWrap", function()
+      formatter:setWidth(10)
+      local expected = "<white><reset><white>  <reset><white> some <reset><white>  <reset><white><reset>\n<white><reset><white>  <reset><white> text <reset><white>  <reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+      expected = "<white><reset><white><reset><white> some text <reset><white><reset><white><reset>"
+      formatter:setWrap(false)
+      actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the cap using :setCap", function()
+      formatter:setCap('|')
+      local expected = "<white>|<reset><white>   <reset><white> some text <reset><white>    <reset><white>|<reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the capColor using :setCapColor", function()
+      formatter:setCapColor('<red>')
+      local expected = "<red><reset><white>    <reset><white> some text <reset><white>     <reset><red><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the spacer color using :setSpacerColor", function()
+      formatter:setSpacerColor("<red>")
+      --local expected = "<white><reset><white>    <reset><white> some text <reset><white>     <reset><white><reset>"
+      local expected = "<white><reset><red>    <reset><white> some text <reset><red>     <reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the text color using :setTextColor", function()
+      formatter:setTextColor("<red>")
+      --local expected = "<white><reset><white>    <reset><white> some text <reset><white>     <reset><white><reset>"
+      local expected = "<white><reset><white>    <reset><red> some text <reset><white>     <reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the spacer using :setSpacer", function()
+      formatter:setSpacer("=")
+      --local expected = "<white><reset><white>    <reset><white> some text <reset><white>     <reset><white><reset>"
+      local expected = "<white><reset><white>====<reset><white> some text <reset><white>=====<reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to set the alignment using :setAlignment", function()
+      formatter:setAlignment("left")
+      local expected = "<white><reset><white><reset><white>some text <reset><white>          <reset><white><reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+      formatter:setAlignment("right")
+      expected = "<white><reset><white>          <reset><white> some text<reset><white><reset><white><reset>"
+      actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the 'inside' option using :setInside", function()
+      formatter:setInside(false)
+      local expected = "<white>    <reset><white><reset><white> some text <reset><white><reset><white>     <reset>"
+      local actual = formatter:format(str)
+      assert.equals(expected, actual)
+    end)
+
+    it("Should allow you to change the mirror option using :setMirror", function()
+      formatter:setCap('<')
+      formatter:setMirror(true)
+      local expected = "<white><<reset><white>   <reset><white> some text <reset><white>    <reset><white>><reset>"
+      local actual = formatter:format(str)
+      assert.equal(expected, actual)
     end)
   end)
 end)
