@@ -4,6 +4,7 @@
 -- @author Damian Monogue <demonnic@gmail.com>
 -- @copyright 2020 Damian Monogue
 -- @copyright 2021 Damian Monogue
+-- @copyright 2022 Damian Monogue
 -- @license MIT, see LICENSE.lua
 local ftext = {}
 local dec = {"d", "decimal", "dec"}
@@ -477,7 +478,7 @@ end
 -- @license MIT, see LICENSE.lua
 
 local TextFormatter = {}
-TextFormatter.validFormatTypes = {'d', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
+TextFormatter.validFormatTypes = {'d', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name', 'none', 'e', 'plain', ''}
 
 --- Set's the formatting type whether it's for cecho, decho, or hecho
 -- @tparam string typeToSet What type of formatter is this? Valid options are { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
@@ -624,6 +625,17 @@ function TextFormatter:setMirror(shouldMirror)
     error("TextFormatter:setMirror(shouldMirror): Argument error, boolean expected, got " .. argumentType)
   end
   self.options.mirror = shouldMirror
+end
+
+--- Set whether we should remove the gap spaces between the text and spacer characters. "===some text===" if set to true, "== some text ==" if set to false
+-- @tparam boolean noGap
+function TextFormatter:setNoGap(noGap)
+  local argumentType = type(noGap)
+  noGap = self:toBoolean(noGap)
+  if noGap == nil then
+    error("TextFormatter:setNoGap(noGap): Argument error, boolean expected, got " .. argumentType)
+  end
+  self.options.noGap = noGap
 end
 
 --- Format a string based on the stored options
