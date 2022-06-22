@@ -339,6 +339,11 @@ end
 --     <td class="tg-even">A table of Lua patterns you wish to gag from being added to the EMCO. Useful for removing mob says and such example: {[[^A green leprechaun says, ".*"$]], "^Bob The Dark Lord of the Keep mutters darkly to himself.$"} see <a href="http://lua-users.org/wiki/PatternsTutorial">this tutorial</a> on Lua patterns for more information.</td>
 --     <td class="tg-even">{}</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-odd">notifyTabs</td>
+--     <td class="tg-odd">Tables containing the names of all tabs you want to send notifications. IE {"Says", "Tells", "Org"}</td>
+--     <td class="tg-odd">{}</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
