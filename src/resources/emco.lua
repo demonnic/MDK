@@ -40,6 +40,7 @@ local EMCO = Geyser.Container:new({
   logExclusions = {},
   logFormat = "h",
   gags = {},
+  notifyTabs = {},
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -441,6 +442,9 @@ function EMCO:new(cons, container)
   me.gags = {}
   for _,pattern in ipairs(cons.gags or {}) do
     me:addGag(pattern)
+  end
+  for _,tname in ipairs(cons.notifyTabs or {}) do
+    me:addNotifyTab(tname)
   end
   me:reset()
   if me.allTab then
@@ -1565,6 +1569,34 @@ function EMCO:checkEchoArgs(funcName, tabName, message, excludeAll)
   end
 end
 
+--- Adds a tab to the list of tabs to send OS toast/popup notifications for
+--@tparam tabName string the name of a tab to enable notifications for
+--@return true if it was added, false if it was already included, nil if the tab does not exist.
+function EMCO:addNotifyTab(tabName)
+  if not table.contains(self.consoles, tabName) then
+    return nil, "Tab does not exist"
+  end
+  if self.notifyTabs[tabName] then
+    return false
+  end
+  self.notifyTabs[tabName] = true
+  return true
+end
+
+--- Removes a tab from the list of tabs to send OS toast/popup notifications for
+--@tparam tabName string the name of a tab to disable notifications for
+--@return true if it was removed, false if it wasn't enabled to begin with, nil if the tab does not exist.
+function EMCO:removeNotifyTab(tabName)
+  if not table.contains(self.consoles, tabName) then
+    return nil, "Tab does not exist"
+  end
+  if not self.notifyTabs[tabName] then
+    return false
+  end
+  self.notifyTabs[tabName] = nil
+  return true
+end
+
 --- Adds a pattern to the gag list for the EMCO
 --@tparam pattern string a Lua pattern to gag. http://lua-users.org/wiki/PatternsTutorial
 --@return true if it was added, false if it was already included.
@@ -1597,6 +1629,23 @@ function EMCO:matchesGag(str)
     end
   end
   return false
+end
+
+function EMCO:strip(message, xtype)
+  local strippers = {
+    a = function(msg) return msg end,
+    cecho = cecho2string,
+    decho = decho2string,
+    hecho = hecho2string,
+  }
+  local result = strippers[xtype](message)
+  return result
+end
+
+function EMCO:sendNotification(tabName, msg)
+  if self.notifyTabs[tabName] then
+    showNotification(f'{self.name}:{tabName}', msg)
+  end
 end
 
 function EMCO:xEcho(tabName, message, xtype, excludeAll)
@@ -1661,6 +1710,8 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
   end
   if xtype == "a" then
     console:appendBuffer()
+    local txt = self:strip(getCurrentLine(), xtype)
+    self:sendNotification(tabName, txt)
     if allTab then
       allTab:appendBuffer()
     end
@@ -1674,6 +1725,7 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     end
   else
     console[xtype](console, message)
+    self:sendNotification(tabName, self:strip(message, xtype))
     if allTab then
       allTab[xtype](allTab, message)
     end
