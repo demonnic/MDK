@@ -41,6 +41,7 @@ local EMCO = Geyser.Container:new({
   logFormat = "h",
   gags = {},
   notifyTabs = {},
+  notifyWithFocus = false,
 })
 
 -- patch Geyser.MiniConsole if it does not have its own display method defined
@@ -344,6 +345,11 @@ end
 --     <td class="tg-odd">Tables containing the names of all tabs you want to send notifications. IE {"Says", "Tells", "Org"}</td>
 --     <td class="tg-odd">{}</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-even">notifyWithFocus</td>
+--     <td class="tg-even">If true, EMCO will send notifications even if Mudlet has focus. If false, it will only send them when Mudlet does NOT have focus.</td>
+--     <td class="tg-even">false</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -450,6 +456,9 @@ function EMCO:new(cons, container)
   end
   for _,tname in ipairs(cons.notifyTabs or {}) do
     me:addNotifyTab(tname)
+  end
+  if me:fuzzyBoolean(cons.notifyWithFocus) then
+    self:enableNotifyWithFocus()
   end
   me:reset()
   if me.allTab then
@@ -1636,6 +1645,16 @@ function EMCO:matchesGag(str)
   return false
 end
 
+--- Enables sending OS notifications even if Mudlet has focus
+function EMCO:enableNotifyWithFocus()
+  self.notifyWithFocus = true
+end
+
+--- Disables sending OS notifications if Mudlet has focus
+function EMCO:disableNotifyWithFocus()
+  self.notifyWithFocus = false
+end
+
 function EMCO:strip(message, xtype)
   local strippers = {
     a = function(msg) return msg end,
@@ -1648,8 +1667,10 @@ function EMCO:strip(message, xtype)
 end
 
 function EMCO:sendNotification(tabName, msg)
-  if self.notifyTabs[tabName] then
-    showNotification(f'{self.name}:{tabName}', msg)
+  if self.notifyWithFocus or not hasFocus() then
+    if self.notifyTabs[tabName] then
+      showNotification(f'{self.name}:{tabName}', msg)
+    end
   end
 end
 
