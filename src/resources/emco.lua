@@ -2122,6 +2122,8 @@ function EMCO:save()
     deleteLines = self.deleteLines,
     logExclusions = self.logExclusions,
     gags = self.gags,
+    notifyTabs = self.notifyTabs,
+    notifyWithFocus = self.notifyWithFocus,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
   local filename = dirname .. self.name .. ".lua"
@@ -2186,6 +2188,8 @@ function EMCO:load()
   self.deleteLines = configTable.deleteLines
   self.logExclusions = configTable.logExclusions
   self.gags = configTable.gags
+  self.notifyTabs = configTable.notifyTabs
+  self.notifyWithFocus = configTable.notifyWithFocus
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
   self:reset()
