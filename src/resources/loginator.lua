@@ -284,7 +284,7 @@ end
 --- Set the color to associate with a logging level post-creation
 --@param color The color to set for the level, as a string. Can be any valid color string for cecho, decho, or hecho.
 --@param level The level to set the color for. Must be one of 'error', 'warn', 'info', or 'debug'
---@returns true if the color is updated, or nil+error if it could not be updated for some reason.
+--@return true if the color is updated, or nil+error if it could not be updated for some reason.
 function Loginator:setColorForLevel(color, level)
   if not color then
     return nil, "You must provide a color to set"

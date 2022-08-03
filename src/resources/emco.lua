@@ -464,7 +464,6 @@ function EMCO:new(cons, container)
   if me.allTab then
     me:setAllTabName(me.allTabName or me.consoles[1])
   end
-  table.insert(EMCOHelper.items, me)
   return me
 end
 
@@ -614,6 +613,13 @@ function EMCO:removeTab(tabName)
   if not table.contains(self.consoles, tabName) then
     self.ae(funcName, "tabName must be a tab which exists in this EMCO. valid options are: " .. table.concat(self.consoles, ","))
   end
+  if self.currentTab == tabName then
+    if self.allTab and self.allTabName then
+      self:switchTab(self.allTabName)
+    else
+      self:switchTab(self.consoles[1])
+    end
+  end
   table.remove(self.consoles, table.index_of(self.consoles, tabName))
   local window = self.mc[tabName]
   local tab = self.tabs[tabName]
@@ -652,10 +658,10 @@ end
 -- @param tabName string the name of the tab to show
 function EMCO:switchTab(tabName)
   local oldTab = self.currentTab
+  self.currentTab = tabName
   if oldTab ~= tabName and oldTab ~= "" then
     self.mc[oldTab]:hide()
-    self.tabs[oldTab]:setStyleSheet(self.inactiveTabCSS)
-    self.tabs[oldTab]:setColor(self.inactiveTabBGColor)
+    self:adjustTabBackground(oldTab)
     self.tabs[oldTab]:echo(oldTab, self.inactiveTabFGColor)
     if self.blink then
       if self.allTab and tabName == self.allTabName then
@@ -665,14 +671,12 @@ function EMCO:switchTab(tabName)
       end
     end
   end
-  self.tabs[tabName]:setStyleSheet(self.activeTabCSS)
-  self.tabs[tabName]:setColor(self.activeTabBGColor)
+  self:adjustTabBackground(tabName)
   self.tabs[tabName]:echo(tabName, self.activeTabFGColor)
-  if oldTab and self.mc[oldTab] then
-    self.mc[oldTab]:hide()
-  end
+  -- if oldTab and self.mc[oldTab] then
+  --   self.mc[oldTab]:hide()
+  -- end
   self.mc[tabName]:show()
-  self.currentTab = tabName
   if oldTab ~= tabName then
     raiseEvent("EMCO tab change", self.name, oldTab, tabName)
   end
@@ -689,13 +693,9 @@ function EMCO:createComponentsForTab(tabName)
   tab:setItalics(self.tabItalics)
   tab:setBold(self.tabBold)
   tab:setUnderline(self.tabUnderline)
-  -- use the inactive CSS. It's "" if unset, which is ugly, but
-  tab:setStyleSheet(self.inactiveTabCSS)
-  -- set the BGColor if set. if the CSS is set it overrides the setColor, but if it's "" then the setColor actually covers that.
-  -- and we set a default for the inactiveBGColor
-  tab:setColor(self.inactiveTabBGColor)
-  tab:setClickCallback("EMCOHelper.switchTab", nil, string.format("%s+%s", self.name, tabName))
+  tab:setClickCallback(self.switchTab, self, tabName)
   self.tabs[tabName] = tab
+  self:adjustTabBackground(tabName)
   local window
   local windowConstraints = {
     x = self.leftMargin,
@@ -740,7 +740,7 @@ function EMCO:createComponentsForTab(tabName)
   end
   self.mc[tabName] = window
   if not mapTab then
-    self:setCmdAction(tabName)
+    self:setCmdAction(tabName, nil)
   end
   window:hide()
   self:processImage(tabName)
@@ -1368,16 +1368,30 @@ function EMCO:adjustTabNames()
   end
 end
 
+function EMCO:adjustTabBackground(console)
+  local tab = self.tabs[console]
+  local activeTabCSS = self.activeTabCSS
+  local inactiveTabCSS = self.inactiveTabCSS
+  local activeTabBGColor = self.activeTabBGColor
+  local inactiveTabBGColor = self.inactiveTabBGColor
+  if console == self.currentTab then
+    if activeTabCSS and activeTabCSS ~= "" then
+      tab:setStyleSheet(activeTabCSS)
+    elseif activeTabBGColor then
+      tab:setColor(activeTabBGColor)
+    end
+  else
+    if inactiveTabCSS and inactiveTabCSS ~= "" then
+      tab:setStyleSheet(inactiveTabCSS)
+    elseif inactiveTabBGColor then
+      tab:setColor(inactiveTabBGColor)
+    end
+  end
+end
+
 function EMCO:adjustTabBackgrounds()
   for _, console in ipairs(self.consoles) do
-    local tab = self.tabs[console]
-    if console == self.currentTab then
-      tab:setStyleSheet(self.activeTabCSS)
-      tab:setColor(self.activeBGColor)
-    else
-      tab:setStyleSheet(self.inactiveTabCSS)
-      tab:setColor(self.inactiveBGColor)
-    end
+    self:adjustTabBackground(console)
   end
 end
 
@@ -1584,7 +1598,7 @@ function EMCO:checkEchoArgs(funcName, tabName, message, excludeAll)
 end
 
 --- Adds a tab to the list of tabs to send OS toast/popup notifications for
---@tparam tabName string the name of a tab to enable notifications for
+--@tparam string tabName the name of a tab to enable notifications for
 --@return true if it was added, false if it was already included, nil if the tab does not exist.
 function EMCO:addNotifyTab(tabName)
   if not table.contains(self.consoles, tabName) then
@@ -1598,7 +1612,7 @@ function EMCO:addNotifyTab(tabName)
 end
 
 --- Removes a tab from the list of tabs to send OS toast/popup notifications for
---@tparam tabName string the name of a tab to disable notifications for
+--@tparam string tabName the name of a tab to disable notifications for
 --@return true if it was removed, false if it wasn't enabled to begin with, nil if the tab does not exist.
 function EMCO:removeNotifyTab(tabName)
   if not table.contains(self.consoles, tabName) then
@@ -1612,7 +1626,7 @@ function EMCO:removeNotifyTab(tabName)
 end
 
 --- Adds a pattern to the gag list for the EMCO
---@tparam pattern string a Lua pattern to gag. http://lua-users.org/wiki/PatternsTutorial
+--@tparam string pattern a Lua pattern to gag. http://lua-users.org/wiki/PatternsTutorial
 --@return true if it was added, false if it was already included.
 function EMCO:addGag(pattern)
   if self.gags[pattern] then
@@ -1623,7 +1637,7 @@ function EMCO:addGag(pattern)
 end
 
 --- Removes a pattern from the gag list for the EMCO
---@tparam pattern string a Lua pattern to no longer gag. http://lua-users.org/wiki/PatternsTutorial
+--@tparam string pattern a Lua pattern to no longer gag. http://lua-users.org/wiki/PatternsTutorial
 --@return true if it was removed, false if it was not there to remove.
 function EMCO:removeGag(pattern)
   if self.gags[pattern] then
@@ -1634,7 +1648,7 @@ function EMCO:removeGag(pattern)
 end
 
 --- Checks if a string matches any of the EMCO's gag patterns
---@tparam str string The text you're testing against the gag patterns
+--@tparam string str The text you're testing against the gag patterns
 --@return false if it does not match any gag patterns. true and the matching pattern if it does match.
 function EMCO:matchesGag(str)
   for pattern,_ in pairs(self.gags) do
@@ -1658,6 +1672,7 @@ end
 function EMCO:strip(message, xtype)
   local strippers = {
     a = function(msg) return msg end,
+    echo = function(msg) return msg end,
     cecho = cecho2string,
     decho = decho2string,
     hecho = hecho2string,
@@ -2048,20 +2063,6 @@ function EMCO:adjustScrollbars()
       else
         self.mc[console]:disableScrollBar()
       end
-    end
-  end
-end
-
-EMCOHelper = EMCOHelper or {}
-EMCOHelper.items = EMCOHelper.items or {}
-function EMCOHelper:switchTab(designator)
-  local args = string.split(designator, "+")
-  local emcoName = args[1]
-  local tabName = args[2]
-  for _, emco in ipairs(EMCOHelper.items) do
-    if emco.name == emcoName then
-      emco:switchTab(tabName)
-      return
     end
   end
 end
