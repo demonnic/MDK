@@ -70,10 +70,6 @@ You should maybe also include demontools.lua, as it notes below several other of
 
 ## Others people's work I depend upon
 
-* luaunit.lua
-  * LuaUnit, for writing unit tests for your packages. Modified slightly for use with Mudlet. Documentation at <https://github.com/bluebird75/luaunit>
-  * Where I have been a good boy and written tests, this is what I've done it with.
-
 * schema.lua
   * lua-schema, for defining table schema. Documentation at <https://github.com/sschoener/lua-schema>
   * will be used by Archon for ensuring configuration tables are as they should be.
