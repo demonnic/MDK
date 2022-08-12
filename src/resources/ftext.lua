@@ -4,6 +4,7 @@
 -- @author Damian Monogue <demonnic@gmail.com>
 -- @copyright 2020 Damian Monogue
 -- @copyright 2021 Damian Monogue
+-- @copyright 2022 Damian Monogue
 -- @license MIT, see LICENSE.lua
 local ftext = {}
 local dec = {"d", "decimal", "dec"}
@@ -477,7 +478,7 @@ end
 -- @license MIT, see LICENSE.lua
 
 local TextFormatter = {}
-TextFormatter.validFormatTypes = {'d', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
+TextFormatter.validFormatTypes = {'d', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name', 'none', 'e', 'plain', ''}
 
 --- Set's the formatting type whether it's for cecho, decho, or hecho
 -- @tparam string typeToSet What type of formatter is this? Valid options are { 'd', 'dec', 'decimal', 'h', 'hex', 'hexidecimal', 'c', 'color', 'colour', 'col', 'name'}
@@ -624,6 +625,17 @@ function TextFormatter:setMirror(shouldMirror)
     error("TextFormatter:setMirror(shouldMirror): Argument error, boolean expected, got " .. argumentType)
   end
   self.options.mirror = shouldMirror
+end
+
+--- Set whether we should remove the gap spaces between the text and spacer characters. "===some text===" if set to true, "== some text ==" if set to false
+-- @tparam boolean noGap
+function TextFormatter:setNoGap(noGap)
+  local argumentType = type(noGap)
+  noGap = self:toBoolean(noGap)
+  if noGap == nil then
+    error("TextFormatter:setNoGap(noGap): Argument error, boolean expected, got " .. argumentType)
+  end
+  self.options.noGap = noGap
 end
 
 --- Format a string based on the stored options
@@ -778,6 +790,14 @@ function TableMaker:insert(tbl, pos, item)
   end
 end
 
+--- Get the TextFormatter which defines the format of a specific column
+-- @tparam number position The position of the column you're getting, counting from the left. If not provided will return the last column.
+function TableMaker:getColumn(position)
+  position = position or #self.columns
+  position = self:checkPosition(position, "TableMaker:getColumn(position)")
+  return self.columns[position]
+end
+
 --- Adds a column definition for the table.
 -- @tparam table options Table of options suitable for a TextFormatter object. See https://github.com/demonnic/fText/wiki/fText
 -- @tparam number position The position of the column you're adding, counting from the left. If not provided will add it as the last column
@@ -832,6 +852,15 @@ function TableMaker:replaceColumn(options, position)
   options.name = options.name or ""
   local formatter = TextFormatter:new(options)
   self.columns[position] = formatter
+end
+
+--- Gets the row of output at a specific position
+-- @tparam number position The position of the row you want to get, coutning from the top down. If not provided defaults to the last row in the table
+-- @return table of entries in the specified row
+function TableMaker:getRow(position)
+  position = position or #self.rows
+  position = self:checkPosition(position, "TableMaker:getRow(position)")
+  return self.rows[position]
 end
 
 --- Adds a row of output to the table
@@ -926,6 +955,38 @@ function TableMaker:checkNumber(num)
   return tonumber(num)
 end
 
+--- Get the contents and formatter for a specific cell
+-- @tparam number row the row number of the cell, counted top down.
+-- @tparam number column the column number of the cell, counted from the left.
+-- @return the base text and TextFormatter for the cell at the specific row and column number
+function TableMaker:getCell(row, column)
+  local rowType = type(row)
+  local columnType = type(column)
+  local maxRow = #self.rows
+  local maxColumn = #self.columns
+  local ae = "TableMaker:getCell(row, column): Argument error:"
+  row = self:checkNumber(row)
+  column = self:checkNumber(column)
+  if row == 0 then
+    if rowType ~= "number" then
+      printError(f"{ae} row as number expected, got {rowType}", true, true)
+    else
+      printError(f"{ae} rows start at 1, and you asked for row 0", true, true)
+    end
+  elseif column == 0 then
+    if columnType ~= "number" then
+      printError(f"{ae} column as number expected, got {columnType}", true, true)
+    else
+      printError(f"{ae} columns start at 1, and you asked for column 0", true, true)
+    end
+  elseif row > maxRow then
+    printError(f"{ae} row exceeds number of rows in table ({maxRow})")
+  elseif column > maxColumn then
+    printError(f"{ae} column exceeds number of columns in table ({maxColumn})", true, true)
+  end
+  return self.rows[row][column], self.columns[column]
+end
+
 --- Sets a specific cell's display information
 -- @tparam number row the row number of the cell, counted from the top down
 -- @tparam number column the column number of the cell, counted from the left
@@ -951,11 +1012,10 @@ function TableMaker:setCell(row, column, entry)
   local entryType = type(entry)
   entry = self:checkEntry(entry)
   if entry == 0 then
-    if type(entry) == "function" then
+    if entryType == "function" then
       error(ae .. " entry was provided as a function, but does not return a string. We need a string in the end")
     else
-      error("TableMaker:setCell(row, column, entry): Argument Error: entry must be a string, or a function which returns a string. You provided a " ..
-              entryType)
+      error("TableMaker:setCell(row, column, entry): Argument Error: entry must be a string, or a function which returns a string. You provided a " .. entryType)
     end
   end
   self.rows[row][column] = entry
