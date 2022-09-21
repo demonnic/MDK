@@ -276,9 +276,13 @@ function TimerGauge:update(skipHook)
   local text = string.format("%s%s%s", prefix, time, suffix)
   self:setValue(current, self.time, text)
   if current == 0 then
+    if self.timer then
+      killTimer(self.timer)
+      self.timer = nil
+    end
     if not skipHook then
       self:executeHook()
-    end
+    end     
   end
 end
 
