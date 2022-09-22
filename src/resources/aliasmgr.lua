@@ -8,7 +8,7 @@ aliasmgr.__index = aliasmgr
 
 --- Creates a new alias manager
 function aliasmgr:new()
-  locl mgr = {
+  local mgr = {
     aliases = {}
   }
   setmetatable(mgr, self)
@@ -32,6 +32,15 @@ function aliasmgr:register(name, regex, func)
   object.handlerID = err
   self.aliases[name] = object
   return true
+end
+
+--- Registers an alias with the alias manager. Alias for register
+-- @param name the name for the alias
+-- @param regex the regular expression the alias matches against
+-- @param func The code to run when the alias matches. Can wrap code in [[ ]] or pass an actual function
+-- @see register
+function aliasmgr:add(name, regex, func)
+  self:register(name, regex, func)
 end
 
 --- Disables an alias, but does not delete it so it can be enabled later without being redefined
