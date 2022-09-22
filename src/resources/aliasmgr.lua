@@ -15,11 +15,32 @@ function aliasmgr:new()
   return mgr
 end
 
+local function argError(funcName, argument, expected, actual)
+  local msg = string.format("%s: %s as %s expected, got %s", funcName, argument, expected, actual)
+  printError(msg, true, true)
+end
+
 --- Registers an alias with the alias manager
 -- @param name the name for the alias
 -- @param regex the regular expression the alias matches against
 -- @param func The code to run when the alias matches. Can wrap code in [[ ]] or pass an actual function
 function aliasmgr:register(name, regex, func)
+  local funcName = "aliasmgr:register(name, regex, func)"
+  if func == nil then 
+    printError(f"{funcName} takes 3 arguments and you have provided less than that", true, true)
+  end
+  local nameType = type(name)
+  if nameType ~= "string" then
+    argError(funcName, "name", "string", nameType)
+  end
+  local regexType = type(regex)
+  if regexType ~= "string" then
+    argError(funcName, "regex", "string", regexType)
+  end
+  local funcType = type(func)
+  if funcType ~= "string" and funcType ~= "function" then
+    argError(funcName, "func", "string or function", funcType)
+  end
   local object = {
     regex = regex,
     func = func
@@ -47,6 +68,11 @@ end
 -- @param name the name of the alias to disable
 -- @return true if the alias exists and gets disabled, false if it does not exist or is already disabled
 function aliasmgr:disable(name)
+  local funcName = "aliasmgr:disable(name)"
+  local nameType = type(name)
+  if nameType ~= "string" then
+    argError(funcName, "name", "string", nameType)
+  end
   local object = self.aliases[name]
   if not object or object.handlerID == -1 then
     return false
@@ -68,6 +94,11 @@ end
 -- @param name the name of the alias to enable
 -- @return true if the alias exists and was enabled, false if it does not exist. 
 function aliasmgr:enable(name)
+  local funcName = "aliasmgr:enable(name)"
+  local nameType = type(name)
+  if nameType ~= "string" then
+    argError(funcName, "name", "string", nameType)
+  end
   local object = self.aliases[name]
   if not object then
     return false
@@ -88,6 +119,11 @@ end
 -- @param name the name of the alias to kill
 -- @return true if the alias exists and gets deleted, false if the alias does not exist
 function aliasmgr:kill(name)
+  local funcName = "aliasmgr:kill(name)"
+  local nameType = type(name)
+  if nameType ~= "string" then
+    argError(funcName, "name", "string", nameType)
+  end
   local object = self.aliases[name]
   if not object then
     return false
