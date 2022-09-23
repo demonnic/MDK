@@ -31,6 +31,9 @@ These files contain the modules in the MDK. You only need to include those files
 If you include any of the modules from the MDK, you should also include LICENSE.lua or LICENSE-MDK.lua. It contains the licenses for my modules and for luaunit and lua-schema which are not my original works.
 You should maybe also include demontools.lua, as it notes below several other of the MDK modules make use of items within it.
 
+* aliasmgr.ua
+  * Object to manage tempAliases programmatically. <https://github.com/demonnic/MDK/wiki/AliasMgr>
+  
 * chyron.lua
   * Label which moves a message across its face from right to left, like a stock ticker or the news chyrons. Documentation at <https://github.com/demonnic/MDK/wiki/Chyron>
 
