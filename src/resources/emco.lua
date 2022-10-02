@@ -2127,7 +2127,7 @@ function EMCO:save()
     notifyWithFocus = self.notifyWithFocus,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
-  local filename = dirname .. self.name .. ".lua"
+  local filename = dirname .. self.name:gsub("[<>:'\"/\\|?*]", "_") .. ".lua"
   if not (io.exists(dirname)) then
     lfs.mkdir(dirname)
   end
