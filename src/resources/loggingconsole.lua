@@ -109,6 +109,7 @@ end
 --- Returns the filename for the logfile for this console
 function LoggingConsole:getFileName()
   local fileName = self:transformTemplate(self.fileName)
+  fileName = fileName:gsub("[<>:'\"/\\?*]", "_")
   return fileName
 end
 
@@ -123,6 +124,7 @@ function LoggingConsole:getFullFilename()
   local path = self:getPath()
   local fileName = self:getFileName()
   local fullPath = path .. fileName
+  fullPath = fullPath:gsub("|", "_")
   return fullPath
 end
 

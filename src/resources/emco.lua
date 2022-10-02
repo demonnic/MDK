@@ -846,8 +846,8 @@ end
 -- @param str the string to replace tokens in
 -- @param tabName optional, if included will be used for |N in the templated string.
 function EMCO:processTemplate(str, tabName)
-  str = str:gsub("|E", self.name)
-  str = str:gsub("|N", tabName or "")
+  str = str:gsub("|E", self.name:gsub("[<>:'\"/|\\?*]", "_"))
+  str = str:gsub("|N", tabName:gsub("[<>:'\"/|\\?*]", "_") or "")
   return str
 end
 
@@ -2127,7 +2127,7 @@ function EMCO:save()
     notifyWithFocus = self.notifyWithFocus,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
-  local filename = dirname .. self.name .. ".lua"
+  local filename = dirname .. self.name:gsub("[<>:'\"/\\|?*]", "_") .. ".lua"
   if not (io.exists(dirname)) then
     lfs.mkdir(dirname)
   end
