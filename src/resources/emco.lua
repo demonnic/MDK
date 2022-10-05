@@ -846,8 +846,10 @@ end
 -- @param str the string to replace tokens in
 -- @param tabName optional, if included will be used for |N in the templated string.
 function EMCO:processTemplate(str, tabName)
-  str = str:gsub("|E", self.name:gsub("[<>:'\"?*]", "_"))
-  str = str:gsub("|N", tabName:gsub("[<>:'\"?*]", "_") or "")
+  local safeName = self.name:gsub("[<>:'\"?*]", "_")
+  local safeTabName = tabName and tabName:gsub("[<>:'\"?*]", "_") or ""
+  str = str:gsub("|E", safeName)
+  str = str:gsub("|N", safeTabName)
   return str
 end
 
@@ -1210,7 +1212,7 @@ function EMCO:setAllTabName(allTabName)
     self.ae(funcName, "allTabName expected as string, got" .. allTabNameType)
   end
   if not table.contains(self.consoles, allTabName) then
-    self.ae(funcName, "allTabName must be the name of one of the console tabs. Valid options are: " .. table.concat(self.containers, ","))
+    self.ae(funcName, "allTabName must be the name of one of the console tabs. Valid options are: " .. table.concat(self.consoles, ","))
   end
   self.allTabName = allTabName
 end
@@ -2143,6 +2145,7 @@ function EMCO:load()
     table.load(filename, configTable)
   else
     debugc(string.format("Attempted to load config for EMCO named %s but the file could not be found. Filename: %s", self.name, filename))
+    return
   end
   self.timestamp = configTable.timestamp
   self.blankLine = configTable.blankLine
