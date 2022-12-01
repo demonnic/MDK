@@ -67,6 +67,15 @@ if ok then
 else
   debugc("EMCO tried to require loggingconsole but could not because: " .. content)
 end
+
+content = pcall(require, pathOfThisFile .. "demontools")
+local DT
+if ok then
+  DT = content
+else
+  debugc("EMCO tried to require demontools but could not because: " .. content)
+end
+
 --- Creates a new Embeddable Multi Console Object.
 -- <br>see https://github.com/demonnic/EMCO/wiki for information on valid constraints and defaults
 -- @tparam table cons table of constraints which configures the EMCO.
@@ -1675,9 +1684,9 @@ function EMCO:strip(message, xtype)
   local strippers = {
     a = function(msg) return msg end,
     echo = function(msg) return msg end,
-    cecho = cecho2string,
-    decho = decho2string,
-    hecho = hecho2string,
+    cecho = DT.cecho2string,
+    decho = DT.decho2string,
+    hecho = DT.hecho2string,
   }
   local result = strippers[xtype](message)
   return result
