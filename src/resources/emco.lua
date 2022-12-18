@@ -682,6 +682,20 @@ function EMCO:switchTab(tabName)
   end
 end
 
+--- Cycles between the tabs in order
+-- @tparam boolean reverse Defaults to false. When true, moves backward through the tab list rather than forward.
+function EMCO:cycleTab(reverse)
+  -- add the property to demonnic.chat
+  local consoles = self.consoles
+  local cycleIndex = table.index_of(consoles, self.currentTab)
+
+  local maxIndex = #consoles
+  cycleIndex = reverse and cycleIndex - 1 or cycleIndex + 1
+  if cycleIndex > maxIndex then cycleIndex = 1 end
+  if cycleIndex < 1 then cycleIndex = maxIndex end
+  self:switchTab(consoles[cycleIndex])
+end
+
 function EMCO:createComponentsForTab(tabName)
   local tab = Geyser.Label:new({name = string.format("%sTab%s", self.name, tabName)}, self.tabBox)
   if self.tabFont then
