@@ -43,6 +43,10 @@ You should maybe also include demontools.lua, as it notes below several other of
 * emco.lua
   * EMCO. Documentation at <https://github.com/demonnic/MDK/wiki/EMCO> Will make use of LoggingConsole if loggingconsole.lua and demontools.lua are included
 
+* figlet.lua
+  * Creates FIGlets from strings
+  * Reference package with multiple fonts and color gradients at <https://github.com/demonnic/figinator>
+
 * ftext.lua
   * basic fText. Documentation at <https://github.com/demonnic/MDK/wiki/fText>
   * now includes TextFormatter and TableMaker as ftext.TextFormatter and ftext.TableMaker
