@@ -1,6 +1,6 @@
---- Lua Figlet
+--- Figlet
 -- A module to read figlet fonts and produce figlet ascii art from text
--- @module Figlet
+-- @module figlet
 -- @copyright 2010,2011 Nick Gammon
 -- @copyright 2022 Damian Monogue
 local Figlet = {}
