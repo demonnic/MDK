@@ -7,7 +7,7 @@
 -- @author Damian Monogue <demonnic@gmail.com>
 -- @copyright 2018 Sylphas
 -- @copyright 2020 Damian Monogue
-local gradientmaker = {}
+local Gradientmaker = {}
 local gradient_table = {}
 
 local function _clamp(num1, num2, num3)
@@ -222,9 +222,10 @@ end
 -- @param r The red component. Can also pass the full color as a table, IE { 255, 0, 0 }
 -- @param g The green component. If you pass the color as a table as noted above, this param should be empty
 -- @param b the blue components. If you pass the color as a table as noted above, this param should be empty
--- @usage closest_color = gradientmaker.color_name(128,200,30) -- returns "ansi_149"
--- closest_color = gradientmaker.color_name({128, 200, 30}) -- this is functionally equivalent to the first one
-function gradientmaker.color_name(...)
+-- @usage
+-- closest_color = GradientMaker.color_name(128,200,30) -- returns "ansi_149"
+-- closest_color = GradientMaker.color_name({128, 200, 30}) -- this is functionally equivalent to the first one
+function GradientMaker.color_name(...)
   return color_name(...)
 end
 
@@ -237,10 +238,10 @@ end
 -- @see cgradient
 -- @see hgradient
 -- @usage
--- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
--- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
--- decho(gradientmaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
-function gradientmaker.dgradient(text, ...)
+-- decho(GradientMaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- decho(GradientMaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- decho(GradientMaker.dgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+function GradientMaker.dgradient(text, ...)
   return dgradient(text, ...)
 end
 
@@ -253,10 +254,10 @@ end
 -- @see dgradient
 -- @see hgradient
 -- @usage
--- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
--- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
--- cecho(gradientmaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
-function gradientmaker.cgradient(text, ...)
+-- cecho(GradientMaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- cecho(GradientMaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- cecho(GradientMaker.cgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+function GradientMaker.cgradient(text, ...)
   return cgradient(text, ...)
 end
 
@@ -269,10 +270,10 @@ end
 -- @see cgradient
 -- @see dgradient
 -- @usage
--- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
--- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
--- hecho(gradientmaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
-function gradientmaker.hgradient(text, ...)
+-- hecho(GradientMaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {255,128,0}, {255,255,0}, {0,255,0}, {0,255,255}, {0,128,255}, {128,0,255}))
+-- hecho(GradientMaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {255,0,0}, {0,0,255}))
+-- hecho(GradientMaker.hgradient("a luminescent butterly floats about lazily on brillant blue and lilac wings\n", {50,50,50}, {0,255,0}, {50,50,50}))
+function GradientMaker.hgradient(text, ...)
   return hgradient(text, ...)
 end
 
@@ -282,7 +283,7 @@ end
 -- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
 -- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
 -- @see cgradient
-function gradientmaker.cgradient_table(text, ...)
+function GradientMaker.cgradient_table(text, ...)
   return cgradient_table(text, ...)
 end
 
@@ -292,7 +293,7 @@ end
 -- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
 -- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
 -- @see dgradient
-function gradientmaker.dgradient_table(text, ...)
+function GradientMaker.dgradient_table(text, ...)
   return dgradient_table(text, ...)
 end
 
@@ -302,15 +303,15 @@ end
 -- @param second_color The color you want the gradient to transition to first. Table of colors in { r, g, b } format
 -- @param next_color Keep repeating if you want it to transition from the second color to a third, then a third to a fourth, etc
 -- @see hgradient
-function gradientmaker.hgradient_table(text, ...)
+function GradientMaker.hgradient_table(text, ...)
   return hgradient_table(text, ...)
 end
 
 --- Creates global copies of the c/d/hgradient(_table) functions and color_name for use without accessing the module table
 -- @usage
--- gradientmaker.install_global()
+-- GradientMaker.install_global()
 -- cecho(cgradient(...)) -- use cgradient directly now
-function gradientmaker.install_global()
+function GradientMaker.install_global()
   _G["hgradient"] = function(...)
     return hgradient(...)
   end
@@ -334,8 +335,8 @@ function gradientmaker.install_global()
   end
 end
 
--- function gradientmaker.getGrads()
+-- function GradientMaker.getGrads()
 --   return gradient_table
 -- end
 
-return gradientmaker
+return Gradientmaker

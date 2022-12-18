@@ -7,18 +7,9 @@ local DemonTools = {}
 local cheatConsole = Geyser.MiniConsole:new({name = "DemonnicCheatConsole", width = 4000, wrapWidth = 10000, color = "black"})
 cheatConsole:hide()
 local function exists(path)
-  path = path:gsub([[\]], "/")
-  if path:ends("/") then
-    path = path:sub(1,-2)
-  end
-  local ok, err, code = lfs.attributes(path)
-  if ok then
-    return true
-  end
-  if err:lower():find("no such file or directory") then
-    return false
-  end
-  return ok, err, code
+  path = path:gsub([[\$]], "")
+  path = path:gsub([[/$]], "")
+  return io.exists(path)
 end
 
 local function isWindows()

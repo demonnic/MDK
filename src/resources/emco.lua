@@ -2082,6 +2082,7 @@ function EMCO:save()
     preserveBackground = self.preserveBackground,
     gag = self.gag,
     timestampFormat = self.timestampFormat,
+    timestampFGColor = self.timestampFGColor,
     timestampBGColor = self.timestampBGColor,
     allTab = self.allTab,
     allTabName = self.allTabName,
@@ -2147,6 +2148,7 @@ function EMCO:load()
     debugc(string.format("Attempted to load config for EMCO named %s but the file could not be found. Filename: %s", self.name, filename))
     return
   end
+
   self.timestamp = configTable.timestamp
   self.blankLine = configTable.blankLine
   self.scrollbars = configTable.scrollbars
@@ -2157,6 +2159,7 @@ function EMCO:load()
   self.preserveBackground = configTable.preserveBackground
   self.gag = configTable.gag
   self.timestampFormat = configTable.timestampFormat
+  self.timestampFGColor = configTable.timestampFGColor
   self.timestampBGColor = configTable.timestampBGColor
   self.allTab = configTable.allTab
   self.allTabName = configTable.allTabName
