@@ -282,7 +282,7 @@ function TimerGauge:update(skipHook)
     end
     if not skipHook then
       self:executeHook()
-    end     
+    end
   end
 end
 
@@ -309,7 +309,7 @@ function TimerGauge:setTime(time)
   if time < currentTime then
     self:reset()
   else
-    self:update()
+    self:update(currentTime == 0)
   end
 end
 
