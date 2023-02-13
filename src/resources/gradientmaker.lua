@@ -2,12 +2,12 @@
 -- Original functions found on <a href="https://forums.lusternia.com/discussion/3261/anyone-want-text-gradients">the Lusternia Forums</a>
 -- <br> I added functions to work with hecho.
 -- <br> I also made performance enhancements by storing already calculated gradients after first use for the session and only including the colorcode in the returned string if the color changed.
--- @module gradientmaker
+-- @module GradientMaker
 -- @author Sylphas on the Lusternia forums
 -- @author Damian Monogue <demonnic@gmail.com>
 -- @copyright 2018 Sylphas
 -- @copyright 2020 Damian Monogue
-local Gradientmaker = {}
+local GradientMaker = {}
 local gradient_table = {}
 
 local function _clamp(num1, num2, num3)
@@ -339,4 +339,4 @@ end
 --   return gradient_table
 -- end
 
-return Gradientmaker
+return GradientMaker
