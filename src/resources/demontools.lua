@@ -1104,29 +1104,29 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">format</td>
---     <td class="tg-odd">What format to return the text as? 'h' for html, 'c' for cecho, 'a' for ansi, 'd' for decho, and 'x' for hecho</td>
---     <td class="tg-odd">"d"</td>
+--     <td class="tg-1">format</td>
+--     <td class="tg-1">What format to return the text as? 'h' for html, 'c' for cecho, 'a' for ansi, 'd' for decho, and 'x' for hecho</td>
+--     <td class="tg-1">"d"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">win</td>
---     <td class="tg-even">what console/window to dump the buffer of?</td>
---     <td class="tg-even">"main"</td>
+--     <td class="tg-2">win</td>
+--     <td class="tg-2">what console/window to dump the buffer of?</td>
+--     <td class="tg-2">"main"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">start_line</td>
---     <td class="tg-odd">What line to start dumping the buffer from?</td>
---     <td class="tg-odd">0</td>
+--     <td class="tg-1">start_line</td>
+--     <td class="tg-1">What line to start dumping the buffer from?</td>
+--     <td class="tg-1">0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">end_line</td>
---     <td class="tg-even">What line to stop dumping the buffer on?</td>
---     <td class="tg-even">Last line of the console</td>
+--     <td class="tg-2">end_line</td>
+--     <td class="tg-2">What line to stop dumping the buffer on?</td>
+--     <td class="tg-2">Last line of the console</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">includeHtmlWrapper</td>
---     <td class="tg-odd">If the format is html, should it include the front and back portions required to make it a functioning html page?</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">includeHtmlWrapper</td>
+--     <td class="tg-1">If the format is html, should it include the front and back portions required to make it a functioning html page?</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -1146,49 +1146,49 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">cols</td>
---     <td class="tg-odd">Number of columsn wide to display the colors in</td>
---     <td class="tg-odd">4</td>
+--     <td class="tg-1">cols</td>
+--     <td class="tg-1">Number of columsn wide to display the colors in</td>
+--     <td class="tg-1">4</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">search</td>
---     <td class="tg-even">If not the empty string, will check colors against string.find using this property.<br>IE if set to "blue" only colors which include the word 'blue' would be listed</td>
---     <td class="tg-even">""</td>
+--     <td class="tg-2">search</td>
+--     <td class="tg-2">If not the empty string, will check colors against string.find using this property.<br>IE if set to "blue" only colors which include the word 'blue' would be listed</td>
+--     <td class="tg-2">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">sort</td>
---     <td class="tg-odd">If true, sorts alphabetically. Otherwise sorts based on the color value</td>
---     <td class="tg-odd">false</td>
+--     <td class="tg-1">sort</td>
+--     <td class="tg-1">If true, sorts alphabetically. Otherwise sorts based on the color value</td>
+--     <td class="tg-1">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">echoOnly</td>
---     <td class="tg-even">If true, colors will not be clickable links</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">echoOnly</td>
+--     <td class="tg-2">If true, colors will not be clickable links</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">window</td>
---     <td class="tg-odd">What window/console to echo the colors out to.</td>
---     <td class="tg-odd">"main"</td>
+--     <td class="tg-1">window</td>
+--     <td class="tg-1">What window/console to echo the colors out to.</td>
+--     <td class="tg-1">"main"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">removeDupes</td>
---     <td class="tg-even">If true, will remove snake_case entries and 'gray' in favor of 'grey'</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">removeDupes</td>
+--     <td class="tg-2">If true, will remove snake_case entries and 'gray' in favor of 'grey'</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">columnSort</td>
---     <td class="tg-odd">If true, will print top-to-bottom, then left-to-right. false is like showColors</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">columnSort</td>
+--     <td class="tg-1">If true, will print top-to-bottom, then left-to-right. false is like showColors</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">justText</td>
---     <td class="tg-even">If true, will echo the text in the color and leave the background black.<br>If false, the background will be the colour(like showColors).</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">justText</td>
+--     <td class="tg-2">If true, will echo the text in the color and leave the background black.<br>If false, the background will be the colour(like showColors).</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">color_table</td>
---     <td class="tg-odd">Table of colors to display. If you provide your own table, it must be in the same format as Mudlet's own color_table</td>
---     <td class="tg-odd">color_table</td>
+--     <td class="tg-1">color_table</td>
+--     <td class="tg-1">Table of colors to display. If you provide your own table, it must be in the same format as Mudlet's own color_table</td>
+--     <td class="tg-1">color_table</td>
 --   </tr>
 -- </tbody>
 -- </table>

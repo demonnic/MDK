@@ -100,44 +100,44 @@ SortBox.SortFunctions = {
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">autoSort</td>
---     <td class="tg-odd">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">autoSort</td>
+--     <td class="tg-1">should the SortBox perform function based sorting? If false, will behave like a normal H/VBox</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">timerSort</td>
---     <td class="tg-even">should the SortBox automatically perform sorting on a timer?</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">timerSort</td>
+--     <td class="tg-2">should the SortBox automatically perform sorting on a timer?</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">sortInterval</td>
---     <td class="tg-odd">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
---     <td class="tg-odd">500</td>
+--     <td class="tg-1">sortInterval</td>
+--     <td class="tg-1">how frequently should we sort on a timer if timerSort is true, in milliseconds</td>
+--     <td class="tg-1">500</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">boxType</td>
---     <td class="tg-even">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
---     <td class="tg-even">v</td>
+--     <td class="tg-2">boxType</td>
+--     <td class="tg-2">Should we stack like an HBox or VBox? use 'h' for hbox and 'v' for vbox</td>
+--     <td class="tg-2">v</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">sortFunction</td>
---     <td class="tg-odd">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
---     <td class="tg-odd">gaugeValue</td>
+--     <td class="tg-1">sortFunction</td>
+--     <td class="tg-1">how should we sort the items in the SortBox? see setSortFunction for valid options</td>
+--     <td class="tg-1">gaugeValue</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">elastic</td>
---     <td class="tg-even">Should this container stretch to fit its contents? boxType v stretches in height, h stretches in width.</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">elastic</td>
+--     <td class="tg-2">Should this container stretch to fit its contents? boxType v stretches in height, h stretches in width.</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">maxHeight</td>
---     <td class="tg-odd">If elastic, what's the biggest a 'v' style box should grow in height? Use 0 for unlimited</td>
---     <td class="tg-odd">0</td>
+--     <td class="tg-1">maxHeight</td>
+--     <td class="tg-1">If elastic, what's the biggest a 'v' style box should grow in height? Use 0 for unlimited</td>
+--     <td class="tg-1">0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">maxWidth</td>
---     <td class="tg-even">If elastic, what's the biggest a 'h' style box should grow in width? Use 0 for unlimited</td>
---     <td class="tg-even">0</td>
+--     <td class="tg-2">maxWidth</td>
+--     <td class="tg-2">If elastic, what's the biggest a 'h' style box should grow in width? Use 0 for unlimited</td>
+--     <td class="tg-2">0</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -471,36 +471,36 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">gaugeValue</td>
---     <td class="tg-odd">sort gauges based on how full the gauge is, from less full to more</td>
+--     <td class="tg-1">gaugeValue</td>
+--     <td class="tg-1">sort gauges based on how full the gauge is, from less full to more</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">reverseGaugeValue</td>
---     <td class="tg-even">sort gauges based on how full the gauge is, from more full to less</td>
+--     <td class="tg-2">reverseGaugeValue</td>
+--     <td class="tg-2">sort gauges based on how full the gauge is, from more full to less</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">timeLeft</td>
---     <td class="tg-odd">sort TimerGauges based on the total time left in the gauge, from less time to more</td>
+--     <td class="tg-1">timeLeft</td>
+--     <td class="tg-1">sort TimerGauges based on the total time left in the gauge, from less time to more</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">reverseTimeLeft</td>
---     <td class="tg-even">sort TimerGauges based on the total time left in the gauge, from more time to less</td>
+--     <td class="tg-2">reverseTimeLeft</td>
+--     <td class="tg-2">sort TimerGauges based on the total time left in the gauge, from more time to less</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">name</td>
---     <td class="tg-odd">sort any item (and mixed types) by name, alphabetically.</td>
+--     <td class="tg-1">name</td>
+--     <td class="tg-1">sort any item (and mixed types) by name, alphabetically.</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">reverseName</td>
---     <td class="tg-even">sort any item (and mixed types) by name, reverse alphabetically.</td>
+--     <td class="tg-2">reverseName</td>
+--     <td class="tg-2">sort any item (and mixed types) by name, reverse alphabetically.</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">message</td>
---     <td class="tg-odd">sorts Labels based on their echoed message, alphabetically. If not a label, the empty string will be used</td>
+--     <td class="tg-1">message</td>
+--     <td class="tg-1">sorts Labels based on their echoed message, alphabetically. If not a label, the empty string will be used</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">reverseMessage</td>
---     <td class="tg-even">sorts Labels based on their echoed message, reverse alphabetically. If not a label, the empty string will be used</td>
+--     <td class="tg-2">reverseMessage</td>
+--     <td class="tg-2">sorts Labels based on their echoed message, reverse alphabetically. If not a label, the empty string will be used</td>
 --   </tr>
 -- </tbody>
 -- </table>

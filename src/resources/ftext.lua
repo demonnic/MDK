@@ -130,64 +130,64 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">wrap</td>
---     <td class="tg-odd">Should it wordwrap to multiple lines?</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">wrap</td>
+--     <td class="tg-1">Should it wordwrap to multiple lines?</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">formatType</td>
---     <td class="tg-even">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
---     <td class="tg-even">""</td>
+--     <td class="tg-2">formatType</td>
+--     <td class="tg-2">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
+--     <td class="tg-2">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">width</td>
---     <td class="tg-odd">How wide should we format the text?</td>
---     <td class="tg-odd">80</td>
+--     <td class="tg-1">width</td>
+--     <td class="tg-1">How wide should we format the text?</td>
+--     <td class="tg-1">80</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">cap</td>
---     <td class="tg-even">what characters to use for the endcap.</td>
---     <td class="tg-even">""</td>
+--     <td class="tg-2">cap</td>
+--     <td class="tg-2">what characters to use for the endcap.</td>
+--     <td class="tg-2">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">capColor</td>
---     <td class="tg-odd">what color to make the endcap?</td>
---     <td class="tg-odd">the correct 'white' for your formatType</td>
+--     <td class="tg-1">capColor</td>
+--     <td class="tg-1">what color to make the endcap?</td>
+--     <td class="tg-1">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">spacer</td>
---     <td class="tg-even">What character to use for empty space. Must be a single character</td>
---     <td class="tg-even">" "</td>
+--     <td class="tg-2">spacer</td>
+--     <td class="tg-2">What character to use for empty space. Must be a single character</td>
+--     <td class="tg-2">" "</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">spacerColor</td>
---     <td class="tg-odd">what color should the spacer be?</td>
---     <td class="tg-odd">the correct 'white' for your formatType</td>
+--     <td class="tg-1">spacerColor</td>
+--     <td class="tg-1">what color should the spacer be?</td>
+--     <td class="tg-1">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">textColor</td>
---     <td class="tg-even">what color should the text itself be?</td>
---     <td class="tg-even">the correct 'white' for your formatType</td>
+--     <td class="tg-2">textColor</td>
+--     <td class="tg-2">what color should the text itself be?</td>
+--     <td class="tg-2">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">alignment</td>
---     <td class="tg-odd">How should the text be aligned within the width. "center", "left", or "right"</td>
---     <td class="tg-odd">"center"</td>
+--     <td class="tg-1">alignment</td>
+--     <td class="tg-1">How should the text be aligned within the width. "center", "left", or "right"</td>
+--     <td class="tg-1">"center"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">nogap</td>
---     <td class="tg-even">Should we put a literal space between the spacer character and the text?</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">nogap</td>
+--     <td class="tg-2">Should we put a literal space between the spacer character and the text?</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">inside</td>
---     <td class="tg-odd">Put the spacers inside the caps?</td>
---     <td class="tg-odd">false</td>
+--     <td class="tg-1">inside</td>
+--     <td class="tg-1">Put the spacers inside the caps?</td>
+--     <td class="tg-1">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">mirror</td>
---     <td class="tg-even">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">mirror</td>
+--     <td class="tg-2">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -657,64 +657,64 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">wrap</td>
---     <td class="tg-odd">Should it wordwrap to multiple lines?</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">wrap</td>
+--     <td class="tg-1">Should it wordwrap to multiple lines?</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">formatType</td>
---     <td class="tg-even">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
---     <td class="tg-even">"c"</td>
+--     <td class="tg-2">formatType</td>
+--     <td class="tg-2">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
+--     <td class="tg-2">"c"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">width</td>
---     <td class="tg-odd">How wide should we format the text?</td>
---     <td class="tg-odd">80</td>
+--     <td class="tg-1">width</td>
+--     <td class="tg-1">How wide should we format the text?</td>
+--     <td class="tg-1">80</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">cap</td>
---     <td class="tg-even">what characters to use for the endcap.</td>
---     <td class="tg-even">""</td>
+--     <td class="tg-2">cap</td>
+--     <td class="tg-2">what characters to use for the endcap.</td>
+--     <td class="tg-2">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">capColor</td>
---     <td class="tg-odd">what color to make the endcap?</td>
---     <td class="tg-odd">the correct 'white' for your formatType</td>
+--     <td class="tg-1">capColor</td>
+--     <td class="tg-1">what color to make the endcap?</td>
+--     <td class="tg-1">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">spacer</td>
---     <td class="tg-even">What character to use for empty space. Must be a single character</td>
---     <td class="tg-even">" "</td>
+--     <td class="tg-2">spacer</td>
+--     <td class="tg-2">What character to use for empty space. Must be a single character</td>
+--     <td class="tg-2">" "</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">spacerColor</td>
---     <td class="tg-odd">what color should the spacer be?</td>
---     <td class="tg-odd">the correct 'white' for your formatType</td>
+--     <td class="tg-1">spacerColor</td>
+--     <td class="tg-1">what color should the spacer be?</td>
+--     <td class="tg-1">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">textColor</td>
---     <td class="tg-even">what color should the text itself be?</td>
---     <td class="tg-even">the correct 'white' for your formatType</td>
+--     <td class="tg-2">textColor</td>
+--     <td class="tg-2">what color should the text itself be?</td>
+--     <td class="tg-2">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">alignment</td>
---     <td class="tg-odd">How should the text be aligned within the width. "center", "left", or "right"</td>
---     <td class="tg-odd">"center"</td>
+--     <td class="tg-1">alignment</td>
+--     <td class="tg-1">How should the text be aligned within the width. "center", "left", or "right"</td>
+--     <td class="tg-1">"center"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">nogap</td>
---     <td class="tg-even">Should we put a literal space between the spacer character and the text?</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">nogap</td>
+--     <td class="tg-2">Should we put a literal space between the spacer character and the text?</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">inside</td>
---     <td class="tg-odd">Put the spacers inside the caps?</td>
---     <td class="tg-odd">false</td>
+--     <td class="tg-1">inside</td>
+--     <td class="tg-1">Put the spacers inside the caps?</td>
+--     <td class="tg-1">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">mirror</td>
---     <td class="tg-even">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">mirror</td>
+--     <td class="tg-2">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -1370,90 +1370,90 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">formatType</td>
---     <td class="tg-odd">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
---     <td class="tg-odd">c</td>
+--     <td class="tg-1">formatType</td>
+--     <td class="tg-1">Determines how it formats for color. 'c' for cecho, 'd' for decho, 'h' for hecho, and anything else for no colors</td>
+--     <td class="tg-1">c</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">printHeaders</td>
---     <td class="tg-even">print top row as header</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">printHeaders</td>
+--     <td class="tg-2">print top row as header</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">headCharacter</td>
---     <td class="tg-odd">The character used to construct the very top of the table. A solid line of these characters is used</td>
---     <td class="tg-odd">"*"</td>
+--     <td class="tg-1">headCharacter</td>
+--     <td class="tg-1">The character used to construct the very top of the table. A solid line of these characters is used</td>
+--     <td class="tg-1">"*"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">footCharacter</td>
---     <td class="tg-even">The character used to construct the very bottom of the table. A solid line of these characters is used</td>
---     <td class="tg-even">"*"</td>
+--     <td class="tg-2">footCharacter</td>
+--     <td class="tg-2">The character used to construct the very bottom of the table. A solid line of these characters is used</td>
+--     <td class="tg-2">"*"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">edgeCharacter</td>
---     <td class="tg-odd">the character used to form the left and right edges of the table. There is one on either side of every line</td>
---     <td class="tg-odd">"*"</td>
+--     <td class="tg-1">edgeCharacter</td>
+--     <td class="tg-1">the character used to form the left and right edges of the table. There is one on either side of every line</td>
+--     <td class="tg-1">"*"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">frameColor</td>
---     <td class="tg-even">The color to use for the frame. The frame is the border around the outside edge of the table (headCharacter, footCharacter, and edgeCharacters will all be this color).</td>
---     <td class="tg-even">the correct 'white' for your formatType</td>
+--     <td class="tg-2">frameColor</td>
+--     <td class="tg-2">The color to use for the frame. The frame is the border around the outside edge of the table (headCharacter, footCharacter, and edgeCharacters will all be this color).</td>
+--     <td class="tg-2">the correct 'white' for your formatType</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">rowSeparator</td>
---     <td class="tg-odd">the character used to form the lines between rows of text</td>
---     <td class="tg-odd">"-"</td>
+--     <td class="tg-1">rowSeparator</td>
+--     <td class="tg-1">the character used to form the lines between rows of text</td>
+--     <td class="tg-1">"-"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">separator</td>
---     <td class="tg-even">Character used between columns.</td>
---     <td class="tg-even">"|"</td>
+--     <td class="tg-2">separator</td>
+--     <td class="tg-2">Character used between columns.</td>
+--     <td class="tg-2">"|"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">separatorColor</td>
---     <td class="tg-odd">the color used for the separators, the things which divide the rows and columns internally. (separator and rowSeparator will be this color)</td>
---     <td class="tg-odd">frameColor</td>
+--     <td class="tg-1">separatorColor</td>
+--     <td class="tg-1">the color used for the separators, the things which divide the rows and columns internally. (separator and rowSeparator will be this color)</td>
+--     <td class="tg-1">frameColor</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">autoEcho</td>
---     <td class="tg-even">echo the table automatically in addition to returning the string representation?</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">autoEcho</td>
+--     <td class="tg-2">echo the table automatically in addition to returning the string representation?</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">autoEchoConsole</td>
---     <td class="tg-odd">MiniConsole to autoEcho to</td>
---     <td class="tg-odd">"main"</td>
+--     <td class="tg-1">autoEchoConsole</td>
+--     <td class="tg-1">MiniConsole to autoEcho to</td>
+--     <td class="tg-1">"main"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">autoClear</td>
---     <td class="tg-even">If autoEchoing, and not echoing to the main console, should we clear the console before outputting?</td>
---     <td class="tg-even">false</td>
+--     <td class="tg-2">autoClear</td>
+--     <td class="tg-2">If autoEchoing, and not echoing to the main console, should we clear the console before outputting?</td>
+--     <td class="tg-2">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">allowPopups</td>
---     <td class="tg-odd">setting this to true allows you to make cells in the table clickable, as well as give them right-click menus.<br>
+--     <td class="tg-1">allowPopups</td>
+--     <td class="tg-1">setting this to true allows you to make cells in the table clickable, as well as give them right-click menus.<br>
 --                        Please see Clickable Tables <a href="https://github.com/demonnic/fText/wiki/ClickableTables">HERE</a></td>
---     <td class="tg-odd">false</td>
+--     <td class="tg-1">false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">separateRows</td>
---     <td class="tg-even">When false, will not print the separator line between rows</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">separateRows</td>
+--     <td class="tg-2">When false, will not print the separator line between rows</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">title</td>
---     <td class="tg-odd">The overall title of the table. Displayed at the top</td>
---     <td class="tg-odd">""</td>
+--     <td class="tg-1">title</td>
+--     <td class="tg-1">The overall title of the table. Displayed at the top</td>
+--     <td class="tg-1">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">titleColor</td>
---     <td class="tg-even">What color to use for the title text</td>
---     <td class="tg-even">formatColor</td>
+--     <td class="tg-2">titleColor</td>
+--     <td class="tg-2">What color to use for the title text</td>
+--     <td class="tg-2">formatColor</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">printTitle</td>
---     <td class="tg-odd">Should we print the title of the table at the very tip-top?</td>
---     <td class="tg-odd">false</td>
+--     <td class="tg-1">printTitle</td>
+--     <td class="tg-1">Should we print the title of the table at the very tip-top?</td>
+--     <td class="tg-1">false</td>
 --   </tr>
 -- </tbody>
 -- </table>
