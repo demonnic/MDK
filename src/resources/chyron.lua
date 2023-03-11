@@ -30,49 +30,49 @@ local Chyron = {
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">text</td>
---     <td class="tg-odd">The text to scroll on the label</td>
---     <td class="tg-odd">""</td>
+--     <td class="tg-1">text</td>
+--     <td class="tg-1">The text to scroll on the label</td>
+--     <td class="tg-1">""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">updateTime</td>
---     <td class="tg-even">Milliseconds between movements (one letter shift)</td>
---     <td class="tg-even">200</td>
+--     <td class="tg-2">updateTime</td>
+--     <td class="tg-2">Milliseconds between movements (one letter shift)</td>
+--     <td class="tg-2">200</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">displayWidth</td>
---     <td class="tg-odd">How many chars wide to display the text</td>
---     <td class="tg-odd">28</td>
+--     <td class="tg-1">displayWidth</td>
+--     <td class="tg-1">How many chars wide to display the text</td>
+--     <td class="tg-1">28</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">delimiter</td>
---     <td class="tg-even">This character will be inserted with a space either side to mark the stop/start of the message</td>
---     <td class="tg-even">"|"</td>
+--     <td class="tg-2">delimiter</td>
+--     <td class="tg-2">This character will be inserted with a space either side to mark the stop/start of the message</td>
+--     <td class="tg-2">"|"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">enabled</td>
---     <td class="tg-odd">Should the chyron scroll?</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">enabled</td>
+--     <td class="tg-1">Should the chyron scroll?</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">font</td>
---     <td class="tg-even">What font to use for the Chyron? Available in Geyser.Label but we define a default.</td>
---     <td class="tg-even">"Bitstream Vera Sans Mono"</td>
+--     <td class="tg-2">font</td>
+--     <td class="tg-2">What font to use for the Chyron? Available in Geyser.Label but we define a default.</td>
+--     <td class="tg-2">"Bitstream Vera Sans Mono"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">fontSize</td>
---     <td class="tg-odd">What font size to use for the Chyron? Available in Geyser.Label but we define a default.</td>
---     <td class="tg-odd">9</td>
+--     <td class="tg-1">fontSize</td>
+--     <td class="tg-1">What font size to use for the Chyron? Available in Geyser.Label but we define a default.</td>
+--     <td class="tg-1">9</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">autoWidth</td>
---     <td class="tg-even">Should the Chyron resize to just fit the text?</td>
---     <td class="tg-even">true</td>
+--     <td class="tg-2">autoWidth</td>
+--     <td class="tg-2">Should the Chyron resize to just fit the text?</td>
+--     <td class="tg-2">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">alignment</td>
---     <td class="tg-odd">What alignment(left/right/center) to use for the Chyron text? Available in Geyser.Label but we define a default.</td>
---     <td class="tg-odd">"center"</td>
+--     <td class="tg-1">alignment</td>
+--     <td class="tg-1">What alignment(left/right/center) to use for the Chyron text? Available in Geyser.Label but we define a default.</td>
+--     <td class="tg-1">"center"</td>
 --   </tr>
 -- </tbody>
 -- </table>

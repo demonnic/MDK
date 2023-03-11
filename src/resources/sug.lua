@@ -56,44 +56,44 @@ end
 --  <th>default</th>
 -- </tr>
 -- <tr>
---  <td class="tg-odd">active</td>
---  <td class="tg-odd">boolean, if true starts the timer updating</td>
---  <td class="tg-odd">true</td>
+--  <td class="tg-1">active</td>
+--  <td class="tg-1">boolean, if true starts the timer updating</td>
+--  <td class="tg-1">true</td>
 -- </tr>
 -- <tr>
---  <td class="tg-even">updateTime</td>
---  <td class="tg-even">How often should the gauge autoupdate? Milliseconds. 0 to disable the timer but still allow event updates</td>
---  <td class="tg-even">333</td>
+--  <td class="tg-2">updateTime</td>
+--  <td class="tg-2">How often should the gauge autoupdate? Milliseconds. 0 to disable the timer but still allow event updates</td>
+--  <td class="tg-2">333</td>
 -- </tr>
 -- <tr>
---  <td class="tg-odd">currentVariable</td>
---  <td class="tg-odd">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "currentHP" or "gmcp.Char.Vitals.hp"</td>
---  <td class="tg-odd">""</td>
+--  <td class="tg-1">currentVariable</td>
+--  <td class="tg-1">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "currentHP" or "gmcp.Char.Vitals.hp"</td>
+--  <td class="tg-1">""</td>
 -- </tr>
 -- <tr>
---  <td class="tg-even">maxVariable</td>
---  <td class="tg-even">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "maxHP" or "gmcp.Char.Vitals.maxhp"</td>
---  <td class="tg-even">""</td>
+--  <td class="tg-2">maxVariable</td>
+--  <td class="tg-2">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "maxHP" or "gmcp.Char.Vitals.maxhp"</td>
+--  <td class="tg-2">""</td>
 -- </tr>
 -- <tr>
---  <td class="tg-odd">textTemplate</td>
---  <td class="tg-odd">Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
---  <td class="tg-odd">" |c/|m |p%"</td>
+--  <td class="tg-1">textTemplate</td>
+--  <td class="tg-1">Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
+--  <td class="tg-1">" |c/|m |p%"</td>
 -- </tr>
 -- <tr>
---  <td class="tg-even">defaultCurrent</td>
---  <td class="tg-even">What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
---  <td class="tg-even">50</td>
+--  <td class="tg-2">defaultCurrent</td>
+--  <td class="tg-2">What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
+--  <td class="tg-2">50</td>
 -- </tr>
 -- <tr>
---  <td class="tg-odd">defaultMax</td>
---  <td class="tg-odd">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
---  <td class="tg-odd">100</td>
+--  <td class="tg-1">defaultMax</td>
+--  <td class="tg-1">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
+--  <td class="tg-1">100</td>
 -- </tr>
 -- <tr>
---  <td class="tg-even">updateEvent</td>
---  <td class="tg-even">The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
---  <td class="tg-even">""</td>
+--  <td class="tg-2">updateEvent</td>
+--  <td class="tg-2">The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
+--  <td class="tg-2">""</td>
 -- </tr>
 -- </table>
 -- @param container The Geyser container for this gauge

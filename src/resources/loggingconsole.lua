@@ -22,24 +22,24 @@ local LoggingConsole = {log = true, logFormat = "h", path = "|h/log/consoleLogs/
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-odd">log</td>
---     <td class="tg-odd">Should the miniconsole be logging?</td>
---     <td class="tg-odd">true</td>
+--     <td class="tg-1">log</td>
+--     <td class="tg-1">Should the miniconsole be logging?</td>
+--     <td class="tg-1">true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">logFormat</td>
---     <td class="tg-even">"h" for html, "t" for plaintext, "l" for log (with ansi)</td>
---     <td class="tg-even">h</td>
+--     <td class="tg-2">logFormat</td>
+--     <td class="tg-2">"h" for html, "t" for plaintext, "l" for log (with ansi)</td>
+--     <td class="tg-2">h</td>
 --   </tr>
 --   <tr>
---     <td class="tg-odd">path</td>
---     <td class="tg-odd">The path the file lives in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)</td>
---     <td class="tg-odd">"|h/log/consoleLogs/|y/|m/|d/"</td>
+--     <td class="tg-1">path</td>
+--     <td class="tg-1">The path the file lives in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)</td>
+--     <td class="tg-1">"|h/log/consoleLogs/|y/|m/|d/"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-even">fileName</td>
---     <td class="tg-even">The name of the log file. It is templated, same as path above</td>
---     <td class="tg-even">"|n.|e"</td>
+--     <td class="tg-2">fileName</td>
+--     <td class="tg-2">The name of the log file. It is templated, same as path above</td>
+--     <td class="tg-2">"|n.|e"</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -188,7 +188,7 @@ function LoggingConsole:xEcho(str, etype, log)
   local logType = self.logFormat
   if logType:find("h") then
     logType = "h"
-  else
+  elseif logType ~= "t" then
     logType = "l"
   end
   if etype == "d" then -- decho
