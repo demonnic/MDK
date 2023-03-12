@@ -915,6 +915,9 @@ end
 -- @tparam string styleSheet the stylesheet to use for the command line. See https://wiki.mudlet.org/w/Manual:Lua_Functions#setCmdLineStyleSheet for examples
 function EMCO:setCmdLineStyleSheet(styleSheet)
   self.cmdLineStyleSheet = styleSheet
+  if not styleSheet then
+    return
+  end
   for _, window in pairs(self.mc) do
     window:setCmdLineStyleSheet(styleSheet)
   end
@@ -929,7 +932,9 @@ function EMCO:enableCmdLine(tabName, template)
   end
   local window = self.mc[tabName]
   window:enableCommandLine()
-  window:setCmdLineStyleSheet(self.cmdLineStyleSheet)
+  if self.cmdLineStyleSheet then
+    window:setCmdLineStyleSheet(self.cmdLineStyleSheet)
+  end
   self:setCmdAction(tabName, template)
 end
 
