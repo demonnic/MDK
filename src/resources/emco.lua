@@ -1465,6 +1465,20 @@ function EMCO:adjustTabBackgrounds()
   end
 end
 
+--- Sets the inactiveTabCSS
+-- @tparam string stylesheet the stylesheet to use for inactive tabs.
+function EMCO:setInactiveTabCSS(stylesheet)
+  self.inactiveTabCSS = stylesheet
+  self:adjustTabBackgrounds()
+end
+
+--- Sets the activeTabCSS
+-- @tparam string stylesheet the stylesheet to use for active tab.
+function EMCO:setActiveTabCSS(stylesheet)
+  self.activeTabCSS = stylesheet
+  self:adjustTabBackgrounds()
+end
+
 --- Sets the FG color for the active tab
 -- @param color Color string suitable for decho or hecho, or color name eg "purple", or table of colors {r,g,b}
 function EMCO:setActiveTabFGColor(color)
