@@ -1056,7 +1056,7 @@ function EMCO:createContainers()
 end
 
 function EMCO:stripTimeChars(str)
-  return string.gsub(string.trim(str), '[hHmMszZaApPdy:. ]', '')
+  return string.gsub(string.trim(str), '[ThHmMszZaApPdy0-9%-%+:. ]', '')
 end
 
 --- Expands boolean definitions to be more flexible.
