@@ -15,33 +15,11 @@ local SUG = {
   strict = true,
 }
 
--- ========== Copied from demontools.lua in order to cut the dependency for just this small functionality ==========
--- internal function, recursively digs for a value within subtables if possible
-local function digForValue(dataFrom, tableTo)
-  if dataFrom == nil or table.size(tableTo) == 0 then
-    return dataFrom
-  else
-    local newData = dataFrom[tableTo[1]]
-    table.remove(tableTo, 1)
-    return digForValue(newData, tableTo)
-  end
-end
-
 -- Internal function, used to turn a string variable name into a value
 local function getValueAt(accessString)
-  if accessString == "" then
-    return nil
-  end
-  local tempTable = accessString:split("%.")
-  local accessTable = {}
-  for i, v in ipairs(tempTable) do
-    if tonumber(v) then
-      accessTable[i] = tonumber(v)
-    else
-      accessTable[i] = v
-    end
-  end
-  return digForValue(_G, accessTable)
+  local ok, err = pcall(loadstring("return " .. tostring(accessString)))
+  if ok then return err end
+  return nil, err
 end
 
 -- ========== End section copied from demontools.lua
@@ -94,6 +72,11 @@ end
 --  <td class="tg-2">updateEvent</td>
 --  <td class="tg-2">The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
 --  <td class="tg-2">""</td>
+-- </tr>
+-- <tr>
+--  <td class="tg-1">updateHook</td>
+--  <td class="tg-1">A function which is run each time the gauge updates. Should take 3 arguments, the gauge itself, current value, and max value. You can return new current and max values to be used, for example `return 34, 120` would cause the gauge to use 34 for current and 120 for max regardless of what the variables it reads say.</td>
+--  <td class="tg-1"></td>
 -- </tr>
 -- </table>
 -- @param container The Geyser container for this gauge
@@ -194,6 +177,16 @@ function SUG:setTextTemplate(template)
   self:update()
 end
 
+--- Set the updateHook function which is run just prior to the gauge updating
+-- @tparam function func The function which will be called when the gauge updates. It should take 3 arguments, the gauge itself, the current value, and the max value. If you wish to override the current or max values used for the gauge, you can return new current and max values, like `return newCurrent newMax`
+function SUG:setUpdateHook(func)
+  local funcType = type(func)
+  if funcType ~= "function" then
+    return nil, "setUpdateHook only takes functions, no strings or anything like that. You passed in: " .. funcType
+  end
+  self.updateHook = func
+end
+
 --- Stops the Self Updating Gauge from updating
 function SUG:stop()
   self.active = false
@@ -239,6 +232,13 @@ function SUG:update()
       debugc(string.format(
                "Self Updating Gauge named %s is trying to update with an invalid max value. Using the defaultCurrent instead. currentVariable: '%s' maxVariable: '%s'",
                self.name, self.currentVariable, self.maxVariable))
+    end
+  end
+  if self.updateHook and type(self.updateHook) == "function" then
+    local ok, newcur, newmax = pcall(self.updateHook, self, current, max)
+    if ok and newcur then
+      current = newcur
+      max = newmax and newmax or self.defaultMax
     end
   end
   local text = self.textTemplate
