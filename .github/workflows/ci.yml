@@ -28,3 +28,4 @@ jobs:
         uses: demonnic/test-in-mudlet@v1.2
         with:
           pretestPackage: ${{ github.workspace }}/build/MDK.mpackage
+          mudletVersion: Mudlet-4.17.2

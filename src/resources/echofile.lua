@@ -1,9 +1,9 @@
 --- set of functions for echoing files to things. Uses a slightly hacked up version of f-strings for interpolation/templating
----@module echofile
----@author Damian Monogue <demonnic@gmail.com>
----@copyright 2021 Damian Monogue
----@copyright 2016 Hisham Muhammad (https://github.com/hishamhm/f-strings/blob/master/LICENSE)
----@license MIT, see LICENSE.lua
+-- @module echofile
+-- @author Damian Monogue <demonnic@gmail.com>
+-- @copyright 2021 Damian Monogue
+-- @copyright 2016 Hisham Muhammad (https://github.com/hishamhm/f-strings/blob/master/LICENSE)
+-- @license MIT, see LICENSE.lua
 local echofile = {}
 
 -- following functions fiddled with from https://github.com/hishamhm/f-strings/blob/master/F.lua and https://hisham.hm/2016/01/04/string-interpolation-in-lua/

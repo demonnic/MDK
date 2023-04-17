@@ -171,6 +171,16 @@ function TextGauge:setPercentSymbolColor(color)
   self.percentSymbolColor = color
 end
 
+--- Enables reversing the fill direction (right to left instead of the usual left to right)
+function TextGauge:enableReverse()
+  self.reverse = true
+end
+
+--- Disables reversing the fill direction (go back to the usual left to right)
+function TextGauge:disableReverse()
+  self.reverse = false
+end
+
 --- Enables showing the percent value of the gauge
 function TextGauge:enableShowPercent()
   self.showPercent = true
@@ -306,9 +316,15 @@ function TextGauge:setValue(current, max)
   if value >= 200 and self.showPercent then
     overflowWidth = overflowWidth - 1
   end
-  return string.format("%s%s%s%s%s%s%s%s%s%s%s", overflowColor, string.rep(overflowCharacter, overflowWidth), fillColor,
-                       string.rep(fillCharacter, fillWidth), resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor,
-                       percentString, percentSymbolString, resetColor)
+  local result = ""
+  if self.reverse then
+    result = string.format("%s%s%s%s%s%s%s%s%s%s%s", emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor,fillColor, string.rep(fillCharacter, fillWidth), resetColor, overflowColor, string.rep(overflowCharacter, overflowWidth), resetColor, percentString, percentSymbolString, resetColor)
+  else
+    result = string.format("%s%s%s%s%s%s%s%s%s%s%s", overflowColor, string.rep(overflowCharacter, overflowWidth), fillColor,
+                  string.rep(fillCharacter, fillWidth), resetColor, emptyColor, string.rep(emptyCharacter, emptyWidth), resetColor,
+                  percentString, percentSymbolString, resetColor)
+  end
+  return result
 end
 
 --- Synonym for setValue

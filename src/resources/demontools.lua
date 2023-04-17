@@ -93,32 +93,11 @@ local htmlHeaderPattern = [=[  <!DOCTYPE HTML PUBLIC "%-//W3C//DTD HTML 4.01 Tra
 <body><span>
 ]=]
 
--- internal function, recursively digs for a value within subtables if possible
-local function digForValue(dataFrom, tableTo)
-  if dataFrom == nil or table.size(tableTo) == 0 then
-    return dataFrom
-  else
-    local newData = dataFrom[tableTo[1]]
-    table.remove(tableTo, 1)
-    return digForValue(newData, tableTo)
-  end
-end
-
 -- Internal function, used to turn a string variable name into a value
 local function getValueAt(accessString)
-  if accessString == "" then
-    return nil
-  end
-  local tempTable = accessString:split("%.")
-  local accessTable = {}
-  for i, v in ipairs(tempTable) do
-    if tonumber(v) then
-      accessTable[i] = tonumber(v)
-    else
-      accessTable[i] = v
-    end
-  end
-  return digForValue(_G, accessTable)
+  local ok, err = pcall(loadstring("return " .. tostring(accessString)))
+  if ok then return err end
+  return nil, err
 end
 
 -- internal sorting function, sorts first by hue, then luminosity, then value
@@ -832,7 +811,7 @@ function string.tocolor(self)
   local strTable = {}
   local part1 = {}
   local part2 = {}
-  self:gsub(".", function(c)
+  _ = self:gsub(".", function(c)
     table.insert(strTable, c)
   end)
   for index, value in ipairs(strTable) do
