@@ -107,6 +107,11 @@ function ftext.xwrap(text, limit, type)
           table.insert(lines, take)
           table.insert(strLines, take)
         end
+        if leave == "\n" then
+          table.insert(lines, leave)
+          table.insert(strLines, leave)
+          leave = ""
+        end
       end
     end
   end
@@ -189,12 +194,25 @@ end
 --     <td class="tg-2">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
 --     <td class="tg-2">true</td>
 --   </tr>
+--     <td class="tg-1">truncate</td>
+--     <td class="tg-1">Cut the string to width. Is superceded by wrap being true.</td>
+--     <td class="tg-1">false</td>
+--   </tr>
 -- </tbody>
 -- </table>
 function ftext.fText(str, opts)
   local options = ftext.fixFormatOptions(str, opts)
   if options.wrap and (options.strLen > options.effWidth) then
-    local wrapped = ftext.xwrap(str, options.effWidth, options.formatType)
+    local wrapped = ""
+    if str:find("\n") then
+      for _,line in ipairs(str:split("\n")) do
+        local newline = "\n"
+        if _ == 1 then newline = "" end
+        wrapped = wrapped .. newline .. ftext.xwrap(line, options.effWidth, options.formatType)
+      end
+    else
+      wrapped = ftext.xwrap(str, options.effWidth, options.formatType)
+    end
     local lines = wrapped:split("\n")
     local formatted = {}
     options.fixed = false
@@ -225,6 +243,9 @@ function ftext.fixFormatOptions(str, opts)
   if options.wrap == nil then
     options.wrap = true
   end -- wrap by default.
+  if options.truncate == nil then
+    options.truncate = false
+  end -- do not truncate by default
   options.formatType = options.formatType or "" -- by default, no color formatting.
   options.width = options.width or 80 -- default 80 width
   options.cap = options.cap or "" -- no cap by default
@@ -294,6 +315,12 @@ end
 -- internal function, processes a single line of the wrapped string.
 function ftext.fLine(str, opts)
   local options = ftext.fixFormatOptions(str, opts)
+  local truncate, strLen, width = options.truncate, options.strLen, options.width
+  if truncate and strLen > width then
+    local wrapped = ftext.xwrap(str, options.effWidth, options.formatType)
+    local lines = wrapped:split("\n")
+    str = lines[1]
+  end
   local leftCap = options.leftCap
   local rightCap = options.rightCap
   local leftPadLen = options.leftPadLen
@@ -638,13 +665,23 @@ function TextFormatter:setNoGap(noGap)
   self.options.noGap = noGap
 end
 
+--- Enables truncation (cutting to length). You still need to ensure wrap is disabled, as it supercedes.
+function TextFormatter:enableTruncate()
+  self.options.truncate = true
+end
+
+--- Disables truncation (cutting to length). You still need to ensure wrap is enabled if you want it to wrap.
+function TextFormatter:disableTruncate()
+  self.options.truncate = false
+end
+
 --- Format a string based on the stored options
 -- @tparam string str The string to format
 function TextFormatter:format(str)
   return ftext.fText(str, self.options)
 end
 
---- Creates and returns a new TextFormatter. For valid options, please see https://github.com/demonnic/fText/wiki/fText
+--- Creates and returns a new TextFormatter.
 -- @tparam table options the options for the text formatter to use when running format()
 -- <br><br>Table of options
 -- <table class="tg">
@@ -716,6 +753,10 @@ end
 --     <td class="tg-2">Should the endcap be reversed on the right? IE [[ becomes ]]</td>
 --     <td class="tg-2">true</td>
 --   </tr>
+--     <td class="tg-1">truncate</td>
+--     <td class="tg-1">Cut the string to width. Is superceded by wrap being true.</td>
+--     <td class="tg-1">false</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @usage
@@ -766,6 +807,9 @@ local TableMaker = {
   autoEcho = false,
   title = "",
   printTitle = false,
+  headerTitle = false,
+  forceHeaderSeparator = false,
+  autoEchoConsole = "main",
 }
 
 function TableMaker:checkPosition(position, func)
@@ -1058,6 +1102,8 @@ function TableMaker:echo(message, echoType, ...)
   end
   if consoleType == "string" then
     console = self.autoEchoConsole
+  elseif consoleType == "nil" then
+    console = "main"
   else
     console = self.autoEchoConsole.name
   end
@@ -1202,8 +1248,9 @@ function TableMaker:makeHeader()
     for _, v in ipairs(self.columns) do
       table.insert(columnEntries, v:format(v.options.name))
     end
-    local divWithNewlines = string.format("\n%s", self:createRowDivider())
-    columnHeaders = string.format("\n%s%s%s%s", ec, table.concat(columnEntries, sep), ec, self.separateRows and divWithNewlines or '')
+    local divWithNewlines = self.headerTitle and header or self:createRowDivider()
+    divWithNewlines = "\n" .. divWithNewlines
+    columnHeaders = string.format("\n%s%s%s%s", ec, table.concat(columnEntries, sep), ec, (self.separateRows or self.forceHeaderSeparator) and divWithNewlines or '')
   end
   local title = self:makeTitle(totalWidth, header)
   header = string.format("%s%s%s", header, title, columnHeaders)
@@ -1231,39 +1278,139 @@ function TableMaker:createRowDivider()
 end
 
 --- set the title of the table
+-- @tparam string title The title of the table.
 function TableMaker:setTitle(title)
   self.title = title
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the rowSeparator for the table
+-- @tparam string char The row separator to use
+function TableMaker:setRowSeparator(char)
+  self.rowSeparator = char
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the edgeCharacter for the table
+-- @tparam string char The edge character to use
+function TableMaker:setEdgeCharacter(char)
+  self.edgeCharacter = char
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the foot character for the table
+-- @tparam string char The foot character to use
+function TableMaker:setFootCharacter(char)
+  self.footCharacter = char
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the head character for the table
+-- @tparam string char The head character to use
+function TableMaker:setHeadCharacter(char)
+  self.headCharacter = char
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the column separator character for the table
+-- @tparam string char The separator character to use
+function TableMaker:setSeparator(char)
+  self.separator = char
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the title color for the table
+-- @tparam string color The title color to use. Should match the color type of the tablemaker (cecho by default)
+function TableMaker:setTitleColor(color)
+  self.titleColor = color
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the title color for the table
+-- @tparam string color The separator color to use. Should match the color type of the tablemaker (cecho by default)
+function TableMaker:setSeparatorColor(color)
+  self.separatorColor = color
+  if self.autoEcho then self:assemble() end
+end
+
+--- set the title color for the table
+-- @tparam string color The frame color to use. Should match the color type of the tablemaker (cecho by default)
+function TableMaker:setFrameColor(color)
+  self.frameColor = color
+  if self.autoEcho then self:assemble() end
+end
+
+--- Force a separator between the header and first row, even if the row separator is disabled for the overall table
+function TableMaker:enableForceHeaderSeparator()
+  self.forceHeaderSeparator = true
+  if self.autoEcho then self:assemble() end
+end
+
+--- Do not force a separator between the header and first row, even if the row separator is disabled for the overall table
+function TableMaker:disableForceHeaderSeparator()
+  self.forceHeaderSeparator = false
+  if self.autoEcho then self:assemble() end
+end
+
+--- Enable using the title separator for the column headers as well
+function TableMaker:enableHeaderTitle()
+  self.headerTitle = true
+  if self.autoEcho then self:assemble() end
+end
+
+--- Disable using the title separator for the column headers as well
+function TableMaker:disableHeaderTitle()
+  self.headerTitle = false
+  if self.autoEcho then self:assemble() end
 end
 
 --- enable printing the title of the table
 function TableMaker:enablePrintTitle()
   self.printTitle = true
+  if self.autoEcho then self:assemble() end
 end
 
---- enable printing the title of the table
+--- disable printing the title of the table
 function TableMaker:disablePrintTitle()
   self.printTitle = false
+  if self.autoEcho then self:assemble() end
+end
+
+--- enable printing of the column headers
+function TableMaker:enablePrintHeaders()
+  self.printHeaders = true
+  if self.autoEcho then self:assemble() end
+end
+
+--- disable printing of the column headers
+function TableMaker:disablePrintHeaders()
+  self.printHeaders = false
+  if self.autoEcho then self:assemble() end
 end
 
 --- enable printing the separator line between rows
 function TableMaker:enableRowSeparator()
   self.separateRows = true
+  if self.autoEcho then self:assemble() end
 end
 
 --- enable printing the separator line between rows
 function TableMaker:disableRowSeparator()
   self.separateRows = false
+  if self.autoEcho then self:assemble() end
 end
 
 --- enables making cells which incorporate insertLink/insertPopup
 function TableMaker:enablePopups()
   self.autoEcho = true
   self.allowPopups = true
+  if self.autoEcho then self:assemble() end
 end
 
 --- enables autoEcho so that when assemble is called it echos automatically
 function TableMaker:enableAutoEcho()
   self.autoEcho = true
+  self:assemble()
 end
 
 --- disables autoecho. Cannot be used if allowPopups is set
@@ -1278,6 +1425,7 @@ end
 --- Enables automatically clearing the miniconsole we echo to
 function TableMaker:enableAutoClear()
   self.autoClear = true
+  if self.autoEcho then self:assemble() end
 end
 
 --- Disables automatically clearing the miniconsole we echo to
@@ -1294,12 +1442,13 @@ function TableMaker:setAutoEchoConsole(console)
   end
   local consoleType = type(console)
   if consoleType ~= "string" and consoleType ~= "table" then
-    error(funcName .. " ArgumentError: console as string or Geyser.MiniConsole expected, got " .. consoleType)
-  elseif consoleType == "table" and console.type ~= "miniConsole" then
+    error(funcName .. " ArgumentError: console as string or a Geyser MiniConsole or UserWindow expected, got " .. consoleType)
+  elseif consoleType == "table" and not (console.type == "miniConsole" or console.type == "userwindow") then
     error(funcName .. " ArgumentError: console received was a table and may be a Geyser object, but console.type is not miniConsole, it is " ..
             console.type)
   end
   self.autoEchoConsole = console
+  if self.autoEcho then self:assemble() end
 end
 
 --- Assemble the table. If autoEcho is enabled/set to true, will automatically echo. Otherwise, returns the formatted string to echo the table
@@ -1356,8 +1505,8 @@ function TableMaker:textAssemble()
   return sheet
 end
 
---- Creates and returns a new TableMaker. See https://github.com/demonnic/fText/wiki/TableMaker for valid entries to the options table.
--- see https://github.com/demonnic/tempwiki/wiki/fText%3A-TableMaker%3A-Examples for usage
+--- Creates and returns a new TableMaker. 
+-- see https://github.com/demonnic/MDK/wiki/fText%3A-TableMaker%3A-Examples for usage
 -- @tparam table options table of options for the TableMaker object
 -- <br><br>Table of new options
 -- <table class="tg">
@@ -1453,6 +1602,16 @@ end
 --   <tr>
 --     <td class="tg-1">printTitle</td>
 --     <td class="tg-1">Should we print the title of the table at the very tip-top?</td>
+--     <td class="tg-1">false</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-2">headerTitle</td>
+--     <td class="tg-2">Use the same separator for the column headers as the title/top, rather than the row separator</td>
+--     <td class="tg-2">formatColor</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-1">forceHeaderSeparator</td>
+--     <td class="tg-1">Force a separator between the column headers and the first row, even if rowSeparator is false.</td>
 --     <td class="tg-1">false</td>
 --   </tr>
 -- </tbody>
