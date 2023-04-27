@@ -93,67 +93,134 @@ function spinbox:new(cons, container)
   return me
 end
 
---- handles actually creating the pieces which make up the spinbox
--- @internal
+--- Creates the components that make up the spinbox UI. 
+-- @local
+-- Obtains the up and down arrow images specified in the spinbox options.
+-- Generates styles for the spinbox.
+-- Calculates the height of the up/down buttons and any remainder space.
+-- Creates:
+--   `self.upButton` - A button with an up arrow image for incrementing the value
+--   `self.downButton` - A button with a down arrow image for decrementing the value
+--   `self.displayLabel` - A label to display the current spinbox value
+--   `self.input` - A command line input to allow directly entering a value
+-- Hides the input by default.
+-- Applies the generated styles.
 function spinbox:createComponents()
   self:obtainImages()
   self:generateStyles()
-  self.upButton = Geyser.Label:new({
-    name = self.name .. "spinbox_upArrow",
-    height = 12,
-    width = 12,
-    x = "100%-12",
-    y = 0
-  }, self)
-  self.upButton:setClickCallback(function()
-    self:increment()
-  end)
-  self.downButton = Geyser.Label:new({
-    name = self.name .. "spinbox_downArrow",
-    height = 12,
-    width = 12,
-    x = "100%-12",
-    y = "13"
-  }, self)
-  self.downButton:setClickCallback(function()
-    self:decrement()
-  end)
-  self.displayLabel = Geyser.Label:new({
-    name = self.name .. "spinbox_displayLabel",
-    x = 0,
-    y = 0,
-    width = "100%-12",
-    height = "100%",
-    message = self.value
-  }, self)
-  self.displayLabel:setAlignment("center")
-  self.displayLabel:setDoubleClickCallback(function()
-    self.input:show()
-    self.input:print(self.value)
-    self.input:selectText()
-    self.displayLabel:hide()
-  end)
-  self.input = Geyser.CommandLine:new({
-    x = 0,
-    y = 0,
-    width = "100%-12",
-    height = "100%",
-  }, self)
-  self.input:setAction(function(txt)
-    txt = tonumber(txt)
-    if txt then
-      self:setValue(txt)
-      self.input:hide()
-    end
-    self.displayLabel:show()
-    self.input:print(self.value)
-  end)
+  self:calculateButtonDimensions()
+
+  self.upButton = self:createButton("up")
+  self.downButton = self:createButton("down")
+
+  self.displayLabel = self:createDisplayLabel()
+
+  self.input = self:createInput()
   self.input:hide()
+
   self:applyStyles()
 end
 
---- Used to increment the value by the increment amount
--- @internal
+--- Calculates the button height. We use square buttons in this house.  
+-- @local
+-- Calculates the height of the up/down buttons by dividing the spinbox height in half.
+-- Stores the remainder (if any) in self.remainder.
+-- Stores the calculated button height in self.buttonHeight.
+function spinbox:calculateButtonDimensions()
+  self.buttonHeight = math.floor(self.get_height() / 2)
+  self.remainder = self.get_height() % 2
+end
+
+--- Creates a button (up or down arrow) for the spinbox.
+-- @param type Either "up" or "down" to specify which direction the arrow should point
+-- @return The created Geyser.Label button
+-- @local
+-- Creates a Geyser.Label button with an up or down arrow image. 
+-- Positions the button at the top or bottom of the spinbox respectively.
+-- Sets a click callback on the button to call increment() or decrement() depending on the type.
+-- Returns the created button.
+function spinbox:createButton(type)
+  local button = Geyser.Label:new({
+    name = self.name .. "spinbox_"..type.."Arrow",
+    height = self.buttonHeight,
+    width = self.buttonHeight,
+    x = "100%-" .. self.buttonHeight,
+    y = type == "up" and 0 or self.buttonHeight + self.remainder,
+  }, self)
+    
+  button:setClickCallback(function()
+    if type == "up" then
+      self:increment()
+    else
+      self:decrement()
+    end
+  end)
+  return button
+end
+
+--- Creates the display label for the spinbox value.
+-- @return The created Geyser.Label display label
+-- @local 
+-- Creates a Geyser.Label to display the current spinbox value.
+-- Centers the text in the label.
+-- Sets a double click callback on the label to show the input, put the current 
+-- value in it, select the text, and hide the label.
+-- Returns the created display label.
+function spinbox:createDisplayLabel()
+  local displayLabel = Geyser.Label:new({
+    name = self.name .. "spinbox_displayLabel",
+    x = 0,
+    y = 0,
+    width = "100%-" .. self.buttonHeight,
+    height = "100%",
+    message = self.value
+  }, self)
+  displayLabel:setAlignment("center")
+  displayLabel:setDoubleClickCallback(function()
+    self.input:show()
+    self.input:print(self.value)
+    self.input:selectText()
+    displayLabel:hide()
+  end)
+  return displayLabel
+end
+
+--- Creates the input for directly entering a spinbox value.  
+-- @return The created Geyser.CommandLine input  
+-- @local
+-- Creates a Geyser.CommandLine input.
+-- Sets an action on the input to:
+--   - Attempt to convert the input text to a number
+--   - If successful, call setValue() with the number to set the spinbox value
+--   - Hide the input
+--   - Show the display label
+--   - Put the new spinbox value in the input
+-- Returns the created input.
+function spinbox:createInput()
+  local input = Geyser.CommandLine:new({
+    x = 0,
+    y = 0,
+    width = "100%-".. self.buttonHeight,
+    height = "100%",
+  }, self)
+  input:setAction(function(txt)
+    txt = tonumber(txt)
+    if txt then
+      self:setValue(txt)
+      input:hide()
+    end
+    self.displayLabel:show()
+    input:print(self.value)
+  end)
+  return input
+end
+
+--- Used to increment the value by the delta amount  
+-- @local
+-- Increments the spinbox value by the delta amount.
+-- Checks if the new value would exceed the max, and if so sets it to the max.
+-- Updates the display label with the new value.
+-- Applies any styles that depend on the value.
 function spinbox:increment()
   local val = self.value + self.delta
   if val >= self.max then
@@ -164,8 +231,12 @@ function spinbox:increment()
   self:applyStyles()
 end
 
---- Used to decrement the value by the increment amount
--- @internal
+--- Used to decrement the value by the delta amount  
+-- @local
+-- Decrements the spinbox value by the delta amount.
+-- Checks if the new value would be below the min, and if so sets it to the min.  
+-- Updates the display label with the new value.
+-- Applies any styles that depend on the value.
 function spinbox:decrement()
   local val = self.value - self.delta
   if val <= self.min then
@@ -176,8 +247,12 @@ function spinbox:decrement()
   self:applyStyles()
 end
 
---- Used to directly set the value of the the spinbox.
--- @internal
+--- Used to directly set the value of the spinbox.  
+-- @param value The new value to set
+-- Rounds the value to an integer if the spinbox is integer only.
+-- Checks if the new value is within the min/max range and clamps it if not.
+-- Updates the display label with the new value.  
+-- Applies any styles that depend on the value.
 function spinbox:setValue(value)
   if self.integer then
     value = math.floor(value)
@@ -192,10 +267,15 @@ function spinbox:setValue(value)
   self:applyStyles()
 end
 
---- Responsible for downloading the up and down arrow images the first time if web URLs.
--- remembers where it's downloaded files to and reuses them if they already exist, even if another spinbox downloaded them
--- if it's not a web URL it assumes it's just a file path.
--- @internal
+--- Obtains the up and down arrow images for the spinbox.  
+-- @local
+-- Gets the previously saved file locations.
+-- Checks if the up arrow image exists at the upArrowLocation. 
+-- If not, it will download the image from a URL or copy a local file. It saves 
+-- the new location.
+-- Does the same for the down arrow image and downArrowLocation.
+-- Saves any new locations to the save file.
+-- Sets self.upArrowFile and self.downArrowFile to the locations of the images.
 function spinbox:obtainImages()
   local locations = self:getFileLocs()
   local upURL = self.upArrowLocation
@@ -238,8 +318,15 @@ function spinbox:obtainImages()
   end
 end
 
---- Handles the -actual- download of a file from a url
--- @internal
+--- Handles the actual download of a file from a url
+-- @param url The url to download the file from
+-- @param fileName The location to save the downloaded file
+-- @local
+-- Creates any missing directories in the file path.
+-- Registers named event handlers to handle the download completing or erroring.
+-- The completion handler stops the error handler.
+-- The error handler prints an error message and stops the completion handler.
+-- Downloads the file from the url to the fileName location.
 function spinbox:downloadFile(url, fileName)
   local parts = fileName:split("/")
   parts[#parts] = nil
@@ -269,7 +356,7 @@ function spinbox:downloadFile(url, fileName)
 end
 
 --- Responsible for reading the file locations from disk and returning them
--- @internal
+-- @local
 function spinbox:getFileLocs()
   local locations = {}
   if io.exists(saveFile) then
@@ -284,6 +371,7 @@ end
 function spinbox:generateStyles()
   self.baseStyle = gss:new([[
     border-radius: 2px;
+    border-color: black;
   ]])
   self.activeStyle = gss:new(f[[
     background-color: {self.activeButtonColor};
