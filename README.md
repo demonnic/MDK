@@ -66,6 +66,9 @@ You should maybe also include demontools.lua, as it notes below several other of
 * sortbox.lua
   * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at <https://github.com/demonnic/MDK/wiki/SortBox>
 
+* spinbox.lua
+  * SpinBox, a Geyser element for adjusting numbers with your mouse. Overview at <https://github.com/demonnic/MDK/wiki/SpinBox>
+
 * sug.lua
   * Self Updating Gauges, will watch a set of variables and update itself on a timer based on what values those variables hold. Documentation at <https://github.com/demonnic/MDK/wiki/SelfUpdatingGauge>
 
