@@ -57,7 +57,7 @@ function revisionator:getAppliedPatch()
 end
 
 --- go through all the patches in order and apply any which are still necessary
---- @treturn boolean true if it successfully applied the patches
+--- @treturn boolean true if it successfully applied patches, false if it was already at the latest patch level
 --- @error error message
 function revisionator:migrate()
   local applied,err = self:getAppliedPatch()
