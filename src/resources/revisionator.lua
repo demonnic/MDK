@@ -23,11 +23,35 @@ end
 
 --- Creates a new revisionator
 -- @tparam table options the options to create the revisionator with.
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td class="tg-1">name</td>
+--     <td class="tg-1">The name of the revisionator. This is absolutely required, as the name is used for tracking the currently applied patch level</td>
+--     <td class="tg-1">raises an error if not provided</td>
+--   </tr>
+--   <tr>
+--     <td class="tg-2">patches</td>
+--     <td class="tg-2">A table of patch functions. It is traversed using ipairs, so must be in the form of {function1, function2, function3} etc. If you do not provide it, you can add the patches by calling :addPatch for each patch in order.</td>
+--     <td class="tg-2">{}</td>
+--   </tr>
+--</tbody>
+--</table>
 function revisionator:new(options)
   options = options or {}
   local optionsType = type(options)
   if optionsType ~= "table" then
     printError(f"revisionator:new bad argument #1 type, options as table expected, got {optionsType}", true, true)
+  end
+  if not options.name then
+    printError("revisionator:new(options) options must include a 'name' key as this is used as part of tracking the applied patch level.", true, true)
   end
   local me = table.deepcopy(options)
   setmetatable(me, self)
