@@ -63,6 +63,9 @@ You should maybe also include demontools.lua, as it notes below several other of
 * mastermindsolver.lua
   * A class which will help you solve Master Mind puzzles. <https://github.com/demonnic/MDK/wiki/MasterMindSolver>
 
+* revisionator.lua
+  * A class which aims to make upgrading between package versions easier by storing and running patch functions. <https://github.com/demonnic/MDK/wiki/Revisionator>
+
 * sortbox.lua
   * SortBox, an alternative to H/VBox which can be either, and also provides options for sorting its contents. Overview at <https://github.com/demonnic/MDK/wiki/SortBox>
 

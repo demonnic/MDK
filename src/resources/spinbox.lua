@@ -15,6 +15,7 @@ local spinbox = {
   integer = true,
   upArrowLocation = "https://demonnic.github.io/image-assets/uparrow.png",
   downArrowLocation = "https://demonnic.github.io/image-assets/downarrow.png",
+  color = "#202020"
 }
 spinbox.__index = spinbox
 setmetatable(spinbox, spinbox.parent)
@@ -76,6 +77,11 @@ end
 --     <td class="tg-2">downArrowLocation</td>
 --     <td class="tg-2">The location of the down arrow image. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
 --     <td class="tg-2">https://demonnic.github.io/image-assets/downarrow.png</td>
+--   <tr>
+--     <td class="tg-1">callBack</td>
+--     <td class="tg-1">The function to run when the spinbox's value is updated. Is called with parameters (self.name, value, oldValue)</td>
+--     <td class="tg-1">nil</td>
+--   </tr>
 --   </tr>
 --</tbody>
 --</table>
@@ -90,6 +96,10 @@ function spinbox:new(cons, container)
   local me = self.parent:new(cons, container)
   setmetatable(me, self)
   me:createComponents()
+  if me.callBack then
+    me:setCallBack(me.callBack)
+  end
+  me.oldValue = me.value
   return me
 end
 
@@ -226,9 +236,11 @@ function spinbox:increment()
   if val >= self.max then
     val = self.max
   end
+  self.oldValue = self.value
   self.value = val
   self.displayLabel:echo(val)
   self:applyStyles()
+  self:handleCallBacks()
 end
 
 --- Used to decrement the value by the delta amount  
@@ -242,9 +254,11 @@ function spinbox:decrement()
   if val <= self.min then
     val = self.min
   end
+  self.oldValue = self.value
   self.value = val
   self.displayLabel:echo(val)
   self:applyStyles()
+  self:handleCallBacks()
 end
 
 --- Used to directly set the value of the spinbox.  
@@ -262,9 +276,11 @@ function spinbox:setValue(value)
   elseif value <= self.min then
     value = self.min
   end
+  self.oldValue = self.value
   self.value = value
   self.displayLabel:echo(value)
   self:applyStyles()
+  self:handleCallBacks()
 end
 
 --- Obtains the up and down arrow images for the spinbox.  
@@ -437,6 +453,29 @@ function spinbox:setInactiveButtonColor(color)
   self.inactiveButtonColor = hex
   self.inactiveStyle:set("background-color", hex)
   self:applyStyles()
+end
+
+-- internal function that handles calling a registered callback and raising an event any time the
+-- spinbox value is changed, whether using the buttons or the :set function.
+function spinbox:handleCallBacks()
+  raiseEvent("spinbox updated", self.name, self.value, self.oldValue)
+  if self.callBack then
+    local ok, err = pcall(self.callBack, self.name, self.value, self.oldValue)
+    if not ok then
+      printError(f"Had an issue running the callback handler for spinbox named {self.name}: {err}", true, true)
+    end
+  end
+end
+
+--- Set a callback function for the spinbox to call any time the value of the spinbox is changed
+-- the function will be called as func(self.value, self.name)
+function spinbox:setCallBack(func)
+  local funcType = type(func)
+  if funcType ~= "function" then
+    printError(f"spinbox:setCallBack(func): func as function required, got {funcType}", true, true)
+  end
+  self.callBack = func
+  return true
 end
 
 return spinbox
