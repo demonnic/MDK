@@ -1284,4 +1284,203 @@ end
 DemonTools.htmlHeader = htmlHeader
 DemonTools.htmlHeaderPattern = htmlHeaderPattern
 
+local echoOutputs = {
+  Color = {
+    ["\27reset"] = "<reset>",
+    ["\27bold"] = "<b>",
+    ["\27boldoff"] = "</b>",
+    ["\27italics"] = "<i>",
+    ["\27italicsoff"] = "</i>",
+    ["\27underline"] = "<u>",
+    ["\27underlineoff"] = "</u>",
+    ["\27strikethrough"] = "<s>",
+    ["\27strikethroughoff"] = "</s>",
+    ["\27overline"] = "<o>",
+    ["\27overlineoff"] = "</o>",
+  },
+  Decimal = {
+    ["\27reset"] = "<r>",
+    ["\27bold"] = "<b>",
+    ["\27boldoff"] = "</b>",
+    ["\27italics"] = "<i>",
+    ["\27italicsoff"] = "</i>",
+    ["\27underline"] = "<u>",
+    ["\27underlineoff"] = "</u>",
+    ["\27strikethrough"] = "<s>",
+    ["\27strikethroughoff"] = "</s>",
+    ["\27overline"] = "<o>",
+    ["\27overlineoff"] = "</o>",
+  },
+  Hex = {
+    ["\27reset"] = "#r",
+    ["\27bold"] = "#b",
+    ["\27boldoff"] = "#/b",
+    ["\27italics"] = "#i",
+    ["\27italicsoff"] = "#/i",
+    ["\27underline"] = "#u",
+    ["\27underlineoff"] = "#/u",
+    ["\27strikethrough"] = "#s",
+    ["\27strikethroughoff"] = "#/s",
+    ["\27overline"] = "#o",
+    ["\27overlineoff"] = "#/o",
+  }
+}
+
+local echoPatterns = _Echos.Patterns
+local echoProcess = _Echos.Process
+
+function DemonTools.toHTML(t, reset)
+  reset = reset or {
+    background = { 0, 0, 0 },
+    bold = false,
+    foreground = { 255, 255, 255 },
+    italic = false,
+    overline = false,
+    reverse = false,
+    strikeout = false,
+    underline = false
+  }
+  local format = table.deepcopy(reset)
+  local result = getHTMLformat(format)
+  for _,v in ipairs(t) do
+    local formatChanged = false
+    if type(v) == "table" then
+      if v.fg then
+        format.foreground = {v.fg[1], v.fg[2], v.fg[3]}
+        formatChanged = true
+      end
+      if v.bg then
+        format.background = {v.bg[1], v.bg[2], v.bg[3]}
+        formatChanged = true
+      end
+    elseif v == "\27bold" then
+      format.bold = true
+      formatChanged = true
+    elseif v == "\27boldoff" then
+      format.bold = false
+      formatChanged = true
+    elseif v == "\27italics" then
+      format.italic = true
+      formatChanged = true
+    elseif v == "\27italicsoff" then
+      format.italic = false
+      formatChanged = true
+    elseif v == "\27underline" then
+      format.underline = true
+      formatChanged = true
+    elseif v == "\27underlineoff" then
+      format.underline = false
+      formatChanged = true
+    elseif v == "\27strikethrough" then
+      format.strikeout = true
+      formatChanged = true
+    elseif v == "\27strikethroughoff" then
+      format.strikeout = false
+      formatChanged = true
+    elseif v == "\27overline" then
+      format.overline = true
+      formatChanged = true
+    elseif v == "\27overlineoff" then
+      format.overline = false
+      formatChanged = true
+    elseif v == "\27reset" then
+      format = table.deepcopy(reset)
+      formatChanged = true
+    end
+    v = formatChanged and getHTMLformat(format) or v
+    result = result .. v
+  end
+  return result
+end
+
+local function toEcho(colorType, colors)
+  colorType = colorType:lower()
+  local result
+  if colorType == "hex" then
+    local fg,bg = "", ""
+    if colors.fg then
+      fg = string.format("%02x%02x%02x", unpack(colors.fg))
+    end
+    if colors.bg then
+      bg = string.format(",%02x%02x%02x", unpack(colors.bg))
+    end
+    result = string.format("#%s%s", fg, bg)
+  elseif colorType == "color" then
+    local fg,bg = "",""
+    if colors.fg then
+      fg = closestColor(colors.fg)
+    end
+    if colors.bg then
+      bg = ":" .. closestColor(colors.bg[1], colors.bg[2], colors.bg[3])
+    end
+    result = string.format("<%s%s>", fg, bg)
+  elseif colorType == "decimal" then
+    local fg,bg = "", ""
+    if colors.fg then
+      fg = string.format("%d,%d,%d", unpack(colors.fg))
+    end
+    if colors.bg then
+      bg = string.format(":%d,%d,%d", unpack(colors.bg))
+    end
+    result = string.format("<%s%s>", fg, bg)
+  end
+  return result
+end
+
+function DemonTools.echoConverter(str, from, to, resetFormat)
+  local strType, fromType, toType, resetType = type(str), type(from), type(to), type(resetFormat)
+  local errTemplate = "bad argument #{argNum} type ({argName} as string expected, got {argType})"
+  local argNum, argName, argType
+  local err = false
+  if strType ~= "string" then
+    argNum = 1
+    argName = "str"
+    argType = strType
+    err = true
+  elseif fromType ~= "string" then
+    argNum = 2
+    argName = "from"
+    argType = fromType
+    err = true
+  elseif toType ~= "string" then
+    argNum = 3
+    argName = "to"
+    argType = toType
+    err = true
+  elseif resetFormat and resetType ~= "table" then
+    argType = resetType
+    errTemplate = "bad argument #4 type (optional resetFormat as table of formatting options expected, got {argType})"
+    err = true
+  end
+  if err then
+    printError(f(errTemplate), true, true)
+  end
+  from = from:title()
+  local t = echoProcess(str, from)
+  if not echoPatterns[from] then
+    local msg = "argument #4 (from) must be a valid echo type. Valid types are: " .. table.concat(table.keys(echoPatterns), ",")
+  end
+  local processed = echoProcess(str, from)
+  if to:lower() == "html" then
+    return DemonTools.toHTML(processed, resetFormat)
+  end
+  local outputs = echoOutputs[to]
+  if not outputs then
+    local msg = "argument #3 (to) must be a valid echo type. Valid types are: " .. table.concat(table.keys(echoOutputs), ",")
+    printError(msg, true, true)
+  end
+  local result = ""
+  for _, token in ipairs(processed) do
+    local formatter = outputs[token]
+    if formatter and token:find("\27") then
+      result = result .. formatter
+    elseif type(token) == "table" then
+      result = result .. toEcho(to, token)
+    else
+      result = result .. token
+    end
+  end
+  return result
+end
+
 return DemonTools
