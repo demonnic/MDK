@@ -360,6 +360,11 @@ end
 --     <td class="tg-1">If true, EMCO will send notifications even if Mudlet has focus. If false, it will only send them when Mudlet does NOT have focus.</td>
 --     <td class="tg-1">false</td>
 --   </tr>
+--   <tr>
+--     <td class="tg-1">newTabOnEcho</td>
+--     <td class="tg-1">If true, EMCO will create a new tab if it doesn't exist. If false, it will throw an error.</td>
+--     <td class="tg-1">false</td>
+--   </tr>
 -- </tbody>
 -- </table>
 -- @tparam GeyserObject container The container to use as the parent for the EMCO
@@ -470,6 +475,7 @@ function EMCO:new(cons, container)
   if me:fuzzyBoolean(cons.notifyWithFocus) then
     self:enableNotifyWithFocus()
   end
+  me.newTabOnEcho = me:fuzzyBoolean(cons.newTabOnEcho) and true or false
   me:reset()
   if me.allTab then
     me:setAllTabName(me.allTabName or me.consoles[1])
@@ -1679,8 +1685,8 @@ function EMCO:checkEchoArgs(funcName, tabName, message, excludeAll)
     ae(funcName, "tabName as string expected, got " .. tabNameType)
   elseif messageType ~= "string" then
     ae(funcName, "message as string expected, got " .. messageType)
-  elseif not validTabName then
-    ae(funcName, "tabName must be the name of a tab attached to this object. Valid names are: " .. table.concat(self.consoles, ","))
+  elseif not validTabName and not self.newTabOnEcho then
+    ae(funcName, "tabName must be the name of a tab attached to this object. If you want to create the tab on the fly, set newTabOnEcho to true. Valid names are: " .. table.concat(self.consoles, ","))
   elseif excludeAllType ~= "nil" and excludeAllType ~= "boolean" then
     ae(funcName, "optional argument excludeAll expected as boolean, got " .. excludeAllType)
   end
@@ -1783,6 +1789,10 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     error("You cannot send text to the Map tab")
   end
   local console = self.mc[tabName]
+  if console == nil and self.newTabOnEcho then
+      self:addTab(tabName)
+      console = self.mc[tabName]
+  end
   local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and
                    self.mc[self.allTabName] or false
   local ofr, ofg, ofb, obr, obg, obb
@@ -2215,6 +2225,7 @@ function EMCO:save()
     gags = self.gags,
     notifyTabs = self.notifyTabs,
     notifyWithFocus = self.notifyWithFocus,
+    newTabOnEcho = self.newTabOnEcho,
     cmdLineStyleSheet = self.cmdLineStyleSheet,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
@@ -2285,6 +2296,7 @@ function EMCO:load()
   self.gags = configTable.gags
   self.notifyTabs = configTable.notifyTabs
   self.notifyWithFocus = configTable.notifyWithFocus
+  self.newTabOnEcho = configTable.newTabOnEcho
   self.cmdLineStyleSheet = configTable.cmdLineStyleSheet
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
