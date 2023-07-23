@@ -1045,6 +1045,12 @@ end
 --- resets the object, redrawing everything
 function EMCO:reset()
   self:createContainers()
+
+  if next(self.consoles) == nil then
+    -- Stop execution if there are no consoles, this happens if EMCO is initialized by passing an empty table into consoles property
+    return
+  end
+
   for _, tabName in ipairs(self.consoles) do
     self:createComponentsForTab(tabName)
   end
