@@ -657,11 +657,11 @@ function EMCO:addTab(tabName, position)
   end
   if position == 0 then
     table.insert(self.consoles, tabName)
-    self:createComponentsForTab(tabName)
   else
     table.insert(self.consoles, position, tabName)
-    self:reset()
   end
+    self:reset()
+    self:switchTab(tabName)
 end
 
 --- Switches the active, visible tab of the EMCO to tabName
@@ -1032,6 +1032,8 @@ function EMCO:reset()
     self:createComponentsForTab(tabName)
   end
 
+  self.tabBox:organize()
+
   local default = self.allTabName or self.consoles[1]
   self:switchTab(default)
 end
@@ -1041,7 +1043,7 @@ function EMCO:createContainers()
     x = 0,
     y = 0,
     width = "100%",
-    height = tostring(tonumber(self.tabHeight) + 2) .. "px",
+    height = tostring(tonumber(self.tabHeight)) .. "px",
     name = self.name .. "TabBoxLabel",
   }, self)
   self.tabBox = Geyser.HBox:new({x = 0, y = 0, width = "100%", height = "100%", name = self.name .. "TabBox"}, self.tabBoxLabel)
