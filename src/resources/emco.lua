@@ -660,8 +660,8 @@ function EMCO:addTab(tabName, position)
   else
     table.insert(self.consoles, position, tabName)
   end
-    self:reset()
-    self:switchTab(tabName)
+  self:reset()
+  self:switchTab(tabName)
 end
 
 --- Switches the active, visible tab of the EMCO to tabName
