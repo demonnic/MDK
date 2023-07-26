@@ -34,49 +34,49 @@ end
 --  <th>default</th>
 -- </tr>
 -- <tr>
---  <td class="tg-1">active</td>
---  <td class="tg-1">boolean, if true starts the timer updating</td>
---  <td class="tg-1">true</td>
+--  <td>active</td>
+--  <td>boolean, if true starts the timer updating</td>
+--  <td>true</td>
 -- </tr>
 -- <tr>
---  <td class="tg-2">updateTime</td>
---  <td class="tg-2">How often should the gauge autoupdate? Milliseconds. 0 to disable the timer but still allow event updates</td>
---  <td class="tg-2">333</td>
+--  <td>updateTime</td>
+--  <td>How often should the gauge autoupdate? Milliseconds. 0 to disable the timer but still allow event updates</td>
+--  <td>333</td>
 -- </tr>
 -- <tr>
---  <td class="tg-1">currentVariable</td>
---  <td class="tg-1">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "currentHP" or "gmcp.Char.Vitals.hp"</td>
---  <td class="tg-1">""</td>
+--  <td>currentVariable</td>
+--  <td>What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "currentHP" or "gmcp.Char.Vitals.hp"</td>
+--  <td>""</td>
 -- </tr>
 -- <tr>
---  <td class="tg-2">maxVariable</td>
---  <td class="tg-2">What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "maxHP" or "gmcp.Char.Vitals.maxhp"</td>
---  <td class="tg-2">""</td>
+--  <td>maxVariable</td>
+--  <td>What variable will hold the 'current' value of the gauge? Pass the name as a string, IE "maxHP" or "gmcp.Char.Vitals.maxhp"</td>
+--  <td>""</td>
 -- </tr>
 -- <tr>
---  <td class="tg-1">textTemplate</td>
---  <td class="tg-1">Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
---  <td class="tg-1">" |c/|m |p%"</td>
+--  <td>textTemplate</td>
+--  <td>Template to use for the text on the gauge. "|c" replaced with current value, "|m" replaced with max value, "|p" replaced with the % full the gauge should be</td>
+--  <td>" |c/|m |p%"</td>
 -- </tr>
 -- <tr>
---  <td class="tg-2">defaultCurrent</td>
---  <td class="tg-2">What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
---  <td class="tg-2">50</td>
+--  <td>defaultCurrent</td>
+--  <td>What value to use if the currentVariable points to nil or something which cannot be made a number?</td>
+--  <td>50</td>
 -- </tr>
 -- <tr>
---  <td class="tg-1">defaultMax</td>
---  <td class="tg-1">What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
---  <td class="tg-1">100</td>
+--  <td>defaultMax</td>
+--  <td>What value to use if the maxVariable points to nil or something which cannot be made a number?</td>
+--  <td>100</td>
 -- </tr>
 -- <tr>
---  <td class="tg-2">updateEvent</td>
---  <td class="tg-2">The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
---  <td class="tg-2">""</td>
+--  <td>updateEvent</td>
+--  <td>The name of an event to listen for to perform an update. Can be run alongside or instead of the timer updates. Empty string to turn off</td>
+--  <td>""</td>
 -- </tr>
 -- <tr>
---  <td class="tg-1">updateHook</td>
---  <td class="tg-1">A function which is run each time the gauge updates. Should take 3 arguments, the gauge itself, current value, and max value. You can return new current and max values to be used, for example `return 34, 120` would cause the gauge to use 34 for current and 120 for max regardless of what the variables it reads say.</td>
---  <td class="tg-1"></td>
+--  <td>updateHook</td>
+--  <td>A function which is run each time the gauge updates. Should take 3 arguments, the gauge itself, current value, and max value. You can return new current and max values to be used, for example `return 34, 120` would cause the gauge to use 34 for current and 120 for max regardless of what the variables it reads say.</td>
+--  <td></td>
 -- </tr>
 -- </table>
 -- @param container The Geyser container for this gauge

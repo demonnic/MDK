@@ -22,24 +22,24 @@ local LoggingConsole = {log = true, logFormat = "h", path = "|h/log/consoleLogs/
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">log</td>
---     <td class="tg-1">Should the miniconsole be logging?</td>
---     <td class="tg-1">true</td>
+--     <td>log</td>
+--     <td>Should the miniconsole be logging?</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">logFormat</td>
---     <td class="tg-2">"h" for html, "t" for plaintext, "l" for log (with ansi)</td>
---     <td class="tg-2">h</td>
+--     <td>logFormat</td>
+--     <td>"h" for html, "t" for plaintext, "l" for log (with ansi)</td>
+--     <td>h</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">path</td>
---     <td class="tg-1">The path the file lives in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)</td>
---     <td class="tg-1">"|h/log/consoleLogs/|y/|m/|d/"</td>
+--     <td>path</td>
+--     <td>The path the file lives in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|n by the name constraint<br>|e by the file extension (html for h logType, log for others)</td>
+--     <td>"|h/log/consoleLogs/|y/|m/|d/"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">fileName</td>
---     <td class="tg-2">The name of the log file. It is templated, same as path above</td>
---     <td class="tg-2">"|n.|e"</td>
+--     <td>fileName</td>
+--     <td>The name of the log file. It is templated, same as path above</td>
+--     <td>"|n.|e"</td>
 --   </tr>
 -- </tbody>
 -- </table>
