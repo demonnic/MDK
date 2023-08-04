@@ -633,7 +633,7 @@ function EMCO:removeTab(tabName)
     if self.allTab and self.allTabName then
       self:switchTab(self.allTabName)
     else
-      self:switchTab(self.consoles[1])
+      self:cycleTab()
     end
   end
   table.remove(self.consoles, table.index_of(self.consoles, tabName))
@@ -675,7 +675,7 @@ end
 function EMCO:switchTab(tabName)
   local oldTab = self.currentTab
   self.currentTab = tabName
-  if oldTab ~= tabName and oldTab ~= "" then
+  if oldTab ~= tabName and oldTab ~= "" and self.mc[oldTab] then
     self.mc[oldTab]:hide()
     self:adjustTabBackground(oldTab)
     self.tabs[oldTab]:echo(oldTab, self.inactiveTabFGColor)
@@ -712,6 +712,17 @@ function EMCO:cycleTab(reverse)
   self:switchTab(consoles[cycleIndex])
 end
 
+--- Handles the click on a tab, by default left click changes the tab, middle click removes it
+-- @param tabName string the name of the tab to show
+-- @param mouseClickEvent A table passed in when called by setClickCallback
+function EMCO:handleTabClick(tabName, onClickEvent)
+  if onClickEvent.button == "LeftButton" then
+    self:switchTab(tabName)
+  elseif onClickEvent.button == "MidButton" then
+    self:removeTab(tabName)
+  end
+end
+
 function EMCO:createComponentsForTab(tabName)
   local tab = Geyser.Label:new({name = string.format("%sTab%s", self.name, tabName)}, self.tabBox)
   if self.tabFont then
@@ -722,7 +733,7 @@ function EMCO:createComponentsForTab(tabName)
   tab:setItalics(self.tabItalics)
   tab:setBold(self.tabBold)
   tab:setUnderline(self.tabUnderline)
-  tab:setClickCallback(self.switchTab, self, tabName)
+  tab:setClickCallback(self.handleTabClick, self, tabName)
   self.tabs[tabName] = tab
   self:adjustTabBackground(tabName)
   tab:echo(tabName, self.inactiveTabFGColor)
