@@ -33,14 +33,14 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">name</td>
---     <td class="tg-1">The name of the revisionator. This is absolutely required, as the name is used for tracking the currently applied patch level</td>
---     <td class="tg-1">raises an error if not provided</td>
+--     <td>name</td>
+--     <td>The name of the revisionator. This is absolutely required, as the name is used for tracking the currently applied patch level</td>
+--     <td>raises an error if not provided</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">patches</td>
---     <td class="tg-2">A table of patch functions. It is traversed using ipairs, so must be in the form of {function1, function2, function3} etc. If you do not provide it, you can add the patches by calling :addPatch for each patch in order.</td>
---     <td class="tg-2">{}</td>
+--     <td>patches</td>
+--     <td>A table of patch functions. It is traversed using ipairs, so must be in the form of {function1, function2, function3} etc. If you do not provide it, you can add the patches by calling :addPatch for each patch in order.</td>
+--     <td>{}</td>
 --   </tr>
 --</tbody>
 --</table>

@@ -19,69 +19,69 @@ local TextGauge = {width = 24, fillCharacter = ":", emptyCharacter = "-", showPe
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">width</td>
---     <td class="tg-1">How many characters wide to make the gauge</td>
---     <td class="tg-1">24</td>
+--     <td>width</td>
+--     <td>How many characters wide to make the gauge</td>
+--     <td>24</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">fillCharacter</td>
---     <td class="tg-2">What character to use for the 'full' part of the gauge</td>
---     <td class="tg-2">:</td>
+--     <td>fillCharacter</td>
+--     <td>What character to use for the 'full' part of the gauge</td>
+--     <td>:</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">overflowCharacter</td>
---     <td class="tg-1">What character to use for >100% part of the gauge</td>
---     <td class="tg-1">if not set, it uses whatever you set fillCharacter to</td>
+--     <td>overflowCharacter</td>
+--     <td>What character to use for >100% part of the gauge</td>
+--     <td>if not set, it uses whatever you set fillCharacter to</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">emptyCharacter</td>
---     <td class="tg-2">What character to use for the 'empty' part of the gauge</td>
---     <td class="tg-2">-</td>
+--     <td>emptyCharacter</td>
+--     <td>What character to use for the 'empty' part of the gauge</td>
+--     <td>-</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">showPercentSymbol</td>
---     <td class="tg-1">Should we show the % sign itself?</td>
---     <td class="tg-1">true</td>
+--     <td>showPercentSymbol</td>
+--     <td>Should we show the % sign itself?</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">showPercent</td>
---     <td class="tg-2">Should we show what % of the gauge is filled?</td>
---     <td class="tg-2">true</td>
+--     <td>showPercent</td>
+--     <td>Should we show what % of the gauge is filled?</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">value</td>
---     <td class="tg-1">How much of the gauge should be filled</td>
---     <td class="tg-1">50</td>
+--     <td>value</td>
+--     <td>How much of the gauge should be filled</td>
+--     <td>50</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">format</td>
---     <td class="tg-2">What type of color formatting to use? 'c' for cecho, 'd' for decho, 'h' for hecho</td>
---     <td class="tg-2">c</td>
+--     <td>format</td>
+--     <td>What type of color formatting to use? 'c' for cecho, 'd' for decho, 'h' for hecho</td>
+--     <td>c</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">fillColor</td>
---     <td class="tg-1">What color to make the full part of the bar?</td>
---     <td class="tg-1">"DarkOrange" or equivalent for your format type</td>
+--     <td>fillColor</td>
+--     <td>What color to make the full part of the bar?</td>
+--     <td>"DarkOrange" or equivalent for your format type</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">emptyColor</td>
---     <td class="tg-2">what color to use for the empty part of the bar?</td>
---     <td class="tg-2">"white" or format appropriate equivalent</td>
+--     <td>emptyColor</td>
+--     <td>what color to use for the empty part of the bar?</td>
+--     <td>"white" or format appropriate equivalent</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">percentColor</td>
---     <td class="tg-1">What color to print the percentage numvers in, if shown?</td>
---     <td class="tg-1">"white" or fortmat appropriate equivalent</td>
+--     <td>percentColor</td>
+--     <td>What color to print the percentage numvers in, if shown?</td>
+--     <td>"white" or fortmat appropriate equivalent</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">percentSymbolColor</td>
---     <td class="tg-2">What color to make the % if shown?</td>
---     <td class="tg-2">If not set, uses what percentColor is set to.</td>
+--     <td>percentSymbolColor</td>
+--     <td>What color to make the % if shown?</td>
+--     <td>If not set, uses what percentColor is set to.</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">overflowColor</td>
---     <td class="tg-1">What color to make the >100% portion of the bar?</td>
---     <td class="tg-1">If not set, will use the same color as fillColor</td>
+--     <td>overflowColor</td>
+--     <td>What color to make the >100% portion of the bar?</td>
+--     <td>If not set, will use the same color as fillColor</td>
 --   </tr>
 -- </tbody>
 -- </table>

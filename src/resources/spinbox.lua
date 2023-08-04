@@ -39,48 +39,48 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">min</td>
---     <td class="tg-1">The minimum value for this spinbox</td>
---     <td class="tg-1">0</td>
+--     <td>min</td>
+--     <td>The minimum value for this spinbox</td>
+--     <td>0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">max</td>
---     <td class="tg-2">The maximum value for this spinbox</td>
---     <td class="tg-2">10</td>
+--     <td>max</td>
+--     <td>The maximum value for this spinbox</td>
+--     <td>10</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">activeButtonColor</td>
---     <td class="tg-1">The color the up/down buttons should be when they are active/able to be used</td>
---     <td class="tg-1">gray</td>
+--     <td>activeButtonColor</td>
+--     <td>The color the up/down buttons should be when they are active/able to be used</td>
+--     <td>gray</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">inactiveButtonColor</td>
---     <td class="tg-2">The color the up/down buttons should be when they are inactive/unable to be used</td>
---     <td class="tg-2">dimgray</td>
+--     <td>inactiveButtonColor</td>
+--     <td>The color the up/down buttons should be when they are inactive/unable to be used</td>
+--     <td>dimgray</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">integer</td>
---     <td class="tg-1">Boolean value. When true, values must always be integers (no decimal place)</td>
---     <td class="tg-1">true</td>
+--     <td>integer</td>
+--     <td>Boolean value. When true, values must always be integers (no decimal place)</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">delta</td>
---     <td class="tg-2">The amount to change the spinbox's value when the up or down button is pressed.</td>
---     <td class="tg-2">1</td>
+--     <td>delta</td>
+--     <td>The amount to change the spinbox's value when the up or down button is pressed.</td>
+--     <td>1</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">upArrowLocation</td>
---     <td class="tg-1">The location of the up arrow image. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
---     <td class="tg-1">https://demonnic.github.io/image-assets/uparrow.png</td>
+--     <td>upArrowLocation</td>
+--     <td>The location of the up arrow image. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
+--     <td>https://demonnic.github.io/image-assets/uparrow.png</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">downArrowLocation</td>
---     <td class="tg-2">The location of the down arrow image. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
---     <td class="tg-2">https://demonnic.github.io/image-assets/downarrow.png</td>
+--     <td>downArrowLocation</td>
+--     <td>The location of the down arrow image. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
+--     <td>https://demonnic.github.io/image-assets/downarrow.png</td>
 --   <tr>
---     <td class="tg-1">callBack</td>
---     <td class="tg-1">The function to run when the spinbox's value is updated. Is called with parameters (self.name, value, oldValue)</td>
---     <td class="tg-1">nil</td>
+--     <td>callBack</td>
+--     <td>The function to run when the spinbox's value is updated. Is called with parameters (self.name, value, oldValue)</td>
+--     <td>nil</td>
 --   </tr>
 --   </tr>
 --</tbody>

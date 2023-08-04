@@ -42,39 +42,39 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">places</td>
---     <td class="tg-1">How many spots in the code we're breaking?</td>
---     <td class="tg-1">4</td>
+--     <td>places</td>
+--     <td>How many spots in the code we're breaking?</td>
+--     <td>4</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">items</td>
---     <td class="tg-2">The table of colors/gemstones/whatever which can be part of the code</td>
---     <td class="tg-2">{"red", "orange", "yellow", "green", "blue", "purple"}</td>
+--     <td>items</td>
+--     <td>The table of colors/gemstones/whatever which can be part of the code</td>
+--     <td>{"red", "orange", "yellow", "green", "blue", "purple"}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">template</td>
---     <td class="tg-1">The string template to use for the guess. Within the template, |t is replaced by the item. Used as the command if autoSend is true</td>
---     <td class="tg-1">"|t"</td>
+--     <td>template</td>
+--     <td>The string template to use for the guess. Within the template, |t is replaced by the item. Used as the command if autoSend is true</td>
+--     <td>"|t"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">autoSend</td>
---     <td class="tg-2">Should we send the guess directly to the server?</td>
---     <td class="tg-2">false</td>
+--     <td>autoSend</td>
+--     <td>Should we send the guess directly to the server?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">allowDuplicates</td>
---     <td class="tg-1">Can the same item be used more than once in a code?</td>
---     <td class="tg-1">true</td>
+--     <td>allowDuplicates</td>
+--     <td>Can the same item be used more than once in a code?</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">singleCommand</td>
---     <td class="tg-2">If true, combines the guess into a single command, with each one separated by the separator</td>
---     <td class="tg-2">false</td>
+--     <td>singleCommand</td>
+--     <td>If true, combines the guess into a single command, with each one separated by the separator</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">separator</td>
---     <td class="tg-1">If sending the guess as a single command, what should we put between the guesses to separate them?</td>
---     <td class="tg-1">" "</td>
+--     <td>separator</td>
+--     <td>If sending the guess as a single command, what should we put between the guesses to separate them?</td>
+--     <td>" "</td>
 --   </tr>
 -- </tbody>
 -- </table>

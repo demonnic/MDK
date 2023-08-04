@@ -86,50 +86,50 @@ local htmlHeaderTemplate = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Tra
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">format</td>
---     <td class="tg-1">What format to log in? "h" for html, "a" for ansi, anything else for plaintext.</td>
---     <td class="tg-1">"h"</td>
+--     <td>format</td>
+--     <td>What format to log in? "h" for html, "a" for ansi, anything else for plaintext.</td>
+--     <td>"h"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">name</td>
---     <td class="tg-2">What is the name of the logger? Will replace |n in templates</td>
---     <td class="tg-2">logname</td>
+--     <td>name</td>
+--     <td>What is the name of the logger? Will replace |n in templates</td>
+--     <td>logname</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">level</td>
---     <td class="tg-1">What level should the logger operate at? This will control what level the log function defaults to, as well as what logs will actually be written<br>
+--     <td>level</td>
+--     <td>What level should the logger operate at? This will control what level the log function defaults to, as well as what logs will actually be written<br>
 --                        Only items of an equal or higher severity to this will be written to the log file.</td>
---     <td class="tg-1">"info"</td>
+--     <td>"info"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">bgColor</td>
---     <td class="tg-2">What background color to use for html logs</td>
---     <td class="tg-2">"black"</td>
+--     <td>bgColor</td>
+--     <td>What background color to use for html logs</td>
+--     <td>"black"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">fgColor</td>
---     <td class="tg-1">What color to use for the main text in html logs</td>
---     <td class="tg-1">"white"</td>
+--     <td>fgColor</td>
+--     <td>What color to use for the main text in html logs</td>
+--     <td>"white"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">fontSize</td>
---     <td class="tg-2">What font size to use in html logs</td>
---     <td class="tg-2">12</td>
+--     <td>fontSize</td>
+--     <td>What font size to use in html logs</td>
+--     <td>12</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">levelColors</td>
---     <td class="tg-1">Table with the log level as the key, and the color which corresponds to it as the value</td>
---     <td class="tg-1">{ error = "red", warn = "DarkOrange", info = "ForestGreen", debug = "ansi_yellow" }</td>
+--     <td>levelColors</td>
+--     <td>Table with the log level as the key, and the color which corresponds to it as the value</td>
+--     <td>{ error = "red", warn = "DarkOrange", info = "ForestGreen", debug = "ansi_yellow" }</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">fileNameTemplate</td>
---     <td class="tg-2">A template which will be transformed into the full filename, with path. See template options below for replacements</td>
---     <td class="tg-2">"|p/log/Loginator/|y-|M-|d-|n.|e"</td>
+--     <td>fileNameTemplate</td>
+--     <td>A template which will be transformed into the full filename, with path. See template options below for replacements</td>
+--     <td>"|p/log/Loginator/|y-|M-|d-|n.|e"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">entryTemplate</td>
---     <td class="tg-1">The template which controls the look of each log entry. See template options below for replacements</td>
---     <td class="tg-1">"|y-|M-|d |h:|m:|s.|x [|c|l|r] |t"</td>
+--     <td>entryTemplate</td>
+--     <td>The template which controls the look of each log entry. See template options below for replacements</td>
+--     <td>"|y-|M-|d |h:|m:|s.|x [|c|l|r] |t"</td>
 --   </tr>
 -- </tbody>
 -- </table><br>
@@ -144,69 +144,69 @@ local htmlHeaderTemplate = [=[  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Tra
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">|y</td>
---     <td class="tg-1">the year in 4 digits</td>
---     <td class="tg-1">2021</td>
+--     <td>|y</td>
+--     <td>the year in 4 digits</td>
+--     <td>2021</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|p</td>
---     <td class="tg-2">getMudletHomeDir()</td>
---     <td class="tg-2">/home/demonnic/.config/mudlet/profiles/testprofile</td>
+--     <td>|p</td>
+--     <td>getMudletHomeDir()</td>
+--     <td>/home/demonnic/.config/mudlet/profiles/testprofile</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|M</td>
---     <td class="tg-1">Month as 2 digits</td>
---     <td class="tg-1">05</td>
+--     <td>|M</td>
+--     <td>Month as 2 digits</td>
+--     <td>05</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|d</td>
---     <td class="tg-2">day, as 2 digits</td>
---     <td class="tg-2">23</td>
+--     <td>|d</td>
+--     <td>day, as 2 digits</td>
+--     <td>23</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|h</td>
---     <td class="tg-1">hour in 24hr time format, 2 digits</td>
---     <td class="tg-1">03</td>
+--     <td>|h</td>
+--     <td>hour in 24hr time format, 2 digits</td>
+--     <td>03</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|m</td>
---     <td class="tg-2">minute as 2 digits</td>
---     <td class="tg-2">42</td>
+--     <td>|m</td>
+--     <td>minute as 2 digits</td>
+--     <td>42</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|s</td>
---     <td class="tg-1">seconds as 2 digits</td>
---     <td class="tg-1">34</td>
+--     <td>|s</td>
+--     <td>seconds as 2 digits</td>
+--     <td>34</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|x</td>
---     <td class="tg-2">milliseconds as 3 digits</td>
---     <td class="tg-2">194</td>
+--     <td>|x</td>
+--     <td>milliseconds as 3 digits</td>
+--     <td>194</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|e</td>
---     <td class="tg-1">Filename extension expected. "html" for html format, "log" for everything else</td>
---     <td class="tg-1">html</td>
+--     <td>|e</td>
+--     <td>Filename extension expected. "html" for html format, "log" for everything else</td>
+--     <td>html</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|l</td>
---     <td class="tg-2">The logging level of the entry, in ALLCAPS</td>
---     <td class="tg-2">WARN</td>
+--     <td>|l</td>
+--     <td>The logging level of the entry, in ALLCAPS</td>
+--     <td>WARN</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|c</td>
---     <td class="tg-1">The color which corresponds with the logging level. Set via the levelColors table in the options. Example not included.</td>
---     <td class="tg-1"></td>
+--     <td>|c</td>
+--     <td>The color which corresponds with the logging level. Set via the levelColors table in the options. Example not included.</td>
+--     <td></td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">|r</td>
---     <td class="tg-2">Reset back to standard color. Used to close |c. Example not included</td>
---     <td class="tg-2"></td>
+--     <td>|r</td>
+--     <td>Reset back to standard color. Used to close |c. Example not included</td>
+--     <td></td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">|n</td>
---     <td class="tg-1">The name of the logger, set via the options when you have Loginator create it.</td>
---     <td class="tg-1">CoolPackageLog</td>
+--     <td>|n</td>
+--     <td>The name of the logger, set via the options when you have Loginator create it.</td>
+--     <td>CoolPackageLog</td>
 --   </tr>
 --</tbody>
 --</table>
