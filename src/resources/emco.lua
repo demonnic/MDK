@@ -85,280 +85,285 @@ end
 -- </thead>
 -- <tbody>
 --   <tr>
---     <td class="tg-1">timestamp</td>
---     <td class="tg-1">display timestamps on the miniconsoles?</td>
---     <td class="tg-1">false</td>
+--     <td>timestamp</td>
+--     <td>display timestamps on the miniconsoles?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">blankLine</td>
---     <td class="tg-2">put a blank line between appends/echos?</td>
---     <td class="tg-2">false</td>
+--     <td>blankLine</td>
+--     <td>put a blank line between appends/echos?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">scrollbars</td>
---     <td class="tg-1">enable scrollbars for the miniconsoles?</td>
---     <td class="tg-1">false</td>
+--     <td>scrollbars</td>
+--     <td>enable scrollbars for the miniconsoles?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">customTimestampColor</td>
---     <td class="tg-2">if showing timestamps, use a custom color?</td>
---     <td class="tg-2">false</td>
+--     <td>customTimestampColor</td>
+--     <td>if showing timestamps, use a custom color?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">mapTab</td>
---     <td class="tg-1">should we attach the Mudlet Mapper to this EMCO?</td>
---     <td class="tg-1">false</td>
+--     <td>mapTab</td>
+--     <td>should we attach the Mudlet Mapper to this EMCO?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">mapTabName</td>
---     <td class="tg-2">Which tab should we attach the map to?
+--     <td>mapTabName</td>
+--     <td>Which tab should we attach the map to?
 --                     <br>If mapTab is true and you do not set this, it will throw an error</td>
---     <td class="tg-2"></td>
+--     <td></td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">blinkFromAll</td>
---     <td class="tg-1">should tabs still blink, even if you're on the 'all' tab?</td>
---     <td class="tg-1">false</td>
+--     <td>blinkFromAll</td>
+--     <td>should tabs still blink, even if you're on the 'all' tab?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">preserveBackground</td>
---     <td class="tg-2">preserve the miniconsole background color during append()?</td>
---     <td class="tg-2">false</td>
+--     <td>preserveBackground</td>
+--     <td>preserve the miniconsole background color during append()?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">gag</td>
---     <td class="tg-1">when running :append(), should we also gag the line?</td>
---     <td class="tg-1">false</td>
+--     <td>gag</td>
+--     <td>when running :append(), should we also gag the line?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">timestampFormat</td>
---     <td class="tg-2">Format string for the timestamp. Uses getTime()</td>
---     <td class="tg-2">"HH:mm:ss"</td>
+--     <td>timestampFormat</td>
+--     <td>Format string for the timestamp. Uses getTime()</td>
+--     <td>"HH:mm:ss"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">timestampBGColor</td>
---     <td class="tg-1">Custom BG color to use for timestamps. Any valid Geyser.Color works.</td>
---     <td class="tg-1">"blue"</td>
+--     <td>timestampBGColor</td>
+--     <td>Custom BG color to use for timestamps. Any valid Geyser.Color works.</td>
+--     <td>"blue"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">timestampFGColor</td>
---     <td class="tg-2">Custom FG color to use for timestamps. Any valid Geyser.Color works</td>
---     <td class="tg-2">"red"</td>
+--     <td>timestampFGColor</td>
+--     <td>Custom FG color to use for timestamps. Any valid Geyser.Color works</td>
+--     <td>"red"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">allTab</td>
---     <td class="tg-1">Should we send everything to an 'all' tab?</td>
---     <td class="tg-1">false</td>
+--     <td>allTab</td>
+--     <td>Should we send everything to an 'all' tab?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">allTabName</td>
---     <td class="tg-2">And which tab should we use for the 'all' tab?</td>
---     <td class="tg-2">"All"</td>
+--     <td>allTabName</td>
+--     <td>And which tab should we use for the 'all' tab?</td>
+--     <td>"All"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">blink</td>
---     <td class="tg-1">Should we blink tabs that have been written to since you looked at them?</td>
---     <td class="tg-1">false</td>
+--     <td>blink</td>
+--     <td>Should we blink tabs that have been written to since you looked at them?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">blinkTime</td>
---     <td class="tg-2">How long to wait between blinks, in seconds?</td>
---     <td class="tg-2">3</td>
+--     <td>blinkTime</td>
+--     <td>How long to wait between blinks, in seconds?</td>
+--     <td>3</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">fontSize</td>
---     <td class="tg-1">What font size to use for the miniconsoles?</td>
---     <td class="tg-1">9</td>
+--     <td>fontSize</td>
+--     <td>What font size to use for the miniconsoles?</td>
+--     <td>9</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">font</td>
---     <td class="tg-2">What font to use for the miniconsoles?</td>
---     <td class="tg-2"></td>
+--     <td>font</td>
+--     <td>What font to use for the miniconsoles?</td>
+--     <td></td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">tabFont</td>
---     <td class="tg-1">What font to use for the tabs?</td>
---     <td class="tg-1"></td>
+--     <td>tabFont</td>
+--     <td>What font to use for the tabs?</td>
+--     <td></td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">activeTabCss</td>
---     <td class="tg-2">What css to use for the active tab?</td>
---     <td class="tg-2">""</td>
+--     <td>activeTabCss</td>
+--     <td>What css to use for the active tab?</td>
+--     <td>""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">inactiveTabCSS</td>
---     <td class="tg-1">What css to use for the inactive tabs?</td>
---     <td class="tg-1">""</td>
+--     <td>inactiveTabCSS</td>
+--     <td>What css to use for the inactive tabs?</td>
+--     <td>""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">activeTabFGColor</td>
---     <td class="tg-2">What color to use for the text on the active tab. Any Geyser.Color works.</td>
---     <td class="tg-2">"purple"</td>
+--     <td>activeTabFGColor</td>
+--     <td>What color to use for the text on the active tab. Any Geyser.Color works.</td>
+--     <td>"purple"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">inactiveTabFGColor</td>
---     <td class="tg-1">What color to use for the text on the inactive tabs. Any Geyser.Color works.</td>
---     <td class="tg-1">"white"</td>
+--     <td>inactiveTabFGColor</td>
+--     <td>What color to use for the text on the inactive tabs. Any Geyser.Color works.</td>
+--     <td>"white"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">activeTabBGColor</td>
---     <td class="tg-2">What BG color to use for the active tab? Any Geyser.Color works. Overriden by activeTabCSS</td>
---     <td class="tg-2">"<0,180,0>"</td>
+--     <td>activeTabBGColor</td>
+--     <td>What BG color to use for the active tab? Any Geyser.Color works. Overriden by activeTabCSS</td>
+--     <td>"<0,180,0>"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">inactiveTabBGColor</td>
---     <td class="tg-1">What BG color to use for the inactavie tabs? Any Geyser.Color works. Overridden by inactiveTabCSS</td>
---     <td class="tg-1">"<60,60,60>"</td>
+--     <td>inactiveTabBGColor</td>
+--     <td>What BG color to use for the inactavie tabs? Any Geyser.Color works. Overridden by inactiveTabCSS</td>
+--     <td>"<60,60,60>"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">consoleColor</td>
---     <td class="tg-2">Default background color for the miniconsoles. Any Geyser.Color works</td>
---     <td class="tg-2">"black"</td>
+--     <td>consoleColor</td>
+--     <td>Default background color for the miniconsoles. Any Geyser.Color works</td>
+--     <td>"black"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">tabBoxCSS</td>
---     <td class="tg-1">tss for the entire tabBox (not individual tabs)</td>
---     <td class="tg-1">""</td>
+--     <td>tabBoxCSS</td>
+--     <td>tss for the entire tabBox (not individual tabs)</td>
+--     <td>""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">tabBoxColor</td>
---     <td class="tg-2">What color to use for the tabBox? Any Geyser.Color works. Overridden by tabBoxCSS</td>
---     <td class="tg-2">"black"</td>
+--     <td>tabBoxColor</td>
+--     <td>What color to use for the tabBox? Any Geyser.Color works. Overridden by tabBoxCSS</td>
+--     <td>"black"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">consoleContainerCSS</td>
---     <td class="tg-1">CSS to use for the container holding the miniconsoles</td>
---     <td class="tg-1">""</td>
+--     <td>consoleContainerCSS</td>
+--     <td>CSS to use for the container holding the miniconsoles</td>
+--     <td>""</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">consoleContainerColor</td>
---     <td class="tg-2">Color to use for the container holding the miniconsole. Any Geyser.Color works. Overridden by consoleContainerCSS</td>
---     <td class="tg-2">"black"</td>
+--     <td>consoleContainerColor</td>
+--     <td>Color to use for the container holding the miniconsole. Any Geyser.Color works. Overridden by consoleContainerCSS</td>
+--     <td>"black"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">gap</td>
---     <td class="tg-1">How many pixels to place between the tabs and the miniconsoles?</td>
---     <td class="tg-1">1</td>
+--     <td>gap</td>
+--     <td>How many pixels to place between the tabs and the miniconsoles?</td>
+--     <td>1</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">consoles</td>
---     <td class="tg-2">List of the tabs for this EMCO in table format</td>
---     <td class="tg-2">{ "All" }</td>
+--     <td>consoles</td>
+--     <td>List of the tabs for this EMCO in table format</td>
+--     <td>{ "All" }</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">allTabExclusions</td>
---     <td class="tg-1">List of the tabs which should never echo to the 'all' tab in table format</td>
---     <td class="tg-1">{}</td>
+--     <td>allTabExclusions</td>
+--     <td>List of the tabs which should never echo to the 'all' tab in table format</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">tabHeight</td>
---     <td class="tg-2">How many pixels high should the tabs be?</td>
---     <td class="tg-2">25</td>
+--     <td>tabHeight</td>
+--     <td>How many pixels high should the tabs be?</td>
+--     <td>25</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">autoWrap</td>
---     <td class="tg-1">Use autoWrap for the miniconsoles?</td>
---     <td class="tg-1">true</td>
+--     <td>autoWrap</td>
+--     <td>Use autoWrap for the miniconsoles?</td>
+--     <td>true</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">wrapAt</td>
---     <td class="tg-2">How many characters to wrap it, if autoWrap is turned off?</td>
---     <td class="tg-2">300</td>
+--     <td>wrapAt</td>
+--     <td>How many characters to wrap it, if autoWrap is turned off?</td>
+--     <td>300</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">leftMargin</td>
---     <td class="tg-1">Number of pixels to put between the left edge of the EMCO and the miniconsole?</td>
---     <td class="tg-1">0</td>
+--     <td>leftMargin</td>
+--     <td>Number of pixels to put between the left edge of the EMCO and the miniconsole?</td>
+--     <td>0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">rightMargin</td>
---     <td class="tg-2">Number of pixels to put between the right edge of the EMCO and the miniconsole?</td>
---     <td class="tg-2">0</td>
+--     <td>rightMargin</td>
+--     <td>Number of pixels to put between the right edge of the EMCO and the miniconsole?</td>
+--     <td>0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">bottomMargin</td>
---     <td class="tg-1">Number of pixels to put between the bottom edge of the EMCO and the miniconsole?</td>
---     <td class="tg-1">0</td>
+--     <td>bottomMargin</td>
+--     <td>Number of pixels to put between the bottom edge of the EMCO and the miniconsole?</td>
+--     <td>0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">topMargin</td>
---     <td class="tg-2">Number of pixels to put between the top edge of the miniconsole container, and the miniconsole? This is in addition to gap</td>
---     <td class="tg-2">0</td>
+--     <td>topMargin</td>
+--     <td>Number of pixels to put between the top edge of the miniconsole container, and the miniconsole? This is in addition to gap</td>
+--     <td>0</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">timestampExceptions</td>
---     <td class="tg-1">Table of tabnames which should not get timestamps even if timestamps are turned on</td>
---     <td class="tg-1">{}</td>
+--     <td>timestampExceptions</td>
+--     <td>Table of tabnames which should not get timestamps even if timestamps are turned on</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">tabFontSize</td>
---     <td class="tg-2">Font size for the tabs</td>
---     <td class="tg-2">8</td>
+--     <td>tabFontSize</td>
+--     <td>Font size for the tabs</td>
+--     <td>8</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">tabBold</td>
---     <td class="tg-1">Should the tab text be bold? Boolean value</td>
---     <td class="tg-1">false</td>
+--     <td>tabBold</td>
+--     <td>Should the tab text be bold? Boolean value</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">tabItalics</td>
---     <td class="tg-2">Should the tab text be italicized?</td>
---     <td class="tg-2">false</td>
+--     <td>tabItalics</td>
+--     <td>Should the tab text be italicized?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">tabUnderline</td>
---     <td class="tg-1">Should the tab text be underlined?</td>
---     <td class="tg-1">false</td>
+--     <td>tabUnderline</td>
+--     <td>Should the tab text be underlined?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">tabAlignment</td>
---     <td class="tg-2">Valid alignments are 'c', 'center', 'l', 'left', 'r', 'right', or '' to not include the alignment as part of the echo (to allow the stylesheet to handle it)</td>
---     <td class="tg-2">'c'</td>
+--     <td>tabAlignment</td>
+--     <td>Valid alignments are 'c', 'center', 'l', 'left', 'r', 'right', or '' to not include the alignment as part of the echo (to allow the stylesheet to handle it)</td>
+--     <td>'c'</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">commandLine</td>
---     <td class="tg-1">Should we enable commandlines for the miniconsoles?</td>
---     <td class="tg-1">false</td>
+--     <td>commandLine</td>
+--     <td>Should we enable commandlines for the miniconsoles?</td>
+--     <td>false</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">cmdActions</td>
---     <td class="tg-2">A table with console names as keys, and values which are templates for the command to send. see the setCustomCommandline function for more</td>
---     <td class="tg-2">{}</td>
+--     <td>cmdActions</td>
+--     <td>A table with console names as keys, and values which are templates for the command to send. see the setCustomCommandline function for more</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">cmdLineStyleSheet</td>
---     <td class="tg-1">What stylesheet to use for the command lines.</td>
---     <td class="tg-1">"QPlainTextEdit {\n      border: 1px solid grey;\n    }\n"</td>
+--     <td>cmdLineStyleSheet</td>
+--     <td>What stylesheet to use for the command lines.</td>
+--     <td>"QPlainTextEdit {\n      border: 1px solid grey;\n    }\n"</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">backgroundImages</td>
---     <td class="tg-2">A table containing definitions for the background images. Each entry should have a key the same name as the tab it applies to, with entries "image" which is the path to the image file,<br>and "mode" which determines how it is displayed. "border" stretches, "center" center, "tile" tiles, and "style". See Mudletwikilink for details.</td>
---     <td class="tg-2">{}</td>
+--     <td>backgroundImages</td>
+--     <td>A table containing definitions for the background images. Each entry should have a key the same name as the tab it applies to, with entries "image" which is the path to the image file,<br>and "mode" which determines how it is displayed. "border" stretches, "center" center, "tile" tiles, and "style". See Mudletwikilink for details.</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">bufferSize</td>
---     <td class="tg-1">Number of lines of scrollback to keep for the miniconsoles</td>
---     <td class="tg-1">100000</td>
+--     <td>bufferSize</td>
+--     <td>Number of lines of scrollback to keep for the miniconsoles</td>
+--     <td>100000</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">deleteLines</td>
---     <td class="tg-2">Number of lines to delete if a console's buffer fills up.</td>
---     <td class="tg-2">1000</td>
+--     <td>deleteLines</td>
+--     <td>Number of lines to delete if a console's buffer fills up.</td>
+--     <td>1000</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">gags</td>
---     <td class="tg-1">A table of Lua patterns you wish to gag from being added to the EMCO. Useful for removing mob says and such example: {[[^A green leprechaun says, ".*"$]], "^Bob The Dark Lord of the Keep mutters darkly to himself.$"} see <a href="http://lua-users.org/wiki/PatternsTutorial">this tutorial</a> on Lua patterns for more information.</td>
---     <td class="tg-1">{}</td>
+--     <td>gags</td>
+--     <td>A table of Lua patterns you wish to gag from being added to the EMCO. Useful for removing mob says and such example: {[[^A green leprechaun says, ".*"$]], "^Bob The Dark Lord of the Keep mutters darkly to himself.$"} see <a href="http://lua-users.org/wiki/PatternsTutorial">this tutorial</a> on Lua patterns for more information.</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-2">notifyTabs</td>
---     <td class="tg-2">Tables containing the names of all tabs you want to send notifications. IE {"Says", "Tells", "Org"}</td>
---     <td class="tg-2">{}</td>
+--     <td>notifyTabs</td>
+--     <td>Tables containing the names of all tabs you want to send notifications. IE {"Says", "Tells", "Org"}</td>
+--     <td>{}</td>
 --   </tr>
 --   <tr>
---     <td class="tg-1">notifyWithFocus</td>
---     <td class="tg-1">If true, EMCO will send notifications even if Mudlet has focus. If false, it will only send them when Mudlet does NOT have focus.</td>
---     <td class="tg-1">false</td>
+--     <td>notifyWithFocus</td>
+--     <td>If true, EMCO will send notifications even if Mudlet has focus. If false, it will only send them when Mudlet does NOT have focus.</td>
+--     <td>false</td>
+--   </tr>
+--   <tr>
+--     <td>newTabOnEcho</td>
+--     <td>If true, EMCO will create a new tab if it doesn't exist. If false, it will throw an error.</td>
+--     <td>false</td>
 --   </tr>
 -- </tbody>
 -- </table>
@@ -470,6 +475,7 @@ function EMCO:new(cons, container)
   if me:fuzzyBoolean(cons.notifyWithFocus) then
     self:enableNotifyWithFocus()
   end
+  me.newTabOnEcho = me:fuzzyBoolean(cons.newTabOnEcho) and true or false
   me:reset()
   if me.allTab then
     me:setAllTabName(me.allTabName or me.consoles[1])
@@ -627,7 +633,7 @@ function EMCO:removeTab(tabName)
     if self.allTab and self.allTabName then
       self:switchTab(self.allTabName)
     else
-      self:switchTab(self.consoles[1])
+      self:cycleTab()
     end
   end
   table.remove(self.consoles, table.index_of(self.consoles, tabName))
@@ -657,11 +663,11 @@ function EMCO:addTab(tabName, position)
   end
   if position == 0 then
     table.insert(self.consoles, tabName)
-    self:createComponentsForTab(tabName)
   else
     table.insert(self.consoles, position, tabName)
-    self:reset()
   end
+  self:reset()
+  self:switchTab(tabName)
 end
 
 --- Switches the active, visible tab of the EMCO to tabName
@@ -669,7 +675,7 @@ end
 function EMCO:switchTab(tabName)
   local oldTab = self.currentTab
   self.currentTab = tabName
-  if oldTab ~= tabName and oldTab ~= "" then
+  if oldTab ~= tabName and oldTab ~= "" and self.mc[oldTab] then
     self.mc[oldTab]:hide()
     self:adjustTabBackground(oldTab)
     self.tabs[oldTab]:echo(oldTab, self.inactiveTabFGColor)
@@ -706,6 +712,17 @@ function EMCO:cycleTab(reverse)
   self:switchTab(consoles[cycleIndex])
 end
 
+--- Handles the click on a tab, by default left click changes the tab, middle click removes it
+-- @param tabName string the name of the tab to show
+-- @param mouseClickEvent A table passed in when called by setClickCallback
+function EMCO:handleTabClick(tabName, onClickEvent)
+  if onClickEvent.button == "LeftButton" then
+    self:switchTab(tabName)
+  elseif onClickEvent.button == "MidButton" then
+    self:removeTab(tabName)
+  end
+end
+
 function EMCO:createComponentsForTab(tabName)
   local tab = Geyser.Label:new({name = string.format("%sTab%s", self.name, tabName)}, self.tabBox)
   if self.tabFont then
@@ -716,7 +733,7 @@ function EMCO:createComponentsForTab(tabName)
   tab:setItalics(self.tabItalics)
   tab:setBold(self.tabBold)
   tab:setUnderline(self.tabUnderline)
-  tab:setClickCallback(self.switchTab, self, tabName)
+  tab:setClickCallback(self.handleTabClick, self, tabName)
   self.tabs[tabName] = tab
   self:adjustTabBackground(tabName)
   tab:echo(tabName, self.inactiveTabFGColor)
@@ -1032,6 +1049,8 @@ function EMCO:reset()
     self:createComponentsForTab(tabName)
   end
 
+  self.tabBox:organize()
+
   local default = self.allTabName or self.consoles[1]
   self:switchTab(default)
 end
@@ -1041,7 +1060,7 @@ function EMCO:createContainers()
     x = 0,
     y = 0,
     width = "100%",
-    height = tostring(tonumber(self.tabHeight) + 2) .. "px",
+    height = tostring(tonumber(self.tabHeight)) .. "px",
     name = self.name .. "TabBoxLabel",
   }, self)
   self.tabBox = Geyser.HBox:new({x = 0, y = 0, width = "100%", height = "100%", name = self.name .. "TabBox"}, self.tabBoxLabel)
@@ -1679,8 +1698,8 @@ function EMCO:checkEchoArgs(funcName, tabName, message, excludeAll)
     ae(funcName, "tabName as string expected, got " .. tabNameType)
   elseif messageType ~= "string" then
     ae(funcName, "message as string expected, got " .. messageType)
-  elseif not validTabName then
-    ae(funcName, "tabName must be the name of a tab attached to this object. Valid names are: " .. table.concat(self.consoles, ","))
+  elseif not validTabName and not self.newTabOnEcho then
+    ae(funcName, "tabName must be the name of a tab attached to this object. If you want to create the tab on the fly, set newTabOnEcho to true. Valid names are: " .. table.concat(self.consoles, ","))
   elseif excludeAllType ~= "nil" and excludeAllType ~= "boolean" then
     ae(funcName, "optional argument excludeAll expected as boolean, got " .. excludeAllType)
   end
@@ -1783,6 +1802,10 @@ function EMCO:xEcho(tabName, message, xtype, excludeAll)
     error("You cannot send text to the Map tab")
   end
   local console = self.mc[tabName]
+  if console == nil and self.newTabOnEcho then
+      self:addTab(tabName)
+      console = self.mc[tabName]
+  end
   local allTab = (self.allTab and not excludeAll and not table.contains(self.allTabExclusions, tabName) and tabName ~= self.allTabName) and
                    self.mc[self.allTabName] or false
   local ofr, ofg, ofb, obr, obg, obb
@@ -2215,6 +2238,7 @@ function EMCO:save()
     gags = self.gags,
     notifyTabs = self.notifyTabs,
     notifyWithFocus = self.notifyWithFocus,
+    newTabOnEcho = self.newTabOnEcho,
     cmdLineStyleSheet = self.cmdLineStyleSheet,
   }
   local dirname = getMudletHomeDir() .. "/EMCO/"
@@ -2285,6 +2309,7 @@ function EMCO:load()
   self.gags = configTable.gags
   self.notifyTabs = configTable.notifyTabs
   self.notifyWithFocus = configTable.notifyWithFocus
+  self.newTabOnEcho = configTable.newTabOnEcho
   self.cmdLineStyleSheet = configTable.cmdLineStyleSheet
   self:move(configTable.x, configTable.y)
   self:resize(configTable.width, configTable.height)
