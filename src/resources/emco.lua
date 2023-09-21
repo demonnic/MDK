@@ -29,6 +29,7 @@ local EMCO = Geyser.Container:new({
   tabBoxColor = "black",
   consoleContainerCSS = "",
   consoleContainerColor = "black",
+  noTabMessage = [[<center>No tabs added...</center>]],
   tabHeight = 25,
   leftMargin = 0,
   rightMargin = 0,
@@ -234,6 +235,11 @@ end
 --     <td>consoleContainerColor</td>
 --     <td>Color to use for the container holding the miniconsole. Any Geyser.Color works. Overridden by consoleContainerCSS</td>
 --     <td>"black"</td>
+--   </tr>
+--   <tr>
+--     <td>noTabMessage</td>
+--     <td>Message shown in the parent label when there are no tabs added.</td>
+--     <td>[[<center>No tabs added...</center>]]</td>
 --   </tr>
 --   <tr>
 --     <td>gap</td>
@@ -1080,6 +1086,7 @@ function EMCO:createContainers()
     width = "100%",
     height = "-0px",
     name = self.name .. "ConsoleContainer",
+    message = self.noTabMessage
   }, self)
   self.consoleContainer:setStyleSheet(self.consoleContainerCSS)
   self.consoleContainer:setColor(self.consoleContainerColor)
@@ -2218,6 +2225,7 @@ function EMCO:save()
     tabBoxColor = self.tabBoxColor,
     consoleContainerCSS = self.consoleContainerCSS,
     consoleContainerColor = self.consoleContainerColor,
+    noTabMessage = self.noTabMessage,
     gap = self.gap,
     consoles = self.consoles,
     allTabExclusions = self.allTabExclusions,
@@ -2294,6 +2302,7 @@ function EMCO:load()
   self.tabBoxColor = configTable.tabBoxColor
   self.consoleContainerCSS = configTable.consoleContainerCSS
   self.consoleContainerColor = configTable.consoleContainerColor
+  self.noTabMessage = configTable.noTabMessage
   self.gap = configTable.gap
   self.consoles = configTable.consoles
   self.allTabExclusions = configTable.allTabExclusions
