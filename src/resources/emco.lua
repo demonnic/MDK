@@ -112,7 +112,7 @@ end
 --   <tr>
 --     <td>mapTabName</td>
 --     <td>Which tab should we attach the map to?
---                     <br>If mapTab is true and you do not set this, it will throw an error</td>
+--     <br>If mapTab is true and you do not set this, it will throw an error</td>
 --     <td></td>
 --   </tr>
 --   <tr>
@@ -364,6 +364,16 @@ end
 --     <td>newTabOnEcho</td>
 --     <td>If true, EMCO will create a new tab if it doesn't exist. If false, it will throw an error.</td>
 --     <td>false</td>
+--   </tr>
+--   <tr>
+--     <td>path</td>
+--     <td>The path the log files live in. It is templated.<br>|h is replaced by the profile homedir.<br>|y by 4 digit year.<br>|m by 2 digit month<br>|d by 2 digit day<br>|N by the tab name<br>|E by the EMCO name<br>|e by the file extension (html for h logType, log for others)</td>
+--     <td>"|h/log/|E/|y/|m/|d/"</td>
+--   </tr>
+--   <tr>
+--     <td>fileName</td>
+--     <td>The name of the log file. It is templated, same as path above</td>
+--     <td>"|N.|e"</td>
 --   </tr>
 -- </tbody>
 -- </table>
