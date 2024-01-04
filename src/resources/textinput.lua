@@ -12,8 +12,10 @@ local TextInput = {
   font = "Ubuntu Mono",
   labelWidth = "25%",
   value = "Replace this with what you want to set",
-  color = "#202020",
-  fgColor = "white"
+  labelColor = "#202020",
+  labelFgColor = "white",
+  inputColor = "#202020",
+  inputFgColor = "white",
 }
 setmetatable(TextInput, TextInput.parent)
 TextInput.__index = TextInput
@@ -42,15 +44,18 @@ function TextInput:createComponents()
     font = self.font,
     fontSize = self.fontSize,
     alignment = self.alignment,
+    color = self.labelColor,
+    fgColor = self.labelFgColor,
   }, self)
   self.label:setAlignment(self.alignment)
   self.label:echo()
+  local lw = self.label:get_width()
   self.input = CommandLine:new({
     name = self.name .. "Input",
-    x = self.labelWidth,
+    x = lw,
     y = 0,
     height = "100%",
-    width = "-" .. self.labelWidth,
+    width = f"100%-{lw}px",
   }, self)
   self.inputStyleSheet = gss:new({}, nil, "QPlainTextEdit")
   self:adjustInputStyle()
@@ -94,6 +99,12 @@ function TextInput:setMessage(msg)
   self.label:echo(msg)
 end
 
+--- Sets the message or prompt for the TextInput object
+--- @see setMessage
+function TextInput:echo(msg)
+  self:setMessage(msg)
+end
+
 --- Sets the font for the TextInput object
 -- @tparam string font The font to use
 function TextInput:setFont(font)
@@ -110,17 +121,29 @@ end
 
 --- Sets the color for the TextInput object
 -- @tparam string color The color to use. Can be anything parsable by Geyser.Color
-function TextInput:setColor(color)
-  self.color = color
+function TextInput:setLabelColor(color)
+  self.labelColor = color
   self.label:setColor(color)
+end
+
+--- Sets the foreground color for the TextInput object Label
+-- @tparam string color The color to use. Can be anything parsable by Geyser.Color
+function TextInput:setLabelFgColor(color)
+  self.labelFgColor = color
+  self.label:setFgColor(color)
+end
+
+--- Sets the color for the TextInput object input box
+-- @tparam string color The color to use. Can be anything parsable by Geyser.Color
+function TextInput:setInputColor(color)
+  self.inputColor = color
   self:adjustInputStyle()
 end
 
---- Sets the foreground color for the TextInput object
+--- Sets the foreground color for the TextInput object Label
 -- @tparam string color The color to use. Can be anything parsable by Geyser.Color
-function TextInput:setFgColor(color)
-  self.fgColor = color
-  self.label:setFgColor(color)
+function TextInput:setInputFgColor(color)
+  self.inputFgColor = color
   self:adjustInputStyle()
 end
 
@@ -134,8 +157,15 @@ end
 --- the input box takes up whatever is left over
 -- @tparam number width The width to set the label portion to
 function TextInput:setLabelWidth(width)
-  self.label:resize(width, "100%")
-  self.input:resize("-" .. width, "100%")
+  self.labelWidth = width or self.labelWidth
+  self.label:resize(width)
+  local lw = self.label:get_width()
+  self.input:resize(f"100%-{lw}px")
+  self.input:move(lw)
+end
+
+function TextInput:calcFontSize()
+  return calcFontSize(self.fontSize, self.font)
 end
 
 --- Internal function responsible for taking the TextInput's settings
@@ -143,8 +173,8 @@ end
 -- @local
 function TextInput:adjustInputStyle()
   local style = self.inputStyleSheet
-  local color = Geyser.Color.hex(self.color)
-  local fgColor = Geyser.Color.hex(self.fgColor)
+  local color = Geyser.Color.hex(self.inputColor)
+  local fgColor = Geyser.Color.hex(self.inputFgColor)
   local _, fontHeight = calcFontSize(self.fontSize, self.font)
   -- we add padding for half the height, minus half the fontheight and an additional 2 pixels which seems to make it line up better
   -- magic number arrived at after much testing.
@@ -161,6 +191,7 @@ end
 -- @local
 function TextInput:resize(width, height)
   self.parent.resize(self, width, height)
+  self:setLabelWidth()
   self:adjustInputStyle()
 end
 
