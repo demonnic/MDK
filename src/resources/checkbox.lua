@@ -1,5 +1,4 @@
- 
-checkbox = {
+local checkbox = {
   parent = Geyser.Container,
   name = 'CheckboxClass',
   checkboxLocation = "https://demonnic.github.io/image-assets/checkbox-25px.png",
@@ -34,8 +33,6 @@ end
 
 function checkbox:createDisplay()
 
-  self:set_constraints({x = "30%", y = "60%", width = 200, height = 25})
-  
   self.checkboxLabel = Geyser.Label:new({ 
                               message="A checkbox label",
                               x = 0, y = 0,
@@ -53,8 +50,8 @@ function checkbox:createDisplay()
                               height = 25,
                               color = "white",
                               downColor = "white",
-                              downStyle = [[ background-color: white; border-image: url(/home/kirk/mudlet-data/profiles/Development/checkbox-25px.png); ]],
-                              style = [[ background-color: white; border-image: url(/home/kirk/mudlet-data/profiles/Development/unchecked-25px.png); ]],
+                              downStyle = "background-color: white; border-image: url("..self.checkboxFile..");",
+                              style = "background-color: white; border-image: url("..self.uncheckedFile..");",
                               downCommand = "unticked",
                               clickCommand = "ticked",
                               msg = "",
@@ -166,6 +163,18 @@ function checkbox:isChecked()
 
   return false
 
+end
+
+function checkbox:setChecked(state)
+
+  assert(type(state) == "boolean", "Parameter in setChecked(state) should be boolean")
+
+  if state then
+    self.checkboxButton:setState("down")
+  else  
+    self.checkboxButton:setState("up")
+  end
+  
 end
 
 return checkbox
