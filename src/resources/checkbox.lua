@@ -34,7 +34,7 @@ end
 function checkbox:createDisplay()
 
   self.checkboxLabel = Geyser.Label:new({ 
-                              message="A checkbox label",
+                              message = self.labelText or "Checkbox Label",
                               x = 0, y = 0,
                               width = "100%-25px",
                               height = "100%",
@@ -175,6 +175,12 @@ function checkbox:setChecked(state)
     self.checkboxButton:setState("up")
   end
   
+end
+
+function checkbox:echo(message, color, format)
+
+  self.checkboxLabel:echo(message, color, format)
+
 end
 
 return checkbox
