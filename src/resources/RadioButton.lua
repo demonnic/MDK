@@ -5,7 +5,9 @@ local RadioButton = {
   radioButtonSelectedLocation = "https://demonnic.github.io/image-assets/radio-button-selected.png",
   selected = 0,
   amount = 2,
-  buttons = {}
+  buttons = {},
+  labels = {},
+  labelMessages = {}
 }
 
 RadioButton.__index = RadioButton
@@ -26,6 +28,7 @@ function RadioButton:new(cons, container)
   end
   cons.name = cons.name or Geyser.nameGen("RadioButton")
   RadioButton.amount = cons.amount or 2
+  RadioButton.labelMessages = cons.labelMessages or {"Label 1", "Label 2"}
   local me = self.parent:new(cons, container)
   setmetatable(me, self)
   me:createComponents()
@@ -35,12 +38,25 @@ end
 
 function RadioButton:createDisplay()
 
-  local vboxContainer = Geyser.Container:new({ x = 0, y = 0,
-                                              width = "100%",
+
+  local labelContainer = Geyser.VBox:new({ x = 0, y = 0,
+                                              width = "100%-25px",
+                                              height = "100%"
+                                              }, self)  
+
+  local buttonContainer = Geyser.VBox:new({ x = "-25r", y = 0,
+                                              width = "25px",
                                               height = "100%"
                                               }, self)
                                               
   for i = 1,RadioButton.amount do 
+
+    RadioButton.labels[i] = Geyser.Label:new({
+                                name = "RadioLabel" .. i,
+                                message = RadioButton.labelMessages[i],
+                                color = "white",
+                                fgColor = "black"
+                            }, labelContainer)
 
     RadioButton.buttons[i] = Geyser.Button:new({
                                 name = "Radio" .. i,
@@ -56,7 +72,7 @@ function RadioButton:createDisplay()
                                 twoState        = false,
                                 state           = "up",
                                 toolTipDuration = 0
-                            }, vboxContainer)
+                            }, buttonContainer)
     end
   
 end
@@ -169,6 +185,15 @@ function RadioButton:getSelected()
 
   return RadioButton.selected
 
+end
+
+function RadioButton:setLabels(labelMessages)
+
+  RadioButton.labelMessages = labelMessages
+  for i = 1, RadioButton.amount do
+    RadioButton.labels[i]:echo(RadioButton.labelMessages[i])
+  end
+  
 end
 
 
