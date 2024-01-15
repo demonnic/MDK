@@ -2,7 +2,8 @@ local checkbox = {
   parent = Geyser.Container,
   name = 'CheckboxClass',
   checkboxLocation = "https://demonnic.github.io/image-assets/checkbox-25px.png",
-  uncheckedLocation = "https://demonnic.github.io/image-assets/unchecked-25px.png"  
+  uncheckedLocation = "https://demonnic.github.io/image-assets/unchecked-25px.png",
+  noLabel = false
 }
 
 checkbox.__index = checkbox
@@ -33,14 +34,16 @@ end
 
 function checkbox:createDisplay()
 
-  self.checkboxLabel = Geyser.Label:new({ 
-                              message = self.labelText or "Checkbox Label",
-                              x = 0, y = 0,
-                              width = "100%-25px",
-                              height = "100%",
-                              color = "white",
-                              fgColor = "black"
-                        }, self)
+  if checkbox.noLabel then
+    self.checkboxLabel = Geyser.Label:new({ 
+                                message = self.labelText or "Checkbox Label",
+                                x = 0, y = 0,
+                                width = "100%-25px",
+                                height = "100%",
+                                color = "white",
+                                fgColor = "black"
+                          }, self)
+  end
   
   self.checkboxButton = Geyser.Button:new({
                               name = "Checkbox",
@@ -177,7 +180,10 @@ function checkbox:setChecked(state)
   
 end
 
+
 function checkbox:echo(message, color, format)
+
+  assert(not self.noLabel, "No label associated with this checkbox.")
 
   self.checkboxLabel:echo(message, color, format)
 
