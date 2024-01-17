@@ -1,3 +1,6 @@
+--- A Geyser object to create a yes/no or true/false checkbox
+-- @classmod checkbox
+-- @author Zooka
 local checkbox = {
   parent = Geyser.Container,
   name = 'CheckboxClass',
@@ -9,15 +12,41 @@ local checkbox = {
 checkbox.__index = checkbox
 setmetatable(checkbox, checkbox.parent)
 
-
---local gss = Geyser.StyleSheet
 local directory = getMudletHomeDir() .. "/checkbox/"
 local saveFile = directory .. "fileLocations.lua"
 if not io.exists(directory) then
   lfs.mkdir(directory)
 end
 
-
+--- Creates a new checkbox. 
+-- @tparam table cons a table containing the options for this checkbox.
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>noLabel</td>
+--     <td>Do not assign a label associated this checkbox</td>
+--     <td>false</td>
+--   </tr>
+--   <tr>
+--     <td>checkboxLocation</td>
+--     <td>The location of the checked checkbox image representing true. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
+--     <td>https://demonnic.github.io/image-assets/checkbox-25px.png</td>
+--   </tr>
+--   <tr>
+--     <td>uncheckedLocation</td>
+--     <td>The location of the unchecked checkbox image representing false. Either a web URL where it can be downloaded, or the location on disk to read it from</td>
+--     <td>https://demonnic.github.io/image-assets/unchecked-25px.png</td>
+--   </tr>
+--</tbody>
+--</table>
+-- @param container The Geyser container for this checkbox
 function checkbox:new(cons, container)
   cons = cons or {}
   local consType = type(cons)
@@ -31,7 +60,10 @@ function checkbox:new(cons, container)
   return me
 end
 
-
+--- Create the checkbox components.
+-- @local
+-- Creates self.checkboxLabel to hold a display message.
+-- Creates self.checkboxButton, a Geyser.Button with a true/false state.
 function checkbox:createDisplay()
 
   if checkbox.noLabel then
@@ -68,7 +100,11 @@ function checkbox:createDisplay()
 
 end
 
-
+--- Creates the components that make up the checkbox UI. 
+-- @local
+-- Obtains the checked and unchecked images specified in the checkbox options.
+-- Generate white styling for the checkbox.
+-- @todo user generated CSS styling
 function checkbox:createComponents()
 
   self:obtainImages()
@@ -76,7 +112,15 @@ function checkbox:createComponents()
 
 end
 
-
+--- Obtains the checked and unchecked images for the checkbox.
+-- @local
+-- Gets the previously saved file locations.
+-- Checks if the checked image exists at the checkboxLocation. 
+-- If not, it will download the image from a URL or copy a local file. It saves 
+-- the new location.
+-- Does the same for the unchecked image at teh uncheckedLocation.
+-- Saves any new locations to the save file.
+-- Sets self.checkboxFile and self.uncheckedFile to the locations of the images.
 function checkbox:obtainImages()
   local locations = self:getFileLocs()
   local checkboxURL = self.checkboxLocation
@@ -119,7 +163,15 @@ function checkbox:obtainImages()
   end
 end
 
-
+--- Handles the actual download of a file from a url
+-- @param url The url to download the file from
+-- @param fileName The location to save the downloaded file
+-- @local
+-- Creates any missing directories in the file path.
+-- Registers named event handlers to handle the download completing or erroring.
+-- The completion handler stops the error handler.
+-- The error handler prints an error message and stops the completion handler.
+-- Downloads the file from the url to the fileName location.
 function checkbox:downloadFile(url, fileName)
   local parts = fileName:split("/")
   parts[#parts] = nil
@@ -148,7 +200,8 @@ function checkbox:downloadFile(url, fileName)
   downloadFile(fileName, url)
 end
 
-
+--- Responsible for reading the file locations from disk and returning them
+-- @local
 function checkbox:getFileLocs()
   local locations = {}
   if io.exists(saveFile) then
@@ -157,7 +210,8 @@ function checkbox:getFileLocs()
   return locations
 end
 
-
+--- Return the value of the checkbox.
+-- @return boolean of the checkbox, true if checked, false otherwise
 function checkbox:isChecked()
 
   if self.checkboxButton.state == "down" then
@@ -168,6 +222,8 @@ function checkbox:isChecked()
 
 end
 
+--- Set the state of the checkbox.
+-- @param state boolean, true to checked, false to unchecked
 function checkbox:setChecked(state)
 
   assert(type(state) == "boolean", "Parameter in setChecked(state) should be boolean")
@@ -180,7 +236,11 @@ function checkbox:setChecked(state)
   
 end
 
-
+--- Set the label text associated with this checkbox.
+-- @raise error thrown if noLabel = true
+-- @param message the message to display next to the checkbox
+-- @param color the color of the text
+-- @param format the format of the text; bold, italic, etc
 function checkbox:echo(message, color, format)
 
   assert(not self.noLabel, "No label associated with this checkbox.")
