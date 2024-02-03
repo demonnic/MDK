@@ -1,3 +1,6 @@
+--- A Geyser object to create a single selection radiobox
+-- @classmod RadioButton
+-- @author Zooka
 local RadioButton = {
   parent = Geyser.Container,
   name = 'RadioButtonClass',
@@ -19,7 +22,30 @@ if not io.exists(directory) then
   lfs.mkdir(directory)
 end
 
-
+--- Creates a new radio button. 
+-- @tparam table cons a table containing the options for this radiobutton.
+-- <table class="tg">
+-- <thead>
+--   <tr>
+--     <th>option name</th>
+--     <th>description</th>
+--     <th>default</th>
+--   </tr>
+-- </thead>
+-- <tbody>
+--   <tr>
+--     <td>amount</td>
+--     <td>The amount of buttons in this radio button.</td>
+--     <td>2</td>
+--   </tr>
+--   <tr>
+--     <td>labelMessages</td>
+--     <td>The text to assign to a specific button.  Should be equals to the amount of buttons.</td>
+--     <td>{"Label 1", "Label 2"}</td>
+--   </tr>
+--</tbody>
+--</table>
+-- @param container The Geyser container for this checkbox
 function RadioButton:new(cons, container)
   cons = cons or {}
   local consType = type(cons)
@@ -36,6 +62,10 @@ function RadioButton:new(cons, container)
 end
 
 
+--- Create the radiobutton components.
+-- @local
+-- Creates self.labels[] to hold a display messages.
+-- Creates self.buttons[], an amount of Geyser.Buttons with a true/false state.
 function RadioButton:createDisplay()
 
 
@@ -78,6 +108,11 @@ function RadioButton:createDisplay()
 end
 
 
+--- Creates the components that make up the radiobutton UI. 
+-- @local
+-- Obtains the radiobutton images.
+-- Generate white styling for the radiobutton.
+-- @todo user generated CSS styling
 function RadioButton:createComponents()
 
   self:obtainImages()
@@ -86,6 +121,15 @@ function RadioButton:createComponents()
 end
 
 
+--- Obtains the selected and unselected images for the radiobutton.
+-- @local
+-- Gets the previously saved file locations.
+-- Checks if the selected image exists at the radioButtonSelectedLocation. 
+-- If not, it will download the image from a URL or copy a local file. It saves 
+-- the new location.
+-- Does the same for the unselected image at the radioButtonLocation.
+-- Saves any new locations to the save file.
+-- Sets self.radioButtonFile and self.radioButtonSelectedFile to the locations of the images.
 function RadioButton:obtainImages()
   local locations = self:getFileLocs()
   local radioButtonURL = self.radioButtonLocation
@@ -129,6 +173,15 @@ function RadioButton:obtainImages()
 end
 
 
+--- Handles the actual download of a file from a url
+-- @param url The url to download the file from
+-- @param fileName The location to save the downloaded file
+-- @local
+-- Creates any missing directories in the file path.
+-- Registers named event handlers to handle the download completing or erroring.
+-- The completion handler stops the error handler.
+-- The error handler prints an error message and stops the completion handler.
+-- Downloads the file from the url to the fileName location.
 function RadioButton:downloadFile(url, fileName)
   local parts = fileName:split("/")
   parts[#parts] = nil
@@ -158,6 +211,8 @@ function RadioButton:downloadFile(url, fileName)
 end
 
 
+--- Responsible for reading the file locations from disk and returning them
+-- @local
 function RadioButton:getFileLocs()
   local locations = {}
   if io.exists(saveFile) then
@@ -166,6 +221,9 @@ function RadioButton:getFileLocs()
   return locations
 end
 
+
+--- Set the state of the radiobutton.
+-- @param clicked integer, the button position number as referenced in the constructor
 function RadioButton:setSelected(clicked)
 
   -- set all buttons unselected
@@ -177,16 +235,20 @@ function RadioButton:setSelected(clicked)
   RadioButton.buttons[clicked]:setStyle("background-color: white; border-image: url(".. self.radioButtonSelectedFile ..");")
   RadioButton.selected = clicked
   
-  echo("DEBUG: " .. RadioButton.selected .. " selected\n")
+--  echo("DEBUG: " .. RadioButton.selected .. " selected\n")
 
 end
 
+--- Return which button is selected
+-- @return the integer of the button currently selected
 function RadioButton:getSelected()
 
   return RadioButton.selected
 
 end
 
+--- Set the labels of the buttons to new ones.
+-- @param labelMessages table of strings containing the messages
 function RadioButton:setLabels(labelMessages)
 
   RadioButton.labelMessages = labelMessages
